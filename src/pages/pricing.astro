@@ -1,0 +1,111 @@
+---
+import Base from "../layouts/Base.astro";
+import Tiers from "../components/Tiers.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { tiers, build } from "../data/site.ts";
+
+// AEO: expose pricing as structured FAQ so AI answers can cite it.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How much does a restaurant website from Front of House cost?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `The one-time custom build starts from ${build.from}, priced to scope. A monthly partnership for hosting, maintenance, and support starts at ${tiers[0].price}/mo.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is included in the monthly partnership?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Every tier includes reliable hosting and maintenance. Higher tiers add a full change-request portal, AI website tools, AI-search articles, strategy sessions, and a direct line to the team.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Do I own my restaurant website?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. Front of House builds a real, custom website that you fully own, not a locked drag-and-drop template you rent forever.",
+      },
+    },
+  ],
+};
+---
+
+<Base
+  title="Pricing"
+  description="One-time custom build from $2,000, plus a monthly partnership from $20. Hosting and maintenance included on every tier."
+  jsonLd={jsonLd}
+>
+  <section class="phead">
+    <div class="container">
+      <p class="kicker">Partnership pricing</p>
+      <h1>Build it once. Own it for good.<br />We keep it sharp.</h1>
+      <p class="lede">
+        A custom website you fully own, then a month-to-month partnership to
+        keep it current. Make changes yourself, or just text us. Hosting and
+        maintenance are included on every tier.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container pricing-body">
+      <Tiers showBuild={true} showLocations={true} />
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="finenote">
+        <p>
+          AI features include $25/month in usage credit on Premium and Platinum
+          tiers. AI tools use token-based processing; usage beyond the included
+          credit is billed in $25 blocks. Changes submitted through your portal
+          are reviewed and built by our team before going live to ensure
+          everything works.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    heading="Not sure which tier fits?"
+    sub="Tell us about your restaurant and we'll recommend the right build and partnership."
+  />
+</Base>
+
+<style>
+  .phead {
+    padding-block: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 3vw, 2.5rem);
+    text-align: center;
+  }
+  .phead h1 {
+    margin-inline: auto;
+  }
+  .phead .lede {
+    margin: 1.2rem auto 0;
+  }
+  .pricing-body {
+    text-align: center;
+  }
+  .pricing-body :global(.tiers),
+  .pricing-body :global(.loc) {
+    text-align: left;
+  }
+  .finenote {
+    border-top: 1px solid var(--line);
+    padding-top: 1.5rem;
+  }
+  .finenote p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    max-width: 80ch;
+    margin: 0;
+  }
+</style>

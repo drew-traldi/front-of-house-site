@@ -1,0 +1,263 @@
+---
+import Base from "../layouts/Base.astro";
+import { site, tiers } from "../data/site.ts";
+---
+
+<Base
+  title="Contact"
+  description="Tell us about your restaurant and we'll scope your build. Custom websites from $2,000, monthly partnership from $20."
+>
+  <section class="phead">
+    <div class="container phead__grid">
+      <div>
+        <p class="kicker">Scope your build</p>
+        <h1>Let's build your front of house.</h1>
+        <p class="lede">
+          Tell us a little about your restaurant and what you need. We'll come
+          back with a scope, a recommended tier, and next steps, usually within
+          a business day.
+        </p>
+
+        <ul class="direct">
+          <li>
+            <span class="direct__label">Email</span>
+            <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          </li>
+          <li>
+            <span class="direct__label">Phone</span>
+            <a href={site.contact.phoneHref}>{site.contact.phone}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!--
+        No backend yet (static site on Vercel). This form composes an email
+        via the visitor's mail client on submit, so it works immediately.
+        To capture leads automatically later, point `data-endpoint` at a form
+        service (Formspree, Vercel serverless function, etc.) and POST instead.
+      -->
+      <form
+        class="form card"
+        id="lead-form"
+        data-endpoint=""
+        novalidate
+      >
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" required autocomplete="name" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="restaurant">Restaurant</label>
+            <input id="restaurant" name="restaurant" type="text" />
+          </div>
+          <div class="field">
+            <label for="locations">Locations</label>
+            <input id="locations" name="locations" type="number" min="1" value="1" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="tier">Interested in</label>
+          <select id="tier" name="tier">
+            <option value="">Not sure yet, help me choose</option>
+            {tiers.map((t) => <option value={t.name}>{t.name}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">What do you need?</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="4"
+            placeholder="New site, a refresh, photos, branding…"></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary form__submit">
+          Send it over
+        </button>
+        <p class="form__note" id="form-note" hidden></p>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .phead {
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+  .phead__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+  .phead h1 {
+    max-width: 14ch;
+  }
+  .phead .lede {
+    margin-top: 1rem;
+  }
+  .direct {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    display: flex;
+    gap: 2.5rem;
+  }
+  .direct__label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .direct a {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .direct a:hover {
+    color: var(--ember);
+  }
+
+  .form {
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .field {
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+  .field-row {
+    display: flex;
+    gap: 1rem;
+  }
+  label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 0.98rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 0.85rem;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--ember);
+    box-shadow: 0 0 0 3px rgba(199, 91, 57, 0.14);
+  }
+  textarea {
+    resize: vertical;
+  }
+  .form__submit {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+  .form__note {
+    margin: 0.9rem 0 0;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--body);
+  }
+  .form__note[data-state="ok"] {
+    color: var(--ember-deep);
+    font-weight: 600;
+  }
+
+  @media (max-width: 820px) {
+    .phead__grid {
+      grid-template-columns: 1fr;
+    }
+    .direct {
+      gap: 2rem;
+    }
+  }
+  @media (max-width: 520px) {
+    .field-row {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+</style>
+
+<script is:inline define:vars={{ to: site.contact.email }}>
+  const form = document.getElementById("lead-form");
+  const note = document.getElementById("form-note");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    if (!data.name || !data.email) {
+      showNote("Please add your name and email so we can reach you.", "err");
+      return;
+    }
+
+    const endpoint = form.getAttribute("data-endpoint");
+    if (endpoint) {
+      // Future: POST to a form service / serverless function.
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (res.ok) {
+          form.reset();
+          showNote("Thanks, we'll be in touch within a business day.", "ok");
+          return;
+        }
+      } catch (_) {
+        /* fall through to mailto */
+      }
+    }
+
+    // No-backend fallback: open the visitor's email client, pre-filled.
+    const subject = `New build inquiry: ${data.restaurant || data.name}`;
+    const body = [
+      `Name: ${data.name}`,
+      `Restaurant: ${data.restaurant || "n/a"}`,
+      `Locations: ${data.locations || "n/a"}`,
+      `Email: ${data.email}`,
+      `Phone: ${data.phone || "n/a"}`,
+      `Interested in: ${data.tier || "Not sure yet"}`,
+      "",
+      `${data.message || ""}`,
+    ].join("\n");
+    window.location.href = `mailto:${to}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+    showNote("Opening your email app to send. Almost there.", "ok");
+  });
+
+  function showNote(msg, state) {
+    if (!note) return;
+    note.textContent = msg;
+    note.hidden = false;
+    note.setAttribute("data-state", state);
+  }
+</script>

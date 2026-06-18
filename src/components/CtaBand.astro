@@ -1,0 +1,87 @@
+---
+import Logo from "./Logo.astro";
+import { site } from "../data/site.ts";
+interface Props {
+  heading?: string;
+  sub?: string;
+}
+const {
+  heading = "Let's build your front of house.",
+  sub = "Reach out to scope your build. We'll design it, shoot it, ship it, and stay on as your partner.",
+} = Astro.props;
+---
+
+<section class="ctaband">
+  <div class="container">
+    <div class="ctacard">
+      <Logo variant="stacked" theme="reversed" wordmark={false} class="ctacard__mark" />
+      <h2>{heading}</h2>
+      <p class="ctacard__sub">{sub}</p>
+      <div class="ctacard__actions">
+        <a href="/contact" class="btn btn--primary">Start the conversation</a>
+        <a href="/pricing" class="btn ctacard__ghost">See pricing</a>
+      </div>
+      <p class="ctacard__contact">
+        <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+        <span>·</span>
+        <a href={site.contact.phoneHref}>{site.contact.phone}</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ctaband {
+    padding-block: clamp(2.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+  }
+  .ctacard {
+    background: var(--ink);
+    border-radius: 14px;
+    padding: clamp(2.8rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 4rem);
+    text-align: center;
+  }
+  .ctacard__mark {
+    margin: 0 auto 1.8rem;
+  }
+  .ctacard h2 {
+    color: var(--bone);
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    margin: 0 0 1rem;
+  }
+  .ctacard__sub {
+    color: var(--muted-on-ink);
+    font-size: 1.05rem;
+    max-width: 46ch;
+    margin: 0 auto 2.2rem;
+  }
+  .ctacard__actions {
+    display: inline-flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .ctacard__ghost {
+    color: var(--bone);
+    border: 1px solid var(--ink-border);
+  }
+  .ctacard__ghost:hover {
+    color: var(--paper);
+    border-color: var(--muted);
+    background: rgba(244, 236, 221, 0.04);
+  }
+  .ctacard__contact {
+    margin: 2.2rem 0 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+  }
+  .ctacard__contact a {
+    color: var(--muted-on-ink);
+  }
+  .ctacard__contact a:hover {
+    color: var(--paper);
+  }
+</style>

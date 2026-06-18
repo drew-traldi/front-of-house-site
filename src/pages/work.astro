@@ -1,0 +1,302 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { caseStudies, hai } from "../data/site.ts";
+---
+
+<Base
+  title="Work"
+  description="Real restaurant websites built by the Front of House team. Custom, fast, and owner-owned. See Burger Lab, Killa, and more of our work."
+>
+  <section class="phead">
+    <div class="container">
+      <p class="kicker">Our work</p>
+      <h1>Built for restaurants. Owned by owners.</h1>
+      <p class="lede">
+        These are real restaurants we designed and built. Fast, custom, and
+        made to convert covers. Each one ships with the tools owners actually
+        use: online ordering, reservations, waitlists, and email capture.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cases">
+        {
+          caseStudies.map((c, i) => (
+            <article class:list={["case", { "case--flip": i % 2 === 1 }]}>
+              <a
+                class="case__media"
+                href={c.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visit ${c.name}`}
+              >
+                <video
+                  src={c.video}
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  aria-label={`${c.name}, ${c.type}`}
+                ></video>
+                <span class="case__badge">Live site</span>
+              </a>
+              <div class="case__body">
+                <p class="case__loc">{c.location}</p>
+                <h2 class="case__name">{c.name}</h2>
+                <p class="case__type">{c.type}</p>
+                <p class="case__tag">"{c.tagline}"</p>
+                <p class="case__blurb">{c.blurb}</p>
+                <ul class="case__points">
+                  {c.points.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+                <a
+                  class="case__link"
+                  href={c.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Visit {c.name} →
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HAI talent reference (separate company) ── -->
+  <section class="section--tight">
+    <div class="container">
+      <div class="agency surface-ink">
+        <div class="agency__copy">
+          <p class="kicker">The {hai.name} talent, here</p>
+          <h2>Real sites. Real restaurants.</h2>
+          <p>{hai.blurb}</p>
+        </div>
+        <a
+          class="btn btn--on-ink agency__cta"
+          href={hai.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          More work at {hai.name} →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="soon">
+        <div>
+          <h2>Want to be next?</h2>
+          <p class="lede">
+            We're booking our first Front of House partners now. Early partners
+            get our fullest attention, and a spot in this gallery.
+          </p>
+        </div>
+        <a href="/contact" class="btn btn--primary">Become an early partner</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .phead {
+    padding-block: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 3vw, 2.5rem);
+    background: var(--bone);
+    border-bottom: 1px solid var(--line);
+  }
+  .phead h1 {
+    max-width: 18ch;
+  }
+  .phead .lede {
+    margin-top: 1rem;
+  }
+
+  /* ── Case studies ── */
+  .cases {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .case {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  .case--flip .case__media {
+    order: 2;
+  }
+  .case__media {
+    position: relative;
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .case__media:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+  .case__media img,
+  .case__media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: var(--ink);
+  }
+  .case__badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: rgba(34, 28, 24, 0.6);
+    backdrop-filter: blur(4px);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .case__loc {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.6rem;
+  }
+  .case__name {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin: 0 0 0.2rem;
+  }
+  .case__type {
+    color: var(--ember);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 0.9rem;
+  }
+  .case__tag {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin: 0 0 1rem;
+  }
+  .case__blurb {
+    color: var(--body);
+    max-width: 52ch;
+    margin: 0 0 1.2rem;
+  }
+  .case__points {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.4rem;
+  }
+  .case__points li {
+    position: relative;
+    padding-left: 1.3rem;
+    font-size: 0.9rem;
+    color: var(--body);
+  }
+  .case__points li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--ember);
+    font-weight: 700;
+  }
+  .case__link {
+    font-weight: 600;
+    color: var(--ember-deep);
+  }
+  .case__link:hover {
+    color: var(--ink);
+  }
+
+  /* ── Agency / HAI band ── */
+  .agency {
+    border-radius: var(--radius);
+    padding: clamp(1.8rem, 4vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .agency__copy {
+    max-width: 56ch;
+  }
+  .agency__copy h2 {
+    margin: 0.4rem 0 0.6rem;
+  }
+  .agency__copy p {
+    color: var(--muted-on-ink);
+    margin: 0;
+  }
+  .agency__cta {
+    flex: none;
+  }
+
+  /* ── Booking band ── */
+  .soon {
+    background: var(--bone);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1.8rem, 4vw, 2.8rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .soon h2 {
+    margin: 0 0 0.4rem;
+  }
+  .soon .lede {
+    margin: 0;
+    max-width: 46ch;
+  }
+
+  @media (max-width: 760px) {
+    .case {
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+    }
+    .case--flip .case__media {
+      order: 0;
+    }
+    .case__media {
+      aspect-ratio: 16 / 10;
+    }
+    .agency,
+    .soon {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .agency__cta,
+    .soon .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

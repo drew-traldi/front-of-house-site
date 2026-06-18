@@ -1,0 +1,141 @@
+---
+// Front of House logo: the awning over the FOH monogram.
+// Canonical geometry & color from the Claude Design logo system:
+// 9 bays, ember at both ends, ember rail, bone hairline between stripes.
+//
+// variant: "inline" (header/footer lockup) | "stacked" (hero/CTA emblem) | "mark" (awning only)
+// theme:   "light" (on paper/bone) | "reversed" (on ink) | "mono" (single-ink)
+interface Props {
+  variant?: "inline" | "stacked" | "mark";
+  theme?: "light" | "reversed" | "mono";
+  wordmark?: boolean; // show "FRONT OF HOUSE" line under stacked emblem
+  class?: string;
+}
+const {
+  variant = "inline",
+  theme = "light",
+  wordmark = true,
+  class: klass = "",
+} = Astro.props;
+
+const ember = "#C75B39";
+const ink = theme === "reversed" ? "#F4ECDD" : "#221C18";
+const rail = ember;
+const stroke =
+  theme === "reversed" ? "#F4ECDD" : theme === "mono" ? "#221C18" : "#FBF7F0";
+
+const bays = Array.from({ length: 9 }, (_, i) => {
+  const x0 = 30 + i * 20;
+  const x1 = x0 + 20;
+  return {
+    d: `M${x0} 22 L${x1} 22 L${x1} 86 A10 10 0 0 1 ${x0} 86 Z`,
+    fill: i % 2 === 0 ? ember : ink,
+  };
+});
+---
+
+<span class={`logo logo--${variant} logo--${theme} ${klass}`} aria-hidden="true">
+  <svg
+    class="logo__awning"
+    viewBox="0 0 240 100"
+    role="presentation"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect x="24" y="7" width="192" height="11" rx="3" fill={rail}></rect>
+    {
+      bays.map((b) => (
+        <path d={b.d} fill={b.fill} stroke={stroke} stroke-width="1.6" />
+      ))
+    }
+  </svg>
+
+  {
+    variant !== "mark" && (
+      <span class="logo__type">
+        <span class="logo__mono">FOH</span>
+        {variant === "stacked" && wordmark && (
+          <span class="logo__word">
+            <span class="logo__dot" /> Front of House <span class="logo__dot" />
+          </span>
+        )}
+      </span>
+    )
+  }
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .logo__awning {
+    display: block;
+    width: 2.75rem;
+    height: auto;
+    flex: none;
+  }
+  .logo__mono {
+    font-family: var(--display);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+  .logo--reversed .logo__mono {
+    color: var(--bone);
+  }
+
+  /* Inline lockup (header/footer) */
+  .logo--inline .logo__mono {
+    font-size: 1.55rem;
+  }
+
+  /* Stacked emblem (hero / CTA card) */
+  .logo--stacked {
+    flex-direction: column;
+    gap: 0.1rem;
+    text-align: center;
+  }
+  .logo--stacked .logo__awning {
+    width: 7rem;
+  }
+  .logo--stacked .logo__type {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .logo--stacked .logo__mono {
+    font-size: 3.6rem;
+    line-height: 0.82;
+    margin-top: 0.2rem;
+  }
+  .logo__word {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    padding-left: 0.4em;
+    color: var(--muted);
+    margin-top: 0.85rem;
+  }
+  .logo--reversed .logo__word {
+    color: var(--ember);
+  }
+  .logo__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ember);
+    flex: none;
+  }
+
+  :global(.surface-ink) .logo--inline .logo__mono {
+    color: var(--bone);
+  }
+</style>

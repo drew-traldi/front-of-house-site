@@ -1,0 +1,310 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { steps, portfolioVideo } from "../data/site.ts";
+
+const services = [
+  {
+    kind: "Optional",
+    name: "Brand & Design",
+    line: "A look, not just a site.",
+    body: "Identity, menu, and a visual system for restaurants that need a real brand. Logo, type, color, and the menu design that ties it all together, built so it reads as well on the table as it does on the screen.",
+    points: [
+      "Logo & identity system",
+      "Menu design & layout",
+      "Color, type & art direction",
+    ],
+    video: portfolioVideo.burgerLab,
+    mediaAlt: "BURGER.LAB brand and site preview",
+  },
+  {
+    kind: "Optional",
+    name: "Capture",
+    line: "The space, the plates, the people.",
+    body: "On-site photo and video, shot where you serve. We capture the room, the food, and the team, then edit and deliver a library your site and socials can pull from all year.",
+    points: [
+      "On-location photo & video",
+      "Food & interior styling",
+      "Edited, delivered, ready to use",
+    ],
+    video: portfolioVideo.killa,
+    mediaAlt: "Killa — on-site video capture for restaurant sites",
+  },
+  {
+    kind: "Core",
+    name: "Build",
+    line: "A real, custom website you own.",
+    body: "Hand-built, fast, and modern, made to turn visitors into covers. Real custom code, not a locked drag-and-drop template you rent forever. Optimized to be found through AI search, not Google alone.",
+    points: [
+      "Custom code you fully own",
+      "Fast, mobile-first, accessible",
+      "Built for AI search (AEO)",
+    ],
+    video: portfolioVideo.burgerLab,
+    mediaAlt: "BURGER.LAB — custom restaurant website build",
+  },
+  {
+    kind: "Core",
+    name: "Care",
+    line: "We keep you running.",
+    body: "Hosting, maintenance, and hands-on support on every tier. Edit it yourself through your portal, or just text Sage. Either way, it gets done. Reviewed, tested, and live fast.",
+    points: [
+      "Hosting & maintenance always included",
+      "Self-serve portal or text Sage",
+      "Changes reviewed before they go live",
+    ],
+    video: portfolioVideo.killa,
+    mediaAlt: "Killa — live site with ongoing partnership care",
+  },
+];
+---
+
+<Base
+  title="Services"
+  description="Brand & design, on-site capture, a custom build you own, and month-to-month care. The full restaurant web studio, or just the parts you need."
+>
+  <section class="phead">
+    <div class="container">
+      <p class="kicker">What we do</p>
+      <h1>The whole studio, or just the parts you need.</h1>
+      <p class="lede">
+        Four ways we work, built around one idea: a restaurant's website is its
+        new front of house, so we treat it like one. Two are optional, two are
+        core to every partnership.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container svc-list">
+      {
+        services.map((s, i) => (
+          <article class="svc">
+            <div class="svc__index">
+              <span class="svc__num">0{i + 1}</span>
+              <span
+                class:list={[
+                  "svc__kind",
+                  { "svc__kind--core": s.kind === "Core" },
+                ]}
+              >
+                {s.kind}
+              </span>
+            </div>
+            <div class="svc__main">
+              <h2>{s.name}</h2>
+              <p class="svc__line">{s.line}</p>
+              <p class="svc__body">{s.body}</p>
+              <ul class="svc__points">
+                {s.points.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            </div>
+            <div class="svc__media">
+              <video
+                src={s.video}
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                aria-label={s.mediaAlt}
+              ></video>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section surface-ink">
+    <div class="container">
+      <header class="head head--center">
+        <p class="kicker">How it works</p>
+        <h2>Simple to start. Easy to live with.</h2>
+      </header>
+      <div class="steps">
+        {
+          steps.map((s) => (
+            <article class="step">
+              <span class="step__n">{s.n}</span>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .phead {
+    padding-block: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 3vw, 2.5rem);
+    background: var(--bone);
+    border-bottom: 1px solid var(--line);
+  }
+  .phead h1 {
+    max-width: 18ch;
+  }
+  .phead .lede {
+    margin-top: 1rem;
+  }
+
+  .svc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .svc {
+    display: grid;
+    grid-template-columns: 120px 1fr 0.85fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding-block: clamp(2rem, 4vw, 3rem);
+    border-top: 1px solid var(--line);
+    align-items: center;
+  }
+  .svc:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .svc__media {
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    box-shadow: var(--shadow);
+  }
+  .svc__media img,
+  .svc__media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: var(--ink);
+  }
+  .svc__index {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .svc__num {
+    font-family: var(--display);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--line);
+  }
+  .svc__kind {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .svc__kind--core {
+    color: var(--ember);
+  }
+  .svc__main h2 {
+    margin-bottom: 0.2rem;
+  }
+  .svc__line {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--ember);
+    margin: 0 0 1rem;
+  }
+  .svc__body {
+    max-width: 60ch;
+  }
+  .svc__points {
+    list-style: none;
+    padding: 0;
+    margin: 1.2rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+  }
+  .svc__points li {
+    position: relative;
+    padding-left: 1.4rem;
+    font-size: 0.92rem;
+    color: var(--body);
+  }
+  .svc__points li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--ember);
+    font-weight: 700;
+  }
+
+  .head--center {
+    margin-inline: auto;
+    text-align: center;
+    max-width: 640px;
+    margin-bottom: 2.6rem;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .step {
+    border: 1px solid rgba(244, 236, 221, 0.16);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+  }
+  .step__n {
+    display: inline-grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 999px;
+    background: var(--ember);
+    color: var(--paper);
+    font-family: var(--display);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .step h3 {
+    color: var(--paper);
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+  }
+  .step p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  @media (max-width: 980px) {
+    .svc {
+      grid-template-columns: 90px 1fr;
+    }
+    .svc__media {
+      grid-column: 1 / -1;
+      aspect-ratio: 16 / 9;
+    }
+  }
+  @media (max-width: 760px) {
+    .svc {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .svc__index {
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+    }
+    .svc__num {
+      font-size: 1.6rem;
+    }
+    .svc__media {
+      grid-column: auto;
+    }
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,462 @@
+---
+import Base from "../layouts/Base.astro";
+import Tiers from "../components/Tiers.astro";
+import CtaBand from "../components/CtaBand.astro";
+import VideoSlot from "../components/VideoSlot.astro";
+import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts";
+---
+
+<Base
+  description="Front of House is the web and brand studio built only for restaurants. We design, shoot, and build a custom website you own, then keep it sharp month to month."
+>
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <p class="kicker">{site.studioType}</p>
+        <h1 class="hero__title">
+          Your website is your new <em>front of house.</em>
+        </h1>
+        <p class="lede hero__lede">
+          We design the brand, shoot the photos on site, build a custom website
+          you own, then keep it sharp month to month. Built for one thing only:
+          restaurants.
+        </p>
+        <div class="hero__actions">
+          <a href="/contact" class="btn btn--primary">Scope your build</a>
+          <a href="/pricing" class="btn btn--ghost">See the tiers</a>
+        </div>
+        <div class="hero__stats">
+          <div class="stat">
+            <span class="stat__num">From $2,000</span>
+            <span class="stat__cap">One-time custom build</span>
+          </div>
+          <span class="stat__div"></span>
+          <div class="stat">
+            <span class="stat__num">$20–$75</span>
+            <span class="stat__cap">Monthly partnership</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__media">
+        <VideoSlot
+          src={portfolioVideo.burgerLab}
+          alt="BURGER.LAB — a live restaurant site built by Front of House"
+          class="hero__photo"
+        />
+        <div class="livecard">
+          <div class="livecard__row">
+            <span class="livecard__dot"></span>
+            <span class="livecard__title">Site live · edited this morning</span>
+          </div>
+          <p class="livecard__quote">"Just text Sage. It gets done."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services (dark) ── -->
+  <section class="services surface-ink">
+    <div class="container">
+      <div class="services__head">
+        <h2>Everything the storefront needs, under one roof.</h2>
+        <p>
+          Two core services every restaurant gets. Two optional ones for those
+          who want the full look.
+        </p>
+      </div>
+      <div class="services__grid">
+        {
+          offerings.map((o) => (
+            <article class="svc-cell">
+              <span
+                class:list={[
+                  "svc-cell__tag",
+                  { "svc-cell__tag--opt": o.kind === "Optional" },
+                ]}
+              >
+                {o.kind}
+              </span>
+              <h3>{o.name}</h3>
+              <p>{o.blurb}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why FOH ── -->
+  <section class="section">
+    <div class="container">
+      <header class="head head--center">
+        <p class="kicker">Why Front of House</p>
+        <h2>
+          Most agencies rent you a site.<br />We build you one you own.
+        </h2>
+      </header>
+      <div class="reasons">
+        {
+          reasons.map((r, i) => (
+            <article class="reason">
+              <span class="reason__n">0{i + 1}</span>
+              <div>
+                <h3>{r.title}</h3>
+                <p>{r.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Process ── -->
+  <section class="section surface-bone">
+    <div class="container">
+      <header class="head head--center">
+        <h2>Three steps to a site that works.</h2>
+      </header>
+      <div class="steps">
+        {
+          steps.map((s) => (
+            <article class="step">
+              <span class="step__ring">{s.n}</span>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Gallery strip ── -->
+  <section class="section--tight">
+    <div class="container">
+      <div class="gallery">
+        <VideoSlot
+          src={portfolioVideo.burgerLab}
+          alt="BURGER.LAB site preview"
+        />
+        <VideoSlot src={portfolioVideo.killa} alt="Killa Nikkei site preview" />
+        <VideoSlot
+          src={portfolioVideo.burgerLab}
+          alt="BURGER.LAB — video-led restaurant web design"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Pricing teaser ── -->
+  <section class="section">
+    <div class="container">
+      <header class="head head--center">
+        <p class="kicker">Pricing</p>
+        <h2>One build. One partner. Three tiers.</h2>
+        <p class="lede" style="margin-inline:auto;">
+          A custom site you own, plus a monthly partnership that keeps it sharp.
+        </p>
+      </header>
+      <Tiers showBuild={true} showLocations={false} />
+      <p class="pricing-more">
+        <a href="/pricing" class="btn btn--ghost">Full pricing &amp; details →</a>
+      </p>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  /* ── Hero ── */
+  .hero {
+    background:
+      radial-gradient(
+        120% 80% at 90% -10%,
+        rgba(199, 91, 57, 0.09),
+        transparent 55%
+      ),
+      var(--paper);
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+  }
+  .hero__title {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 0.98;
+    margin: 0 0 1.5rem;
+  }
+  .hero__title em {
+    font-style: italic;
+    color: var(--ember);
+  }
+  .hero__lede {
+    margin-bottom: 2.2rem;
+  }
+  .hero__actions {
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+  }
+  .hero__stats {
+    display: flex;
+    align-items: center;
+    gap: 2.2rem;
+    margin-top: 2.8rem;
+  }
+  .stat__num {
+    display: block;
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat__cap {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.35rem;
+  }
+  .stat__div {
+    width: 1px;
+    align-self: stretch;
+    background: var(--line);
+  }
+
+  .hero__media {
+    position: relative;
+  }
+  .hero__photo {
+    height: clamp(360px, 42vw, 520px);
+    box-shadow: 0 24px 50px rgba(34, 28, 24, 0.18);
+  }
+  .livecard {
+    position: absolute;
+    bottom: -22px;
+    left: -22px;
+    background: var(--ink);
+    color: var(--bone);
+    padding: 1.1rem 1.3rem;
+    border-radius: 8px;
+    box-shadow: 0 16px 30px rgba(34, 28, 24, 0.28);
+  }
+  .livecard__row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .livecard__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--live);
+  }
+  .livecard__title {
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .livecard__quote {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin: 0.3rem 0 0;
+  }
+
+  /* ── Services (dark) ── */
+  .services {
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+  .services__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+  .services__head h2 {
+    color: var(--bone);
+    max-width: 16ch;
+    margin: 0;
+  }
+  .services__head p {
+    color: var(--muted);
+    max-width: 32ch;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .services__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--ink-border);
+    border: 1px solid var(--ink-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .svc-cell {
+    background: var(--ink);
+    padding: 2.1rem 1.7rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 250px;
+  }
+  .svc-cell__tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: auto;
+  }
+  .svc-cell__tag--opt {
+    color: var(--brass);
+  }
+  .svc-cell h3 {
+    color: var(--bone);
+    font-size: 1.7rem;
+    margin: 2rem 0 0.6rem;
+  }
+  .svc-cell p {
+    color: var(--muted-on-ink);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* ── Section heads ── */
+  .head {
+    max-width: 640px;
+    margin-bottom: 2.8rem;
+  }
+  .head--center {
+    margin-inline: auto;
+    text-align: center;
+  }
+  .head h2 {
+    margin-bottom: 0.6rem;
+  }
+
+  /* ── Reasons ── */
+  .reasons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .reason {
+    background: var(--bone);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 2.2rem;
+    display: flex;
+    gap: 1.4rem;
+    align-items: flex-start;
+  }
+  .reason__n {
+    font-family: var(--display);
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--ember);
+    line-height: 0.9;
+    flex: none;
+  }
+  .reason h3 {
+    font-size: 1.45rem;
+    margin-bottom: 0.4rem;
+  }
+  .reason p {
+    margin: 0;
+    font-size: 0.97rem;
+  }
+
+  /* ── Process ── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+  }
+  .step {
+    text-align: center;
+  }
+  .step__ring {
+    display: grid;
+    place-items: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    margin: 0 auto 1.4rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--ember);
+    color: var(--ember);
+    font-family: var(--display);
+    font-size: 1.7rem;
+    font-weight: 600;
+  }
+  .step h3 {
+    font-size: 1.45rem;
+    margin-bottom: 0.5rem;
+  }
+  .step p {
+    margin: 0 auto;
+    max-width: 30ch;
+    color: var(--body);
+  }
+
+  /* ── Gallery ── */
+  .gallery {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+    height: clamp(220px, 30vw, 340px);
+  }
+
+  .pricing-more {
+    text-align: center;
+    margin-top: 2.4rem;
+  }
+
+  @media (max-width: 900px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+    }
+    .hero__media {
+      order: -1;
+    }
+    .livecard {
+      left: 0;
+    }
+    .services__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .reasons {
+      grid-template-columns: 1fr;
+    }
+    .steps {
+      grid-template-columns: 1fr;
+      gap: 2.2rem;
+    }
+    .gallery {
+      grid-template-columns: 1fr 1fr;
+      height: auto;
+    }
+    .gallery :global(.slot:first-child) {
+      grid-column: 1 / -1;
+      height: 240px;
+    }
+    .gallery :global(.slot) {
+      height: 180px;
+    }
+  }
+  @media (max-width: 520px) {
+    .services__grid {
+      grid-template-columns: 1fr;
+    }
+    .hero__stats {
+      gap: 1.4rem;
+    }
+  }
+</style>

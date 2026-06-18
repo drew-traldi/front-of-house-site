@@ -1,0 +1,129 @@
+---
+import Logo from "./Logo.astro";
+import { nav, site, hai } from "../data/site.ts";
+const year = new Date().getFullYear();
+---
+
+<footer class="ft surface-ink">
+  <div class="container ft__grid">
+    <div class="ft__brand on-ink">
+      <Logo variant="inline" theme="reversed" />
+      <p class="ft__tag">{site.studioType}</p>
+      <p class="ft__blurb">
+        Built only for restaurants. Designed, shot, built, and maintained.
+      </p>
+    </div>
+
+    <nav class="ft__nav" aria-label="Footer">
+      <h4 class="ft__h">Studio</h4>
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a href="/contact">Contact</a>
+    </nav>
+
+    <div class="ft__contact">
+      <h4 class="ft__h">Scope your build</h4>
+      <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+      <a href={site.contact.phoneHref}>{site.contact.phone}</a>
+      <a href="/contact" class="btn btn--on-ink ft__cta">Start a project</a>
+    </div>
+  </div>
+
+  <div class="container ft__base">
+    <p>© {year} {site.name}. A restaurant web studio.</p>
+    <p class="ft__credit">
+      Co-founded with talent from <a
+        href={hai.url}
+        target="_blank"
+        rel="noopener noreferrer">{hai.longName}</a
+      > · Custom-built. Owner-owned.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .ft {
+    padding-top: clamp(3rem, 6vw, 4.5rem);
+    border-top: 3px solid var(--ember);
+  }
+  .ft__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1.2fr;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+  .ft__tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin: 1rem 0 0.5rem;
+  }
+  .ft__blurb {
+    color: var(--muted);
+    max-width: 34ch;
+    margin: 0;
+  }
+  .ft__h {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bone);
+    margin: 0 0 1rem;
+  }
+  .ft__nav,
+  .ft__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .ft__nav a,
+  .ft__contact a:not(.btn) {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .ft__nav a:hover,
+  .ft__contact a:not(.btn):hover {
+    color: var(--paper);
+  }
+  .ft__cta {
+    margin-top: 0.6rem;
+    align-self: flex-start;
+  }
+  .ft__base {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid rgba(244, 236, 221, 0.12);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .ft__base p {
+    margin: 0;
+  }
+  .ft__credit {
+    color: var(--brass);
+  }
+  .ft__credit a {
+    color: var(--brass);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .ft__credit a:hover {
+    color: var(--paper);
+  }
+
+  @media (max-width: 820px) {
+    .ft__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .ft__base {
+      flex-direction: column;
+      text-align: left;
+    }
+  }
+</style>

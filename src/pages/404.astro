@@ -1,0 +1,36 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Page not found">
+  <section class="nf">
+    <div class="container">
+      <p class="kicker">404</p>
+      <h1>This table isn't set.</h1>
+      <p class="lede">
+        The page you're after has moved or never existed. Let's get you back to
+        the front of house.
+      </p>
+      <div class="nf__actions">
+        <a href="/" class="btn btn--primary">Back home</a>
+        <a href="/contact" class="btn btn--ghost">Scope your build</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-block: clamp(4rem, 12vw, 9rem);
+    text-align: center;
+  }
+  .nf .lede {
+    margin: 0 auto 2rem;
+  }
+  .nf__actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

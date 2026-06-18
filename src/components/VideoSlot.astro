@@ -1,0 +1,36 @@
+---
+// Autoplaying, muted portfolio video — same slot sizing as ImageSlot.
+interface Props {
+  src: string;
+  alt?: string;
+  class?: string;
+  poster?: string;
+}
+const { src, alt = "", class: klass = "", poster } = Astro.props;
+---
+
+<video
+  class={`slot slot--video ${klass}`}
+  src={src}
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="metadata"
+  aria-label={alt}
+  poster={poster}
+></video>
+
+<style>
+  .slot {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .slot--video {
+    object-fit: cover;
+    background: var(--ink);
+  }
+</style>

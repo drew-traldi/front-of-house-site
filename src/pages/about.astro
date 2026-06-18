@@ -1,0 +1,207 @@
+---
+import Base from "../layouts/Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import VideoSlot from "../components/VideoSlot.astro";
+import { portfolioVideo } from "../data/site.ts";
+
+const values = [
+  {
+    title: "Speak restaurant",
+    body: "We use kitchen and hospitality language. We're insiders, not vendors.",
+  },
+  {
+    title: "Warm, never corporate",
+    body: "Confident and plainspoken. No buzzwords, no fluff.",
+  },
+  {
+    title: "Show, don't oversell",
+    body: "We let the work and the food do the talking.",
+  },
+  {
+    title: "Service is the promise",
+    body: "Everything we do reinforces that we keep you running, hands-on.",
+  },
+];
+---
+
+<Base
+  title="About"
+  description="Front of House is a web and brand studio built for one thing: restaurants. We design, shoot, build, and maintain sites that owners actually own."
+>
+  <section class="phead">
+    <div class="container">
+      <p class="kicker">About the studio</p>
+      <h1>Built for one thing: restaurants.</h1>
+      <p class="lede eyebrow-serif" style="font-style:italic;">
+        A restaurant's website is its new front of house. We treat it like one.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container story">
+      <div class="story__body">
+        <p class="story__lead">
+          Front of House is a studio built for one thing: restaurants. We shape
+          your brand, capture your photos and video on site, build a custom
+          website you own, then keep it sharp.
+        </p>
+        <p>
+          Most agencies rent you a site and bill you yearly to touch it. We do
+          the opposite. We build you a real, custom website that you own, then
+          partner with you month to month to keep it sharp, current, and working
+          for your business. You can make changes yourself or simply text us.
+          Either way, it gets done.
+        </p>
+        <p>
+          We come at this as hospitality people first — paired with co-founders
+          who also built HAI, the web and AI studio behind Burger Lab and Killa.
+          Front of House is its own company, but that same build talent is here.
+          We know what a Friday rush feels like, why the right photo of a plate
+          matters, and how much a slow, clunky website quietly costs you in
+          covers. So we build fast, we build it to be found, including by AI
+          search, and we stay on call.
+        </p>
+      </div>
+      <aside class="story__aside">
+        <VideoSlot
+          src={portfolioVideo.killa}
+          alt="Killa Nikkei — a live restaurant site built by Front of House"
+          class="story__img"
+        />
+        <div class="story__stats">
+          <div class="story__stat">
+            <span class="story__num">100%</span>
+            <span class="story__cap">Restaurants. That's all we build for.</span>
+          </div>
+          <div class="story__stat">
+            <span class="story__num">You</span>
+            <span class="story__cap">Own the code. Every time.</span>
+          </div>
+          <div class="story__stat">
+            <span class="story__num">Always</span>
+            <span class="story__cap">Hosting & maintenance included.</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section surface-bone">
+    <div class="container">
+      <header class="head">
+        <p class="kicker">How we work</p>
+        <h2>The voice we keep.</h2>
+      </header>
+      <div class="values">
+        {
+          values.map((v) => (
+            <article class="value">
+              <h3>{v.title}</h3>
+              <p>{v.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    heading="Let's build your front of house."
+    sub="Tell us about your restaurant. We'll take it from there."
+  />
+</Base>
+
+<style>
+  .phead {
+    padding-block: clamp(3rem, 7vw, 5rem) clamp(2rem, 4vw, 3rem);
+    background: var(--ink);
+  }
+  .phead .kicker {
+    color: var(--ember);
+  }
+  .phead h1 {
+    color: var(--paper);
+    max-width: 16ch;
+  }
+
+  .story {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .story__lead {
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 1.4rem;
+  }
+  .story__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .story__img,
+  .story__aside :global(.story__img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .story__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    border-left: 3px solid var(--ember);
+    padding-left: 1.6rem;
+  }
+  .story__stat {
+    display: flex;
+    flex-direction: column;
+  }
+  .story__num {
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ember);
+    line-height: 1;
+  }
+  .story__cap {
+    color: var(--body);
+    font-size: 0.95rem;
+    margin-top: 0.3rem;
+  }
+
+  .head {
+    max-width: 640px;
+    margin-bottom: 2.4rem;
+  }
+  .values {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem 2.5rem;
+  }
+  .value {
+    border-top: 2px solid var(--ember);
+    padding-top: 1.1rem;
+  }
+  .value h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+  }
+  .value p {
+    margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .story {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .values {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
