@@ -2,7 +2,13 @@
 import Base from "../layouts/Base.astro";
 import Tiers from "../components/Tiers.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { tiers, build } from "../data/site.ts";
+import {
+  carePlans,
+  build,
+  buildScope,
+  buildBands,
+  comparison,
+} from "../data/site.ts";
 
 // AEO: expose pricing as structured FAQ so AI answers can cite it.
 const jsonLd = {
@@ -14,15 +20,15 @@ const jsonLd = {
       name: "How much does a restaurant website from Front of House cost?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: `The one-time custom build starts from ${build.from}, priced to scope. A monthly partnership for hosting, maintenance, and support starts at ${tiers[0].price}/mo.`,
+        text: `The website is a one-time custom build from ${build.from}, priced to the size of your restaurant — and you own the code outright. After launch there is no monthly fee: a flat ${carePlans[0].price}/year Care plan covers hosting, maintenance, and support.`,
       },
     },
     {
       "@type": "Question",
-      name: "What is included in the monthly partnership?",
+      name: "Is there a monthly subscription for a Front of House website?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Every tier includes reliable hosting and maintenance. Higher tiers add a full change-request portal, AI website tools, AI-search articles, strategy sessions, and a direct line to the team.",
+        text: "No. Unlike subscription website rentals that charge $200–$500 a month, Front of House charges a one-time build fee plus a flat yearly Care fee of $450. You buy and own your site instead of renting it.",
       },
     },
     {
@@ -30,7 +36,7 @@ const jsonLd = {
       name: "Do I own my restaurant website?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. Front of House builds a real, custom website that you fully own, not a locked drag-and-drop template you rent forever.",
+        text: "Yes. Front of House builds a real, custom website that you own outright. If you ever leave, we hand you your full code — every Care plan includes an exit kit so you can take your site with you.",
       },
     },
   ],
@@ -39,17 +45,17 @@ const jsonLd = {
 
 <Base
   title="Pricing"
-  description="One-time custom build from $2,000, plus a monthly partnership from $20. Hosting and maintenance included on every tier."
+  description="Buy your restaurant website outright from $2,000 — then a flat $450/year to host and keep it sharp. No $200–$500 monthly rental. You own the code."
   jsonLd={jsonLd}
 >
   <section class="phead">
     <div class="container">
-      <p class="kicker">Partnership pricing</p>
-      <h1>Build it once. Own it for good.<br />We keep it sharp.</h1>
+      <p class="kicker">Pricing</p>
+      <h1>Buy it once. Own it for good.<br />We keep it sharp.</h1>
       <p class="lede">
-        A custom website you fully own, then a month-to-month partnership to
-        keep it current. Make changes yourself, or just text us. Hosting and
-        maintenance are included on every tier.
+        A custom website you own outright, then a flat yearly fee to keep it
+        hosted and current. Make changes yourself, or just ask Maître. No
+        $200–$500 monthly rental, ever.
       </p>
     </div>
   </section>
@@ -60,23 +66,109 @@ const jsonLd = {
     </div>
   </section>
 
+  <!-- ── What a build runs ── -->
+  <section class="section surface-bone">
+    <div class="container">
+      <header class="head head--center">
+        <p class="kicker">The build</p>
+        <h2>Priced to your restaurant.</h2>
+        <p class="lede" style="margin-inline:auto;">
+          Every restaurant is different, so the build is scoped, not boxed.
+          Three things move the price:
+        </p>
+      </header>
+
+      <div class="scope">
+        {
+          buildScope.map((s, i) => (
+            <article class="scope__cell">
+              <span class="scope__n">0{i + 1}</span>
+              <h3>{s.label}</h3>
+              <p>{s.note}</p>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="bands">
+        {
+          buildBands.map((b) => (
+            <article class="band">
+              <div class="band__top">
+                <h3 class="band__name">{b.name}</h3>
+                <span class="band__price">{b.price}</span>
+              </div>
+              <p class="band__for">{b.for}</p>
+            </article>
+          ))
+        }
+      </div>
+      <p class="bands__note">
+        Bigger restaurants — extensive menus, on-site capture, full brand
+        identity, multiple locations — run higher. We'll always scope it with
+        you first.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Own it vs. rent it ── -->
+  <section class="section">
+    <div class="container">
+      <header class="head head--center">
+        <p class="kicker">Own it, don't rent it</p>
+        <h2>The math the rental crowd won't show you.</h2>
+      </header>
+
+      <div class="compare">
+        <table class="compare__table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>
+                <span class="compare__co">{comparison.rivalLabel}</span>
+                <span class="compare__sub">{comparison.rivalSub}</span>
+              </th>
+              <th class="compare__foh">
+                <span class="compare__co">{comparison.fohLabel}</span>
+                <span class="compare__sub">{comparison.fohSub}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              comparison.rows.map((r) => (
+                <tr>
+                  <th scope="row">{r.label}</th>
+                  <td>{r.rival}</td>
+                  <td class="compare__foh">{r.foh}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <p class="compare__foot">{comparison.footnote}</p>
+      </div>
+    </div>
+  </section>
+
   <section class="section--tight">
     <div class="container">
       <div class="finenote">
         <p>
-          AI features include $25/month in usage credit on Premium and Platinum
-          tiers. AI tools use token-based processing; usage beyond the included
-          credit is billed in $25 blocks. Changes submitted through your portal
-          are reviewed and built by our team before going live to ensure
-          everything works.
+          Your AI assistant, Maître, is included with Care — it runs on our own
+          local models, so there's no metered per-message billing and no
+          surprise overages. Changes you or Maître submit are reviewed and built
+          by our team before they go live, so nothing breaks. And every Care
+          plan includes your exit kit: leave whenever you want and we hand you
+          your full code.
         </p>
       </div>
     </div>
   </section>
 
   <CtaBand
-    heading="Not sure which tier fits?"
-    sub="Tell us about your restaurant and we'll recommend the right build and partnership."
+    heading="Not sure what your build runs?"
+    sub="Tell us about your restaurant and we'll scope it — the build, and whether Care or Care+ fits."
   />
 </Base>
 
@@ -95,9 +187,157 @@ const jsonLd = {
     text-align: center;
   }
   .pricing-body :global(.tiers),
+  .pricing-body :global(.buildpill),
   .pricing-body :global(.loc) {
     text-align: left;
   }
+  .pricing-body :global(.tiers) {
+    margin-inline: auto;
+  }
+
+  .head--center {
+    margin-inline: auto;
+    text-align: center;
+    max-width: 640px;
+    margin-bottom: 2.6rem;
+  }
+  .head--center .lede {
+    margin-top: 0.8rem;
+  }
+
+  /* ── Build scope ── */
+  .scope {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .scope__cell {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.8rem;
+  }
+  .scope__n {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ember);
+  }
+  .scope__cell h3 {
+    font-size: 1.2rem;
+    margin: 0.5rem 0 0.4rem;
+  }
+  .scope__cell p {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--body);
+  }
+
+  /* ── Build bands ── */
+  .bands {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .band {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.5rem 1.6rem;
+    background: var(--paper);
+  }
+  .band__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .band__name {
+    font-size: 1.15rem;
+    margin: 0;
+  }
+  .band__price {
+    font-family: var(--display);
+    font-weight: 700;
+    color: var(--ember);
+    white-space: nowrap;
+  }
+  .band__for {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--body);
+  }
+  .bands__note {
+    margin: 1.4rem 0 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+    max-width: 70ch;
+  }
+
+  /* ── Comparison ── */
+  .compare {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+  .compare__table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .compare__table th,
+  .compare__table td {
+    padding: 0.95rem 1.1rem;
+    text-align: left;
+    font-size: 0.92rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .compare__table thead th {
+    vertical-align: bottom;
+    background: var(--bone);
+  }
+  .compare__table tbody th {
+    font-weight: 600;
+    color: var(--muted);
+    width: 26%;
+  }
+  .compare__table tbody td {
+    color: var(--body);
+  }
+  .compare__co {
+    display: block;
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .compare__sub {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-top: 0.15rem;
+  }
+  .compare__foh {
+    background: rgba(199, 91, 57, 0.06);
+  }
+  td.compare__foh {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .compare__table tr:last-child th,
+  .compare__table tr:last-child td {
+    border-bottom: 0;
+  }
+  .compare__foot {
+    margin: 1rem 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
   .finenote {
     border-top: 1px solid var(--line);
     padding-top: 1.5rem;
@@ -107,5 +347,17 @@ const jsonLd = {
     font-size: 0.85rem;
     max-width: 80ch;
     margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .scope,
+    .bands {
+      grid-template-columns: 1fr;
+    }
+    .compare__table th,
+    .compare__table td {
+      padding: 0.7rem 0.75rem;
+      font-size: 0.85rem;
+    }
   }
 </style>

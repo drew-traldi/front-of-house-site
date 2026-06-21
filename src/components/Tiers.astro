@@ -1,5 +1,5 @@
 ---
-import { tiers, build, locationDiscounts } from "../data/site.ts";
+import { carePlans, build, locationDiscounts } from "../data/site.ts";
 interface Props {
   showBuild?: boolean;
   showLocations?: boolean;
@@ -7,10 +7,10 @@ interface Props {
 const { showBuild = true, showLocations = true } = Astro.props;
 
 const ctaLabel: Record<string, string> = {
-  Basic: "Start with Basic",
-  Premium: "Choose Premium",
-  Platinum: "Go Platinum",
+  Care: "Start with Care",
+  "Care+": "Go Care+",
 };
+const careFrom = carePlans[0].price;
 ---
 
 {
@@ -19,10 +19,12 @@ const ctaLabel: Record<string, string> = {
       <div class="buildpill__cell">
         <span class="buildpill__label">One-time build</span>
         <span class="buildpill__price">From {build.from}</span>
+        <span class="buildpill__note">You own the code</span>
       </div>
       <div class="buildpill__cell">
-        <span class="buildpill__label">Then monthly</span>
-        <span class="buildpill__price">$20–$75 / mo</span>
+        <span class="buildpill__label">Then yearly</span>
+        <span class="buildpill__price">From {careFrom} / yr</span>
+        <span class="buildpill__note">Hosting &amp; care — no monthly rent</span>
       </div>
     </div>
   )
@@ -30,38 +32,27 @@ const ctaLabel: Record<string, string> = {
 
 <div class="tiers">
   {
-    tiers.map((tier) => (
-      <article
-        class:list={[
-          "tier",
-          { "tier--featured": tier.featured, "tier--top": tier.short === "Platinum" },
-        ]}
-      >
+    carePlans.map((plan) => (
+      <article class:list={["tier", { "tier--featured": plan.featured }]}>
         <header class="tier__head">
-          <h3 class="tier__name">{tier.short}</h3>
+          <h3 class="tier__name">{plan.short}</h3>
           <span
-            class:list={[
-              "tier__pill",
-              {
-                "tier__pill--pop": tier.featured,
-                "tier__pill--top": tier.short === "Platinum",
-              },
-            ]}
+            class:list={["tier__pill", { "tier__pill--pop": plan.featured }]}
           >
-            {tier.pill}
+            {plan.pill}
           </span>
         </header>
 
         <p class="tier__price">
-          {tier.price}
-          <span>{tier.period}</span>
+          {plan.price}
+          <span>{plan.period}</span>
         </p>
-        <p class="tier__goodfor">{tier.goodFor}</p>
+        <p class="tier__goodfor">{plan.goodFor}</p>
 
         <div class="tier__rule" />
 
         <ul class="tier__features">
-          {tier.features.map((f) => (
+          {plan.features.map((f) => (
             <li>
               <span class="tier__check">✓</span>
               {f}
@@ -70,7 +61,7 @@ const ctaLabel: Record<string, string> = {
         </ul>
 
         <a href="/contact" class="tier__cta">
-          {ctaLabel[tier.short] ?? `Choose ${tier.short}`}
+          {ctaLabel[plan.short] ?? `Choose ${plan.short}`}
         </a>
       </article>
     ))
@@ -86,12 +77,9 @@ const ctaLabel: Record<string, string> = {
           One panel,<br />all your sites.
         </h3>
         <p>
-          Run every location's site from a single portal, and the more you
-          bring on, the less each one costs per month.
-        </p>
-        <p class="loc__example">
-          Six locations on Platinum come to{" "}
-          <strong>$360 / month total</strong>, instead of $450.
+          Run every location's site from a single login, and the more you bring
+          on, the less the yearly care costs on each. The build stays priced to
+          each site; the discount applies to care.
         </p>
       </div>
       <div class="loc__grid">
@@ -102,7 +90,7 @@ const ctaLabel: Record<string, string> = {
             <div class:list={["loc__cell", { "loc__cell--top": i === 2 }]}>
               <span class="loc__range">{sites} sites</span>
               <span class="loc__pct">{pct}</span>
-              <span class="loc__off">off monthly</span>
+              <span class="loc__off">off care</span>
             </div>
           );
         })}
@@ -112,7 +100,7 @@ const ctaLabel: Record<string, string> = {
 }
 
 <style>
-  /* ── Build / monthly pill ── */
+  /* ── Build / yearly pill ── */
   .buildpill {
     display: inline-flex;
     border: 1px solid var(--line);
@@ -144,13 +132,20 @@ const ctaLabel: Record<string, string> = {
     color: var(--ink);
     line-height: 1;
   }
+  .buildpill__note {
+    display: block;
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
 
-  /* ── Tiers ── */
+  /* ── Care plans ── */
   .tiers {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     align-items: start;
+    max-width: 760px;
   }
   .tier {
     background: var(--paper);
@@ -166,9 +161,6 @@ const ctaLabel: Record<string, string> = {
     border-color: var(--ink);
     box-shadow: 0 18px 40px rgba(34, 28, 24, 0.22);
     transform: translateY(-10px);
-  }
-  .tier--top {
-    border-color: var(--brass);
   }
 
   .tier__head {
@@ -205,11 +197,6 @@ const ctaLabel: Record<string, string> = {
     color: var(--ink);
     background: var(--ember);
     border-color: var(--ember);
-  }
-  .tier__pill--top {
-    color: var(--paper);
-    background: var(--brass);
-    border-color: var(--brass);
   }
 
   .tier__price {
@@ -272,9 +259,6 @@ const ctaLabel: Record<string, string> = {
     font-weight: 700;
     flex: none;
   }
-  .tier--top .tier__check {
-    color: var(--brass);
-  }
 
   .tier__cta {
     text-align: center;
@@ -301,14 +285,6 @@ const ctaLabel: Record<string, string> = {
     background: var(--ember-deep);
     border-color: var(--ember-deep);
   }
-  .tier--top .tier__cta {
-    border-color: var(--brass);
-    color: var(--brass-deep);
-  }
-  .tier--top .tier__cta:hover {
-    background: var(--brass);
-    color: var(--paper);
-  }
 
   /* ── Multi-location ── */
   .loc {
@@ -330,16 +306,6 @@ const ctaLabel: Record<string, string> = {
   .loc__copy p {
     color: var(--body);
     margin: 0;
-  }
-  .loc__example {
-    color: var(--muted) !important;
-    font-size: 0.92rem;
-    border-left: 2px solid var(--ember);
-    padding-left: 0.9rem;
-    margin-top: 1.1rem !important;
-  }
-  .loc__example strong {
-    color: var(--ink);
   }
   .loc__grid {
     display: grid;

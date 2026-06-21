@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { caseStudies, hai } from "../data/site.ts";
+import { caseStudies, hai, specConcepts } from "../data/site.ts";
 ---
 
 <Base
@@ -76,7 +76,7 @@ import { caseStudies, hai } from "../data/site.ts";
     <div class="container">
       <div class="agency surface-ink">
         <div class="agency__copy">
-          <p class="kicker">The {hai.name} talent, here</p>
+          <p class="kicker">Same team, same standard</p>
           <h2>Real sites. Real restaurants.</h2>
           <p>{hai.blurb}</p>
         </div>
@@ -88,6 +88,32 @@ import { caseStudies, hai } from "../data/site.ts";
         >
           More work at {hai.name} →
         </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Spec showcase by category ── -->
+  <section class="section--tight">
+    <div class="container">
+      <header class="spec-head">
+        <p class="kicker">Spec builds</p>
+        <h2>Don't see your kind of place yet?</h2>
+        <p class="lede">
+          We're building showcase sites for every kind of restaurant — so you
+          can see exactly what yours could look like before we start. More going
+          live soon.
+        </p>
+      </header>
+      <div class="specs">
+        {
+          specConcepts.map((s) => (
+            <article class="spec">
+              <span class="spec__tag">In production</span>
+              <h3>{s.name}</h3>
+              <p>{s.note}</p>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -255,6 +281,45 @@ import { caseStudies, hai } from "../data/site.ts";
   }
   .agency__cta {
     flex: none;
+  }
+
+  /* ── Spec showcase ── */
+  .spec-head {
+    max-width: 640px;
+    margin-bottom: 2rem;
+  }
+  .spec-head h2 {
+    margin: 0.3rem 0 0.6rem;
+  }
+  .spec-head .lede {
+    margin: 0;
+  }
+  .specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .spec {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    background: var(--bone);
+  }
+  .spec__tag {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brass);
+  }
+  .spec h3 {
+    font-size: 1.3rem;
+    margin: 0.7rem 0 0.4rem;
+  }
+  .spec p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--body);
   }
 
   /* ── Booking band ── */

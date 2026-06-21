@@ -1,11 +1,11 @@
 ---
 import Base from "../layouts/Base.astro";
-import { site, tiers } from "../data/site.ts";
+import { site, carePlans } from "../data/site.ts";
 ---
 
 <Base
   title="Contact"
-  description="Tell us about your restaurant and we'll scope your build. Custom websites from $2,000, monthly partnership from $20."
+  description="Tell us about your restaurant and we'll scope your build. Custom websites you own from $2,000, then flat yearly care from $450 — no monthly rental."
 >
   <section class="phead">
     <div class="container phead__grid">
@@ -31,15 +31,17 @@ import { site, tiers } from "../data/site.ts";
       </div>
 
       <!--
-        No backend yet (static site on Vercel). This form composes an email
-        via the visitor's mail client on submit, so it works immediately.
-        To capture leads automatically later, point `data-endpoint` at a form
-        service (Formspree, Vercel serverless function, etc.) and POST instead.
+        Lead capture: posts to the Front of House lead endpoint (ContRelate's
+        local_server `/api/v1/leads`, reached via its Cloudflare tunnel), which
+        writes to a local SQLite DB on the studio Mac. Set the URL at build time:
+          PUBLIC_LEAD_ENDPOINT=https://<tunnel-host>/api/v1/leads
+        If it's unset or the POST fails, the form falls back to opening the
+        visitor's mail client, pre-filled — so it always works.
       -->
       <form
         class="form card"
         id="lead-form"
-        data-endpoint=""
+        data-endpoint={import.meta.env.PUBLIC_LEAD_ENDPOINT ?? ""}
         novalidate
       >
         <div class="field">
@@ -67,10 +69,10 @@ import { site, tiers } from "../data/site.ts";
           </div>
         </div>
         <div class="field">
-          <label for="tier">Interested in</label>
+          <label for="tier">Care plan</label>
           <select id="tier" name="tier">
             <option value="">Not sure yet, help me choose</option>
-            {tiers.map((t) => <option value={t.name}>{t.name}</option>)}
+            {carePlans.map((t) => <option value={t.name}>{t.name}</option>)}
           </select>
         </div>
         <div class="field">

@@ -9,7 +9,7 @@ export const site = {
   tagline: "Your new front of house.",
   studioType: "Restaurant Web Studio",
   description:
-    "The web and brand studio built only for restaurants. We design the brand, capture the photos and video on site, build a custom website you own, and keep it sharp month to month.",
+    "The web and brand studio built only for restaurants. We design the brand, capture the photos and video on site, and build a custom website you own outright — then host and keep it sharp for a flat yearly fee. Pay once, own it for good.",
   url: "https://frontofhouse.studio",
 
   // ── Contact: PLACEHOLDERS. Replace with real details. ──
@@ -19,22 +19,37 @@ export const site = {
     phoneHref: "tel:+15551234567",
   },
 
-  // Concierge persona used across the partnership copy.
-  concierge: "Sage",
+  // ── The AI that runs each client's front of house. ──
+  // Maître drafts changes, answers questions, and books time with the team;
+  // we verify every change before it goes live. Runs on our own local models.
+  assistant: {
+    name: "Maître",
+    role: "your front-of-house AI",
+    blurb:
+      "Maître is your front-of-house AI. Ask it to change a price, swap a photo, update your hours, answer a question, or book time with our team. It drafts the change, we make sure it's right, and it goes live.",
+  },
+
+  // ── The promise we lead with: own it, don't rent it. ──
+  rival: {
+    // The category we position against (subscription site rentals).
+    name: "Owner.com & the rest",
+    monthly: "$200–$500 / mo",
+    yearly: "$2,400–$6,000 / yr",
+  },
 } as const;
 
-// ── HAI: separate company; four FOH co-founders also built it. ──
+// ── HAI: the team behind Killa & Burger Lab is Front of House. ──
 export const hai = {
   name: "HAI",
   longName: "HAI Solutions",
   url: "https://www.haiconsultingservices.com",
   blurb:
-    "Front of House is its own studio. Four of our co-founders also built HAI — the web and AI company behind Burger Lab and Killa. That same talent is here, building restaurant sites owners actually own.",
+    "The team that designed and built Killa and Burger Lab is Front of House. Those builds — and the owners behind them — came with us. Same people, same standard, now building restaurant sites owners keep for good.",
   footerCredit:
-    "Co-founded with talent from HAI Solutions · Custom-built. Owner-owned.",
+    "Built by the team behind Killa & Burger Lab · Custom-built. Owner-owned.",
 } as const;
 
-// ── Portfolio video from HAI client builds (replaces generic stock). ──
+// ── Portfolio video from the team's real restaurant builds. ──
 export const portfolioVideo = {
   burgerLab: "/videos/burger-lab.mp4",
   killa: "/videos/killa-nikkei.mp4",
@@ -52,7 +67,7 @@ export const caseStudies = [
     points: [
       "Video hero & lab aesthetic",
       "Online ordering + waitlist",
-      "Email capture & SEO articles",
+      "Email capture & AI-search articles",
     ],
     video: portfolioVideo.burgerLab,
     url: "https://www.burgerlabbar.com",
@@ -74,6 +89,14 @@ export const caseStudies = [
   },
 ] as const;
 
+// ── Spec showcase: concept builds by restaurant category (in production). ──
+export const specConcepts = [
+  { name: "Fine Dining", note: "Tasting-menu identity, reservation-led, editorial photography." },
+  { name: "Fast Casual", note: "Order-first, fast, menu and locations front and center." },
+  { name: "Mexican / Cantina", note: "Bold, warm, margarita-hour energy with a big visual menu." },
+  { name: "Neighborhood Bar", note: "Events, specials, and a site that changes as fast as the chalkboard." },
+] as const;
+
 export const nav = [
   { label: "Services", href: "/services" },
   { label: "Pricing", href: "/pricing" },
@@ -87,13 +110,13 @@ export const offerings = [
     name: "The Website",
     kind: "Core",
     blurb:
-      "A real, custom website the owner fully owns. Fast, modern, made to convert covers.",
+      "A real, custom website you own outright — code and all. Fast, modern, made to convert covers.",
   },
   {
     name: "Care & Hosting",
     kind: "Core",
     blurb:
-      "Hosting, maintenance, and tiered support. Edit it yourself or text Sage. Either way, it gets done.",
+      "Hosting, maintenance, and a flat yearly fee. Edit it yourself or ask Maître. Either way, it gets done.",
   },
   {
     name: "Brand & Identity",
@@ -113,19 +136,19 @@ export const offerings = [
 export const reasons = [
   {
     title: "You own your website",
-    body: "Real custom code, not a locked drag-and-drop template you rent forever.",
+    body: "Real custom code you keep for good. Leave whenever you want and we hand you the whole site — no hostage situation.",
   },
   {
-    title: "Edit it yourself, or just text us",
-    body: "Make your own updates, or send Sage a message. Changes go live fast.",
+    title: "Pay once, not every month",
+    body: "No $200–$500 monthly rental. Buy your site, then a flat yearly fee keeps it hosted and current.",
+  },
+  {
+    title: "Edit it yourself, or just ask Maître",
+    body: "Change a price, swap a photo, ask a question. Maître drafts it, we check it, it goes live.",
   },
   {
     title: "Built for AI search",
-    body: "We optimize so customers find you through AI answers, not Google alone.",
-  },
-  {
-    title: "A real partner",
-    body: "Direct access to our team every month, with hosting and maintenance always included.",
+    body: "We optimize so customers find you through AI answers (AEO), not Google alone.",
   },
 ] as const;
 
@@ -133,84 +156,122 @@ export const reasons = [
 export const steps = [
   {
     n: "1",
-    title: "Pick your tier",
-    body: "Choose the level of access and support that fits your business.",
+    title: "Scope your build",
+    body: "We look at your menu, your photos, and what you need, then price it to your restaurant.",
   },
   {
     n: "2",
-    title: "We build your site",
-    body: "We scope, design, and launch a custom website you own.",
+    title: "We design & build it",
+    body: "A custom website you own outright. We can shoot it and brand it, too.",
   },
   {
     n: "3",
-    title: "Your partnership begins",
-    body: "You go live, and we keep it sharp month to month.",
+    title: "You own it. We keep it sharp.",
+    body: "Go live, then a flat yearly Care fee keeps it hosted, current, and yours.",
   },
 ] as const;
 
-// ── One-time build ──
+// ── One-time build (you own the code) ──
 export const build = {
   from: "$2,000",
   blurb:
-    "Custom design, build, and launch of a website you fully own. Priced to scope.",
+    "Custom design, build, and launch of a website you own outright — code and all. Priced to the size of your restaurant.",
 };
 
-// ── Monthly partnership tiers (public, client-facing) ──
-export const tiers = [
+// What shapes the build price (scope drivers, not a rigid menu).
+export const buildScope = [
   {
-    name: "Partner Basic",
-    short: "Basic",
-    price: "$20",
-    period: "/ month",
-    pill: "Live & Current",
-    featured: false,
-    goodFor: "A polished site that stays live and current with a light touch.",
-    features: [
-      "Reliable hosting and maintenance, always included",
-      "Your admin portal for simple text updates, anytime",
-      "One website change a month, handled by our team",
-    ],
+    label: "Menu & pages",
+    note: "How much there is to build — menu size, number of pages, online ordering or reservations.",
   },
   {
-    name: "Partner Premium",
-    short: "Premium",
-    price: "$45",
-    period: "/ month",
-    pill: "Most Popular",
+    label: "Photo & video",
+    note: "Whether we shoot on site, or build from photos you already have.",
+  },
+  {
+    label: "Brand & design",
+    note: "A full identity — logo, type, menu design — or a site on your existing brand.",
+  },
+] as const;
+
+// Illustrative bands. Most builds land in one of these; bigger restaurants run higher.
+export const buildBands = [
+  {
+    name: "The Essentials",
+    price: "$2,000–$3,000",
+    for: "A focused single-location site: your menu, your story, your photos — built fast and built to be found.",
+  },
+  {
+    name: "The Full Build",
+    price: "$3,000–$5,000",
+    for: "A bigger menu and more to show. We help with content and light brand work, and shoot if you need it.",
+  },
+  {
+    name: "The Works",
+    price: "$5,000+",
+    for: "On-site photo and video, a full brand and menu identity, multiple locations — the whole front of house.",
+  },
+] as const;
+
+// ── Annual Care plans (the recurring layer — billed once a year) ──
+export const carePlans = [
+  {
+    name: "Care",
+    short: "Care",
+    price: "$450",
+    period: "/ year",
+    pill: "Own It, Stay Sharp",
     featured: true,
-    goodFor: "For owners who want to actively shape their site and get found online.",
+    goodFor:
+      "Everything it takes to keep your site live, current, and yours — for about what the rental crowd charges in a single month.",
     features: [
-      "Everything in Basic",
-      "Full portal to request real changes to your custom site",
-      "AI-powered website enhancement tools",
-      "$25 / month of AI usage included",
-      "Direct line to our team (meet Sage)",
-      "One AI-search article each month",
-      "30-minute monthly strategy session",
+      "Reliable hosting, security, and backups",
+      "Maître, your front-of-house AI, for edits and questions",
+      "Real changes handled by our team when you need them",
+      "AEO foundation so AI search can find and cite you",
+      "Your exit kit, always: leave anytime with your full code",
     ],
   },
   {
-    name: "Partner Platinum",
-    short: "Platinum",
-    price: "$75",
-    period: "/ month",
-    pill: "Top Tier",
+    name: "Care+",
+    short: "Care+",
+    price: "$900",
+    period: "/ year",
+    pill: "Marketing Partner",
     featured: false,
-    goodFor: "For owners who want a true marketing partner working every month.",
+    goodFor:
+      "For owners who want us working on getting found and filling tables every month, not just keeping the lights on.",
     features: [
-      "Everything in Premium",
-      "Text requests straight to Sage, no portal needed",
-      "Two AI-search articles each month",
-      "60-minute monthly strategy session",
-      "Email capture, analytics, competitor insights",
-      "Automatic photo placement (coming soon)",
+      "Everything in Care",
+      "Ongoing AI-search content (answer-engine articles)",
+      "Analytics, email capture, and competitor insights",
+      "Seasonal refreshes and priority changes",
+      "Scheduled strategy time with our team",
     ],
   },
 ] as const;
 
-// ── Multi-location discounts ──
+// ── Own-it vs. rent-it comparison (the pitch, in a table) ──
+export const comparison = {
+  rivalLabel: "Subscription rental",
+  rivalSub: "Owner.com & the rest",
+  fohLabel: "Front of House",
+  fohSub: "Buy it, own it",
+  rows: [
+    { label: "Up front", rival: "$0–$500 setup", foh: "From $2,000 — you own the code" },
+    { label: "Every month", rival: "$200–$500", foh: "$0" },
+    { label: "Every year", rival: "$2,400–$6,000", foh: "$450 (Care)" },
+    { label: "3-year total*", rival: "$7,200–$18,000", foh: "$3,350–$5,350" },
+    { label: "Who owns it", rival: "They do — you rent", foh: "You do — code and all" },
+    { label: "If you leave", rival: "You lose the site", foh: "You keep your full code" },
+  ],
+  footnote:
+    "*Illustrative: a typical $2,000–$4,000 build plus $450/yr Care over three years, vs. a $200–$500/mo rental. Your build is priced to scope.",
+} as const;
+
+// ── Multi-location discounts (applied to annual Care; build stays full per site) ──
 export const locationDiscounts = [
-  { range: "2 to 3 locations", off: "10% off monthly" },
-  { range: "4 to 5 locations", off: "15% off monthly" },
-  { range: "6 or more locations", off: "20% off monthly" },
+  { range: "2 to 3 locations", off: "10% off care" },
+  { range: "4 to 5 locations", off: "15% off care" },
+  { range: "6 or more locations", off: "20% off care" },
 ] as const;
