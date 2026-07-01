@@ -8,66 +8,45 @@ import {
   buildScope,
   buildBands,
   comparison,
+  faq,
 } from "../data/site.ts";
 
-// AEO: expose pricing as structured FAQ so AI answers can cite it.
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "How much does a restaurant website from Front of House cost?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `The website is a one-time custom build from ${build.from}, priced to the size of your restaurant — and you own the code outright. After launch there is no monthly fee: a flat ${carePlans[0].price}/year Care plan covers hosting, maintenance, and support.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Is there a monthly subscription for a Front of House website?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "No. Unlike subscription website rentals that charge $200–$500 a month, Front of House charges a one-time build fee plus a flat yearly Care fee of $450. You buy and own your site instead of renting it.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Do I own my restaurant website?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. Front of House builds a real, custom website that you own outright. If you ever leave, we hand you your full code — every Care plan includes an exit kit so you can take your site with you.",
-      },
-    },
-  ],
+  mainEntity: faq.pricing.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
 };
 ---
 
 <Base
   title="Pricing"
-  description="Buy your restaurant website outright from $2,000 — then a flat $450/year to host and keep it sharp. No $200–$500 monthly rental. You own the code."
+  description="Buy your restaurant website outright from $2,000, then a flat $450/year to host and keep it sharp. No $200–$500 monthly rental. You own the code."
   jsonLd={jsonLd}
 >
   <section class="phead">
     <div class="container">
       <p class="kicker">Pricing</p>
-      <h1>Buy it once. Own it for good.<br />We keep it sharp.</h1>
+      <h1>How much does a restaurant website cost?</h1>
       <p class="lede">
-        A custom website you own outright, then a flat yearly fee to keep it
-        hosted and current. Make changes yourself, or just ask Maître. No
-        $200–$500 monthly rental, ever.
+        A custom website you own outright from $2,000, then a flat $450/year to
+        keep it hosted and current. No $200 to $500 monthly rental, ever. Make
+        changes yourself or ask Maitre.
       </p>
     </div>
   </section>
 
-  <section class="section section--tight">
+  <section id="plans" class="section section--tight">
     <div class="container pricing-body">
       <Tiers showBuild={true} showLocations={true} />
     </div>
   </section>
 
   <!-- ── What a build runs ── -->
-  <section class="section surface-bone">
+  <section id="build" class="section surface-bone">
     <div class="container">
       <header class="head head--center">
         <p class="kicker">The build</p>
@@ -104,15 +83,15 @@ const jsonLd = {
         }
       </div>
       <p class="bands__note">
-        Bigger restaurants — extensive menus, on-site capture, full brand
-        identity, multiple locations — run higher. We'll always scope it with
+        Bigger restaurants (extensive menus, on-site capture, full brand
+        identity, multiple locations) run higher. We'll always scope it with
         you first.
       </p>
     </div>
   </section>
 
   <!-- ── Own it vs. rent it ── -->
-  <section class="section">
+  <section id="compare" class="section">
     <div class="container">
       <header class="head head--center">
         <p class="kicker">Own it, don't rent it</p>
@@ -155,7 +134,7 @@ const jsonLd = {
     <div class="container">
       <div class="finenote">
         <p>
-          Your AI assistant, Maître, is included with Care — it runs on our own
+          Your AI assistant, Maître, is included with Care. It runs on our own
           local models, so there's no metered per-message billing and no
           surprise overages. Changes you or Maître submit are reviewed and built
           by our team before they go live, so nothing breaks. And every Care
@@ -166,9 +145,28 @@ const jsonLd = {
     </div>
   </section>
 
+  <!-- ── FAQ ── -->
+  <section id="faq" class="section">
+    <div class="container">
+      <header class="head head--center">
+        <h2>Questions about pricing</h2>
+      </header>
+      <div class="faq-list">
+        {
+          faq.pricing.map((item) => (
+            <details class="faq-item">
+              <summary class="faq-q">{item.q}</summary>
+              <p class="faq-a">{item.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
   <CtaBand
     heading="Not sure what your build runs?"
-    sub="Tell us about your restaurant and we'll scope it — the build, and whether Care or Care+ fits."
+    sub="Tell us about your restaurant and we'll scope it: the build, and whether Care or Care+ fits."
   />
 </Base>
 
@@ -336,6 +334,45 @@ const jsonLd = {
     margin: 1rem 0 0;
     font-size: 0.8rem;
     color: var(--muted);
+  }
+
+  .faq-list {
+    max-width: 740px;
+    margin-inline: auto;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q {
+    cursor: pointer;
+    padding: 1.2rem 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .faq-q::after {
+    content: "+";
+    font-size: 1.3rem;
+    color: var(--ember);
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+  .faq-item[open] .faq-q::after {
+    content: "−";
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-a {
+    padding: 0 0 1.2rem;
+    color: var(--body);
+    max-width: 65ch;
+    margin: 0;
   }
 
   .finenote {

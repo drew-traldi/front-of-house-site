@@ -29,6 +29,9 @@
   --muted-on-ink: #c9bba0;
   --live: #5fb87a;
   --ink-soft: rgba(34, 28, 24, 0.62);
+  /* Error/invalid state only. A deep brick red, redder and darker than
+     Ember so it never reads as the CTA/action accent. */
+  --danger: #b23122;
 
   /* Type */
   --display: "Cormorant", Georgia, "Times New Roman", serif;

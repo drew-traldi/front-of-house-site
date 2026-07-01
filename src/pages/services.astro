@@ -1,7 +1,9 @@
 ---
 import Base from "../layouts/Base.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { steps, portfolioVideo } from "../data/site.ts";
+import VideoSlot from "../components/VideoSlot.astro";
+import TickList from "../components/TickList.astro";
+import { steps, portfolioVideo, site, faq } from "../data/site.ts";
 
 const services = [
   {
@@ -28,7 +30,7 @@ const services = [
       "Edited, delivered, ready to use",
     ],
     video: portfolioVideo.killa,
-    mediaAlt: "Killa — on-site video capture for restaurant sites",
+    mediaAlt: "Killa, on-site video capture for restaurant sites",
   },
   {
     kind: "Core",
@@ -41,41 +43,77 @@ const services = [
       "Built for AI search (AEO)",
     ],
     video: portfolioVideo.burgerLab,
-    mediaAlt: "BURGER.LAB — custom restaurant website build",
+    mediaAlt: "BURGER.LAB, custom restaurant website build",
   },
   {
     kind: "Core",
     name: "Care",
     line: "We keep you running.",
-    body: "Hosting and maintenance for one flat yearly fee — no monthly rental. Edit it yourself, or just ask Maître, your front-of-house AI. Either way, it gets done. Reviewed, tested, and live fast.",
+    body: "Hosting and maintenance for one flat yearly fee, no monthly rental. Edit it yourself, or just ask Maître, your front-of-house AI. Either way, it gets done. Reviewed, tested, and live fast.",
     points: [
       "Flat yearly fee, hosting included",
       "Edit it yourself or ask Maître",
       "Changes reviewed before they go live",
     ],
     video: portfolioVideo.killa,
-    mediaAlt: "Killa — live site with ongoing partnership care",
+    mediaAlt: "Killa, live site with ongoing care",
+  },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    provider: { "@id": `${site.url}/#organization` },
+    name: "Restaurant Website Design and Build",
+    description:
+      "Custom restaurant website the owner owns outright. Hand-built, fast, mobile-first, accessible, optimized for AI search (AEO/GEO). One-time build from $2,000.",
+    serviceType: "Website Design",
+    areaServed: "United States",
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Restaurant Web Studio Services",
+      itemListElement: services.map((s) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: s.name,
+          description: s.body,
+        },
+      })),
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.services.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
   },
 ];
 ---
 
 <Base
   title="Services"
-  description="Brand & design, on-site capture, a custom build you own outright, and flat yearly care. The full restaurant web studio, or just the parts you need."
+  description="Front of House offers restaurant website design, branding, on-site photo and video, and flat yearly care. Custom sites you own from $2,000. Built for AI search."
+  jsonLd={jsonLd}
 >
   <section class="phead">
     <div class="container">
       <p class="kicker">What we do</p>
-      <h1>The whole studio, or just the parts you need.</h1>
+      <h1>What does a restaurant web studio do?</h1>
       <p class="lede">
-        Four ways we work, built around one idea: a restaurant's website is its
-        new front of house, so we treat it like one. Two are optional, two are
-        core to every partnership.
+        Front of House offers four services built around one idea: a
+        restaurant's website is its new front of house, so we treat it like one.
+        Brand, capture, build, and care. Two are core to every partnership, two
+        are optional.
       </p>
     </div>
   </section>
 
-  <section class="section">
+  <section id="offerings" class="section">
     <div class="container svc-list">
       {
         services.map((s, i) => (
@@ -95,22 +133,12 @@ const services = [
               <h2>{s.name}</h2>
               <p class="svc__line">{s.line}</p>
               <p class="svc__body">{s.body}</p>
-              <ul class="svc__points">
-                {s.points.map((p) => (
-                  <li>{p}</li>
-                ))}
-              </ul>
+              <div class="svc__points">
+                <TickList points={s.points} inline />
+              </div>
             </div>
             <div class="svc__media">
-              <video
-                src={s.video}
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="metadata"
-                aria-label={s.mediaAlt}
-              ></video>
+              <VideoSlot src={s.video} alt={s.mediaAlt} />
             </div>
           </article>
         ))
@@ -118,7 +146,7 @@ const services = [
     </div>
   </section>
 
-  <section class="section surface-ink">
+  <section id="how" class="section surface-ink">
     <div class="container">
       <header class="head head--center">
         <p class="kicker">How it works</p>
@@ -132,6 +160,25 @@ const services = [
               <h3>{s.title}</h3>
               <p>{s.body}</p>
             </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section id="faq" class="section">
+    <div class="container">
+      <header class="head--center">
+        <h2>Questions about our services</h2>
+      </header>
+      <div class="faq-list">
+        {
+          faq.services.map((item) => (
+            <details class="faq-item">
+              <summary class="faq-q">{item.q}</summary>
+              <p class="faq-a">{item.a}</p>
+            </details>
           ))
         }
       </div>
@@ -219,25 +266,7 @@ const services = [
     max-width: 60ch;
   }
   .svc__points {
-    list-style: none;
-    padding: 0;
-    margin: 1.2rem 0 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem 1.5rem;
-  }
-  .svc__points li {
-    position: relative;
-    padding-left: 1.4rem;
-    font-size: 0.92rem;
-    color: var(--body);
-  }
-  .svc__points li::before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    color: var(--ember);
-    font-weight: 700;
+    margin-top: 1.2rem;
   }
 
   .head--center {
@@ -276,6 +305,45 @@ const services = [
   .step p {
     margin: 0;
     color: var(--muted);
+  }
+
+  .faq-list {
+    max-width: 740px;
+    margin-inline: auto;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q {
+    cursor: pointer;
+    padding: 1.2rem 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .faq-q::after {
+    content: "+";
+    font-size: 1.3rem;
+    color: var(--ember);
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+  .faq-item[open] .faq-q::after {
+    content: "−";
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-a {
+    padding: 0 0 1.2rem;
+    color: var(--body);
+    max-width: 65ch;
+    margin: 0;
   }
 
   @media (max-width: 980px) {

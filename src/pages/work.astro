@@ -1,26 +1,58 @@
 ---
 import Base from "../layouts/Base.astro";
 import CtaBand from "../components/CtaBand.astro";
-import { caseStudies, hai, specConcepts } from "../data/site.ts";
+import VideoSlot from "../components/VideoSlot.astro";
+import TickList from "../components/TickList.astro";
+import { caseStudies, hai, specConcepts, site } from "../data/site.ts";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Restaurant Websites Built by Front of House",
+  description:
+    "Portfolio of custom restaurant websites designed, built, and maintained by Front of House. Each site is owned outright by the restaurant owner.",
+  itemListElement: caseStudies.map((c, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "WebSite",
+      name: c.name,
+      url: c.url,
+      description: c.blurb,
+      creator: { "@id": `${site.url}/#organization` },
+      about: {
+        "@type": "Restaurant",
+        name: c.name,
+        servesCuisine: c.type,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: c.location.split(",")[0].trim(),
+          addressRegion: c.location.split(",")[1]?.trim(),
+        },
+      },
+    },
+  })),
+};
 ---
 
 <Base
   title="Work"
-  description="Real restaurant websites built by the Front of House team. Custom, fast, and owner-owned. See Burger Lab, Killa, and more of our work."
+  description="Restaurant websites built by Front of House. See Burger Lab and Killa: custom, fast, mobile-first, and owned by the restaurant owner. Based in Salt Lake City, Park City, and Atlanta."
+  jsonLd={jsonLd}
 >
   <section class="phead">
     <div class="container">
       <p class="kicker">Our work</p>
-      <h1>Built for restaurants. Owned by owners.</h1>
+      <h1>What does a Front of House restaurant website look like?</h1>
       <p class="lede">
-        These are real restaurants we designed and built. Fast, custom, and
-        made to convert covers. Each one ships with the tools owners actually
-        use: online ordering, reservations, waitlists, and email capture.
+        Real restaurants we designed and built. Fast, custom, mobile-first,
+        and owned by the restaurant owner. Each ships with online ordering,
+        reservations, waitlists, email capture, and AI search optimization.
       </p>
     </div>
   </section>
 
-  <section class="section">
+  <section id="cases" class="section">
     <div class="container">
       <div class="cases">
         {
@@ -33,15 +65,8 @@ import { caseStudies, hai, specConcepts } from "../data/site.ts";
                 rel="noopener noreferrer"
                 aria-label={`Visit ${c.name}`}
               >
-                <video
-                  src={c.video}
-                  autoplay
-                  muted
-                  loop
-                  playsinline
-                  preload="metadata"
-                  aria-label={`${c.name}, ${c.type}`}
-                ></video>
+                <VideoSlot src={c.video} alt={c.alt} />
+
                 <span class="case__badge">Live site</span>
               </a>
               <div class="case__body">
@@ -50,11 +75,9 @@ import { caseStudies, hai, specConcepts } from "../data/site.ts";
                 <p class="case__type">{c.type}</p>
                 <p class="case__tag">"{c.tagline}"</p>
                 <p class="case__blurb">{c.blurb}</p>
-                <ul class="case__points">
-                  {c.points.map((p) => (
-                    <li>{p}</li>
-                  ))}
-                </ul>
+                <div class="case__points">
+                  <TickList points={c.points} inline />
+                </div>
                 <a
                   class="case__link"
                   href={c.url}
@@ -93,13 +116,13 @@ import { caseStudies, hai, specConcepts } from "../data/site.ts";
   </section>
 
   <!-- ── Spec showcase by category ── -->
-  <section class="section--tight">
+  <section id="spec" class="section--tight">
     <div class="container">
       <header class="spec-head">
         <p class="kicker">Spec builds</p>
         <h2>Don't see your kind of place yet?</h2>
         <p class="lede">
-          We're building showcase sites for every kind of restaurant — so you
+          We're building showcase sites for every kind of restaurant, so you
           can see exactly what yours could look like before we start. More going
           live soon.
         </p>
@@ -231,25 +254,7 @@ import { caseStudies, hai, specConcepts } from "../data/site.ts";
     margin: 0 0 1.2rem;
   }
   .case__points {
-    list-style: none;
-    padding: 0;
     margin: 0 0 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.4rem;
-  }
-  .case__points li {
-    position: relative;
-    padding-left: 1.3rem;
-    font-size: 0.9rem;
-    color: var(--body);
-  }
-  .case__points li::before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    color: var(--ember);
-    font-weight: 700;
   }
   .case__link {
     font-weight: 600;

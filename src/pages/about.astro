@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import CtaBand from "../components/CtaBand.astro";
 import VideoSlot from "../components/VideoSlot.astro";
-import { portfolioVideo } from "../data/site.ts";
+import { portfolioVideo, site, faq } from "../data/site.ts";
 
 const values = [
   {
@@ -22,52 +22,65 @@ const values = [
     body: "Everything we do reinforces that we keep you running, hands-on.",
   },
 ];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.about.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
 ---
 
 <Base
   title="About"
-  description="Front of House is a web and brand studio built for one thing: restaurants. We design, shoot, build, and maintain sites that owners actually own."
+  description="Front of House is a web and brand studio built exclusively for restaurants. Founded by restaurant operators and the builders behind Killa and Burger Lab. Based in Park City, Utah and metro Atlanta, Georgia."
+  jsonLd={jsonLd}
 >
   <section class="phead">
     <div class="container">
       <p class="kicker">About the studio</p>
-      <h1>Built for one thing: restaurants.</h1>
+      <h1>Who is Front of House?</h1>
       <p class="lede eyebrow-serif" style="font-style:italic;">
-        A restaurant's website is its new front of house. We treat it like one.
+        A web and brand studio built exclusively for restaurants, founded in
+        2026 in Park City, Utah and metro Atlanta, Georgia.
       </p>
     </div>
   </section>
 
-  <section class="section">
+  <section id="story" class="section">
     <div class="container story">
       <div class="story__body">
         <p class="story__lead">
-          Front of House is a studio built for one thing: restaurants. We shape
-          your brand, capture your photos and video on site, build a custom
-          website you own, then keep it sharp.
+          Front of House is a six-person studio built for one thing: restaurants.
+          We shape your brand, capture your photos and video on site, build a
+          custom website you own outright, then keep it sharp for a flat yearly
+          fee.
         </p>
         <p>
-          Most agencies rent you a site for $200–$500 a month and bill you to
+          Most agencies rent you a site for $200 to $500 a month and bill you to
           touch it. We do the opposite. We build you a real, custom website that
-          you own outright, then keep it sharp for a flat yearly fee. You can
-          make changes yourself or just ask Maître, your front-of-house AI.
-          Either way, it gets done — and if you ever leave, you take your full
+          you own outright, then keep it sharp for $450 a year. You can
+          make changes yourself or just ask Maitre, your front-of-house AI.
+          Either way, it gets done. And if you ever leave, you take your full
           code with you.
         </p>
         <p>
-          We come at this as hospitality people first — paired with co-founders
+          We come at this as hospitality people first, paired with co-founders
           who also built HAI, the web and AI studio behind Burger Lab and Killa.
           Front of House is its own company, but that same build talent is here.
           We know what a Friday rush feels like, why the right photo of a plate
           matters, and how much a slow, clunky website quietly costs you in
-          covers. So we build fast, we build it to be found, including by AI
-          search, and we stay on call.
+          covers. So we build fast, we build it to be found by AI search and
+          traditional search alike, and we stay on call.
         </p>
       </div>
       <aside class="story__aside">
         <VideoSlot
           src={portfolioVideo.killa}
-          alt="Killa Nikkei — a live restaurant site built by Front of House"
+          alt="Killa Nikkei, a live restaurant site built by Front of House"
           class="story__img"
         />
         <div class="story__stats">
@@ -88,7 +101,7 @@ const values = [
     </div>
   </section>
 
-  <section class="section surface-bone">
+  <section id="values" class="section surface-bone">
     <div class="container">
       <header class="head">
         <p class="kicker">How we work</p>
@@ -101,6 +114,25 @@ const values = [
               <h3>{v.title}</h3>
               <p>{v.body}</p>
             </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section id="faq" class="section">
+    <div class="container">
+      <header class="head">
+        <h2>Questions about the studio</h2>
+      </header>
+      <div class="faq-list">
+        {
+          faq.about.map((item) => (
+            <details class="faq-item">
+              <summary class="faq-q">{item.q}</summary>
+              <p class="faq-a">{item.a}</p>
+            </details>
           ))
         }
       </div>
@@ -193,6 +225,44 @@ const values = [
     margin-bottom: 0.3rem;
   }
   .value p {
+    margin: 0;
+  }
+
+  .faq-list {
+    max-width: 740px;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q {
+    cursor: pointer;
+    padding: 1.2rem 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .faq-q::after {
+    content: "+";
+    font-size: 1.3rem;
+    color: var(--ember);
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+  .faq-item[open] .faq-q::after {
+    content: "−";
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-a {
+    padding: 0 0 1.2rem;
+    color: var(--body);
+    max-width: 65ch;
     margin: 0;
   }
 

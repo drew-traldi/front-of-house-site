@@ -1,0 +1,493 @@
+---
+// Maître — the on-site AI concierge. A floating avatar + chat panel that
+// answers questions and can navigate the visitor around the site.
+// Self-contained: vanilla JS, no dependencies, lazy of the rest of the site.
+import { maitre } from "../data/site.ts";
+
+// Defaults to the same-origin serverless route (/api/maitre), which holds the
+// Anthropic key. Override with PUBLIC_MAITRE_ENDPOINT to point elsewhere.
+const endpoint = import.meta.env.PUBLIC_MAITRE_ENDPOINT || "/api/maitre";
+---
+
+<div id="maitre" class="maitre" data-endpoint={endpoint}>
+  <!-- Launcher -->
+  <button id="maitre-launch" class="maitre__launch" aria-label={`Chat with ${maitre.name}`} aria-expanded="false">
+    <span class="maitre__avatar" aria-hidden="true">
+      {maitre.avatar ? (
+        <img src={maitre.avatar} alt="" />
+      ) : (
+        <svg viewBox="0 0 40 40" role="img" aria-hidden="true">
+          <rect width="40" height="40" rx="12" fill="var(--ink)" />
+          <!-- awning -->
+          <g transform="translate(8,9)">
+            <rect x="0" y="0" width="24" height="3.4" rx="1.2" fill="var(--ember)" />
+            <path d="M0 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--ember)" />
+            <path d="M4 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--bone)" />
+            <path d="M8 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--ember)" />
+            <path d="M12 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--bone)" />
+            <path d="M16 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--ember)" />
+            <path d="M20 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--ember)" />
+          </g>
+          <circle cx="20" cy="29" r="3.1" fill="var(--ember)" />
+        </svg>
+      )}
+    </span>
+    <span class="maitre__launchlabel">Ask {maitre.name}</span>
+  </button>
+
+  <!-- Panel -->
+  <section id="maitre-panel" class="maitre__panel" role="dialog" aria-label={`${maitre.name}, ${maitre.title}`} hidden>
+    <header class="maitre__head">
+      <span class="maitre__avatar maitre__avatar--sm" aria-hidden="true">
+        {maitre.avatar ? (
+          <img src={maitre.avatar} alt="" />
+        ) : (
+          <svg viewBox="0 0 40 40" aria-hidden="true">
+            <rect width="40" height="40" rx="12" fill="var(--ink)" />
+            <g transform="translate(8,9)">
+              <rect x="0" y="0" width="24" height="3.4" rx="1.2" fill="var(--ember)" />
+              <path d="M0 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--ember)" />
+              <path d="M4 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--bone)" />
+              <path d="M8 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--ember)" />
+              <path d="M12 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--bone)" />
+              <path d="M16 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--ember)" />
+              <path d="M20 3.4 h4 v4 l-2 2 l-2 -2 z" fill="var(--ember)" />
+            </g>
+            <circle cx="20" cy="29" r="3.1" fill="var(--ember)" />
+          </svg>
+        )}
+      </span>
+      <div class="maitre__id">
+        <span class="maitre__name">{maitre.name}</span>
+        <span class="maitre__title">{maitre.title}</span>
+      </div>
+      <button id="maitre-close" class="maitre__close" aria-label="Close">&times;</button>
+    </header>
+
+    <div id="maitre-log" class="maitre__log" aria-live="polite"></div>
+
+    <div id="maitre-chips" class="maitre__chips">
+      {maitre.suggestions.map((s) => (
+        <button class="maitre__chip" type="button" data-suggest={s}>{s}</button>
+      ))}
+    </div>
+
+    <form id="maitre-form" class="maitre__form">
+      <input
+        id="maitre-input"
+        class="maitre__input"
+        type="text"
+        autocomplete="off"
+        placeholder={`Ask ${maitre.name}…`}
+        aria-label="Message"
+      />
+      <button type="submit" class="maitre__send" aria-label="Send">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M3 11l18-8-8 18-2-7-8-3z" fill="currentColor" />
+        </svg>
+      </button>
+    </form>
+    <p class="maitre__foot">Maître is an AI assistant. It can take you around the site.</p>
+  </section>
+</div>
+
+<style>
+  .maitre {
+    position: fixed;
+    right: clamp(1rem, 3vw, 1.6rem);
+    bottom: clamp(1rem, 3vw, 1.6rem);
+    z-index: 60;
+    font-family: var(--sans);
+  }
+
+  /* Launcher */
+  .maitre__launch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    border-radius: 999px;
+    box-shadow: var(--shadow-lift);
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.18s ease;
+  }
+  .maitre__launch:hover {
+    transform: translateY(-2px);
+  }
+  .maitre__launchlabel {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+  .maitre__avatar {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+  }
+  .maitre__avatar svg,
+  .maitre__avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+  .maitre__avatar--sm svg,
+  .maitre__avatar--sm img {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  /* Panel */
+  .maitre__panel {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.8rem);
+    width: min(370px, calc(100vw - 2rem));
+    height: min(540px, calc(100vh - 7rem));
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(34, 28, 24, 0.28);
+    overflow: hidden;
+    animation: maitre-rise 0.2s ease;
+  }
+  .maitre__panel[hidden] {
+    display: none;
+  }
+  @keyframes maitre-rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .maitre__head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.85rem 1rem;
+    background: var(--ink);
+  }
+  .maitre__id {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    flex: 1;
+  }
+  .maitre__name {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--bone);
+  }
+  .maitre__title {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-on-ink);
+    margin-top: 0.1rem;
+  }
+  .maitre__close {
+    background: transparent;
+    border: 0;
+    color: var(--muted-on-ink);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.2rem 0.3rem;
+  }
+  .maitre__close:hover {
+    color: var(--paper);
+  }
+
+  .maitre__log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .maitre__msg {
+    max-width: 85%;
+    padding: 0.65rem 0.85rem;
+    border-radius: 14px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .maitre__msg--bot {
+    align-self: flex-start;
+    background: var(--bone);
+    color: var(--ink);
+    border-bottom-left-radius: 4px;
+  }
+  .maitre__msg--me {
+    align-self: flex-end;
+    background: var(--ember);
+    color: var(--paper);
+    border-bottom-right-radius: 4px;
+  }
+  .maitre__msg--typing {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .maitre__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0 1rem 0.6rem;
+  }
+  .maitre__chip {
+    font-size: 0.8rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+    transition: background 0.16s ease, border-color 0.16s ease;
+  }
+  .maitre__chip:hover {
+    border-color: var(--ember);
+    color: var(--ember-deep);
+  }
+
+  .maitre__form {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.7rem 0.8rem;
+    border-top: 1px solid var(--line);
+  }
+  .maitre__input {
+    flex: 1;
+    font: inherit;
+    font-size: 0.92rem;
+    color: var(--ink);
+    background: var(--bone);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.6rem 0.9rem;
+  }
+  .maitre__input:focus {
+    outline: none;
+    border-color: var(--ember);
+    box-shadow: 0 0 0 3px rgba(199, 91, 57, 0.14);
+  }
+  .maitre__send {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ember);
+    color: var(--paper);
+    cursor: pointer;
+    transition: background 0.16s ease;
+  }
+  .maitre__send:hover {
+    background: var(--ember-deep);
+  }
+  .maitre__foot {
+    margin: 0;
+    padding: 0 1rem 0.7rem;
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media (max-width: 520px) {
+    .maitre__launchlabel {
+      display: none;
+    }
+    .maitre__launch {
+      padding: 0.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .maitre__panel,
+    .maitre__launch {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script
+  is:inline
+  define:vars={{
+    endpoint,
+    greeting: maitre.greeting,
+    botName: maitre.name,
+  }}
+>
+  (function () {
+    const root = document.getElementById("maitre");
+    if (!root) return;
+    const launch = document.getElementById("maitre-launch");
+    const panel = document.getElementById("maitre-panel");
+    const closeBtn = document.getElementById("maitre-close");
+    const log = document.getElementById("maitre-log");
+    const chips = document.getElementById("maitre-chips");
+    const form = document.getElementById("maitre-form");
+    const input = document.getElementById("maitre-input");
+    const STORE = "foh_maitre";
+
+    // transcript: [{role:'user'|'assistant', content}]
+    let transcript = [];
+    let open = false;
+
+    function save() {
+      try {
+        sessionStorage.setItem(STORE, JSON.stringify({ transcript, open }));
+      } catch (_) {}
+    }
+    function load() {
+      try {
+        const raw = sessionStorage.getItem(STORE);
+        if (raw) return JSON.parse(raw);
+      } catch (_) {}
+      return null;
+    }
+
+    function bubble(role, text) {
+      const el = document.createElement("div");
+      el.className = "maitre__msg " + (role === "user" ? "maitre__msg--me" : "maitre__msg--bot");
+      el.textContent = text;
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+      return el;
+    }
+
+    function setOpen(state) {
+      open = state;
+      panel.hidden = !state;
+      launch.setAttribute("aria-expanded", String(state));
+      if (state) {
+        input.focus();
+        log.scrollTop = log.scrollHeight;
+      }
+      save();
+    }
+
+    function renderTranscript() {
+      log.innerHTML = "";
+      if (transcript.length === 0) {
+        bubble("assistant", greeting);
+      } else {
+        transcript.forEach((m) => bubble(m.role, m.content));
+      }
+    }
+
+    function smoothScrollTo(section) {
+      if (!section) return;
+      const el = document.getElementById(section);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function runActions(actions) {
+      if (!Array.isArray(actions)) return;
+      for (const a of actions) {
+        if (a && a.type === "navigate" && a.path) {
+          const here = window.location.pathname.replace(/\/$/, "") || "/";
+          const dest = a.path.replace(/\/$/, "") || "/";
+          if (here === dest) {
+            smoothScrollTo(a.section);
+          } else {
+            // Persist conversation across the page load, then navigate.
+            save();
+            window.location.href = a.path + (a.section ? "#" + a.section : "");
+            return;
+          }
+        }
+      }
+    }
+
+    async function send(text) {
+      text = (text || "").trim();
+      if (!text) return;
+      chips.style.display = "none";
+      bubble("user", text);
+      transcript.push({ role: "user", content: text });
+      save();
+      input.value = "";
+
+      if (!endpoint) {
+        const msg = "I'm not connected just yet. Head to the contact page and we'll get right back to you.";
+        bubble("assistant", msg);
+        transcript.push({ role: "assistant", content: msg });
+        save();
+        return;
+      }
+
+      const typing = bubble("assistant", botName + " is typing…");
+      typing.classList.add("maitre__msg--typing");
+
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: transcript,
+            page: window.location.pathname,
+          }),
+        });
+        typing.remove();
+        if (!res.ok) throw new Error("bad status " + res.status);
+        const data = await res.json();
+        const reply = (data.reply || "").trim() || "Right this way.";
+        bubble("assistant", reply);
+        transcript.push({ role: "assistant", content: reply });
+        save();
+        runActions(data.actions);
+      } catch (e) {
+        typing.remove();
+        const msg = "Sorry, I had trouble there. You can always reach the team on the contact page.";
+        bubble("assistant", msg);
+        transcript.push({ role: "assistant", content: msg });
+        save();
+      }
+    }
+
+    // Wire up
+    launch.addEventListener("click", () => setOpen(!open));
+    closeBtn.addEventListener("click", () => setOpen(false));
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      send(input.value);
+    });
+    chips.querySelectorAll("[data-suggest]").forEach((c) => {
+      c.addEventListener("click", () => send(c.getAttribute("data-suggest")));
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && open) setOpen(false);
+    });
+
+    // Restore across navigation
+    const prev = load();
+    if (prev && Array.isArray(prev.transcript)) {
+      transcript = prev.transcript;
+      renderTranscript();
+      if (transcript.length > 0) chips.style.display = "none";
+      if (prev.open) setOpen(true);
+    } else {
+      renderTranscript();
+    }
+
+    // If we arrived with a hash (from a cross-page navigate), smooth-scroll once.
+    if (window.location.hash.length > 1) {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      setTimeout(() => smoothScrollTo(id), 120);
+    }
+  })();
+</script>

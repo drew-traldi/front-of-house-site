@@ -1,21 +1,35 @@
 ---
 import Base from "../layouts/Base.astro";
 import { site, carePlans } from "../data/site.ts";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact Front of House",
+  description:
+    "Scope your restaurant website build with Front of House. Custom websites you own from $2,000, then flat yearly care from $450.",
+  url: `${site.url}/contact`,
+  mainEntity: {
+    "@id": `${site.url}/#organization`,
+  },
+};
 ---
 
 <Base
   title="Contact"
-  description="Tell us about your restaurant and we'll scope your build. Custom websites you own from $2,000, then flat yearly care from $450 — no monthly rental."
+  description="Scope your restaurant website build with Front of House. Custom sites you own from $2,000, flat yearly care from $450. Tell us about your restaurant and we'll come back with a plan."
+  jsonLd={jsonLd}
 >
-  <section class="phead">
+  <section id="form" class="phead">
     <div class="container phead__grid">
       <div>
         <p class="kicker">Scope your build</p>
-        <h1>Let's build your front of house.</h1>
+        <h1>Ready to own your restaurant website?</h1>
         <p class="lede">
-          Tell us a little about your restaurant and what you need. We'll come
-          back with a scope, a recommended tier, and next steps, usually within
-          a business day.
+          Tell us about your restaurant and what you need. We'll come back with
+          a scope, a price, a recommended Care tier, and next steps, usually
+          within a business day. Custom builds from $2,000, flat yearly care
+          from $450.
         </p>
 
         <ul class="direct">
@@ -36,17 +50,24 @@ import { site, carePlans } from "../data/site.ts";
         writes to a local SQLite DB on the studio Mac. Set the URL at build time:
           PUBLIC_LEAD_ENDPOINT=https://<tunnel-host>/api/v1/leads
         If it's unset or the POST fails, the form falls back to opening the
-        visitor's mail client, pre-filled — so it always works.
+        visitor's mail client, pre-filled, so it always works.
       -->
       <form
         class="form card"
         id="lead-form"
         data-endpoint={import.meta.env.PUBLIC_LEAD_ENDPOINT ?? ""}
-        novalidate
       >
         <div class="field">
           <label for="name">Your name</label>
-          <input id="name" name="name" type="text" required autocomplete="name" />
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            aria-describedby="name-err"
+          />
+          <span class="field__err" id="name-err" role="alert"></span>
         </div>
         <div class="field-row">
           <div class="field">
@@ -61,7 +82,15 @@ import { site, carePlans } from "../data/site.ts";
         <div class="field-row">
           <div class="field">
             <label for="email">Email</label>
-            <input id="email" name="email" type="email" required autocomplete="email" />
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              aria-describedby="email-err"
+            />
+            <span class="field__err" id="email-err" role="alert"></span>
           </div>
           <div class="field">
             <label for="phone">Phone</label>
@@ -86,7 +115,7 @@ import { site, carePlans } from "../data/site.ts";
         <button type="submit" class="btn btn--primary form__submit">
           Send it over
         </button>
-        <p class="form__note" id="form-note" hidden></p>
+        <p class="form__note" id="form-note" role="status" aria-live="polite" hidden></p>
       </form>
     </div>
   </section>
@@ -171,8 +200,30 @@ import { site, carePlans } from "../data/site.ts";
     border-color: var(--ember);
     box-shadow: 0 0 0 3px rgba(199, 91, 57, 0.14);
   }
+  /* Invalid chrome only after the user has blurred or tried to submit —
+     never red borders on first paint. Mirrored by the JS aria-invalid flag. */
+  input[aria-invalid="true"],
+  input:user-invalid {
+    border-color: var(--danger);
+  }
+  input[aria-invalid="true"]:focus,
+  input:user-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(178, 49, 34, 0.16);
+  }
+  .field__err {
+    display: block;
+    min-height: 1.1rem;
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--danger);
+  }
   textarea {
     resize: vertical;
+  }
+  .form__submit[aria-disabled="true"] {
+    opacity: 0.7;
+    cursor: progress;
   }
   .form__submit {
     width: 100%;
@@ -209,19 +260,84 @@ import { site, carePlans } from "../data/site.ts";
 <script is:inline define:vars={{ to: site.contact.email }}>
   const form = document.getElementById("lead-form");
   const note = document.getElementById("form-note");
+  const submit = form?.querySelector(".form__submit");
+
+  // Pattern A: no-JS users keep the browser's native validation; now that JS
+  // is here, we repaint errors ourselves instead of the browser's bubbles.
+  if (form) form.noValidate = true;
+
+  // Fields that get inline, per-field validation.
+  const validated = ["name", "email"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  // Adaptive, subrule-specific messages beat a single catch-all.
+  function messageFor(input) {
+    const v = input.validity;
+    if (v.valid) return "";
+    if (input.id === "name") {
+      return "Add your name so we know who we're talking to.";
+    }
+    if (input.id === "email") {
+      if (v.valueMissing) return "Add your email so we can reach you.";
+      return "That doesn't look like a complete email address.";
+    }
+    return "Please check this field.";
+  }
+
+  function setError(input, msg) {
+    const err = document.getElementById(`${input.id}-err`);
+    if (msg) {
+      input.setAttribute("aria-invalid", "true");
+      if (err) err.textContent = msg;
+    } else {
+      input.removeAttribute("aria-invalid");
+      if (err) err.textContent = "";
+    }
+    return !msg;
+  }
+
+  validated.forEach((input) => {
+    // First blur after editing runs the constraint.
+    input.addEventListener("blur", () => setError(input, messageFor(input)));
+    // Once invalid, re-validate on input so the error clears as soon as it's
+    // fixed, without making the user blur again.
+    input.addEventListener("input", () => {
+      if (input.getAttribute("aria-invalid") === "true") {
+        setError(input, messageFor(input));
+      }
+    });
+  });
+
+  function setSubmitting(on) {
+    if (!submit) return;
+    submit.disabled = on;
+    submit.setAttribute("aria-disabled", String(on));
+    submit.textContent = on ? "Sending…" : "Send it over";
+  }
 
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(form).entries());
 
-    if (!data.name || !data.email) {
-      showNote("Please add your name and email so we can reach you.", "err");
+    // Validate every wired field; show all errors, focus the first bad one.
+    let firstInvalid = null;
+    validated.forEach((input) => {
+      const ok = setError(input, messageFor(input));
+      if (!ok && !firstInvalid) firstInvalid = input;
+    });
+    if (firstInvalid) {
+      firstInvalid.focus();
+      showNote("A couple of fields need a look.", "err");
       return;
     }
 
+    const data = Object.fromEntries(new FormData(form).entries());
     const endpoint = form.getAttribute("data-endpoint");
+
+    setSubmitting(true);
+    showNote("Sending your details…", "");
+
     if (endpoint) {
-      // Future: POST to a form service / serverless function.
       try {
         const res = await fetch(endpoint, {
           method: "POST",
@@ -230,6 +346,7 @@ import { site, carePlans } from "../data/site.ts";
         });
         if (res.ok) {
           form.reset();
+          setSubmitting(false);
           showNote("Thanks, we'll be in touch within a business day.", "ok");
           return;
         }
@@ -253,6 +370,7 @@ import { site, carePlans } from "../data/site.ts";
     window.location.href = `mailto:${to}?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body)}`;
+    setSubmitting(false);
     showNote("Opening your email app to send. Almost there.", "ok");
   });
 

@@ -1,25 +1,65 @@
 ---
-// Autoplaying, muted portfolio video — same slot sizing as ImageSlot.
+// Muted, looping portfolio video, same slot sizing as ImageSlot.
+// Accepts either a plain mp4 path (string) or an optimized source object
+// { mp4, webm?, poster? }. Plays only when scrolled into view, respects
+// reduced-motion, and shows the poster frame until then.
+interface VideoSource {
+  mp4: string;
+  webm?: string;
+  poster?: string;
+}
 interface Props {
-  src: string;
+  src: VideoSource | string;
   alt?: string;
   class?: string;
   poster?: string;
 }
 const { src, alt = "", class: klass = "", poster } = Astro.props;
+const v: VideoSource = typeof src === "string" ? { mp4: src } : src;
+const posterSrc = poster ?? v.poster;
 ---
 
 <video
   class={`slot slot--video ${klass}`}
-  src={src}
-  autoplay
   muted
   loop
   playsinline
-  preload="metadata"
+  preload="none"
+  poster={posterSrc}
   aria-label={alt}
-  poster={poster}
-></video>
+  data-autoplay-in-view
+>
+  {v.webm && <source src={v.webm} type="video/webm" />}
+  <source src={v.mp4} type="video/mp4" />
+</video>
+
+<script>
+  // Single handler for every [data-autoplay-in-view] video on the page.
+  // Astro hoists and dedupes identical component scripts, so this runs once.
+  const vids = document.querySelectorAll<HTMLVideoElement>(
+    "video[data-autoplay-in-view]",
+  );
+  const reduce = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (!reduce && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const vid = e.target as HTMLVideoElement;
+          if (e.isIntersecting) vid.play().catch(() => {});
+          else vid.pause();
+        }
+      },
+      { rootMargin: "200px 0px", threshold: 0.1 },
+    );
+    vids.forEach((v) => io.observe(v));
+  } else if (!reduce) {
+    vids.forEach((v) => v.play().catch(() => {}));
+  }
+  // reduced-motion: leave the poster frame, never autoplay.
+</script>
 
 <style>
   .slot {

@@ -1,0 +1,63 @@
+---
+// A list with monoline SVG check icons (never a glyph/emoji as an icon —
+// see .claude/craft/anti-ai-slop.md). `inline` lays the items out as a
+// wrapping row; the default is a stacked column.
+interface Props {
+  points: string[];
+  inline?: boolean;
+  class?: string;
+}
+const { points, inline = false, class: className } = Astro.props;
+---
+
+<ul class:list={["ticklist", { "ticklist--inline": inline }, className]}>
+  {
+    points.map((p) => (
+      <li>
+        <svg class="ticklist__tick" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M4 12.5l5 5L20 6.5"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span>{p}</span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .ticklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .ticklist--inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+  }
+  .ticklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    color: var(--body);
+    font-weight: 500;
+  }
+  .ticklist--inline li {
+    font-size: 0.92rem;
+    font-weight: 400;
+  }
+  .ticklist__tick {
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.16em;
+    color: var(--ember);
+  }
+</style>

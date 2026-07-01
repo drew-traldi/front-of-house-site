@@ -3,11 +3,24 @@ import Base from "../layouts/Base.astro";
 import Tiers from "../components/Tiers.astro";
 import CtaBand from "../components/CtaBand.astro";
 import VideoSlot from "../components/VideoSlot.astro";
-import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts";
+import TickList from "../components/TickList.astro";
+import { offerings, reasons, steps, site, portfolioVideo, faq } from "../data/site.ts";
+
+const homeFaq = [...faq.pricing.slice(0, 3), ...faq.services.slice(0, 2)];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: homeFaq.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
 ---
 
 <Base
-  description="Front of House is the web and brand studio built only for restaurants. We design, shoot, and build a custom website you own outright, then keep it sharp for a flat yearly fee — no monthly rental."
+  description="Front of House is the web and brand studio built only for restaurants. We design, shoot, and build a custom website you own outright, then keep it sharp for a flat yearly fee. No monthly rental. Built for AI search from the start."
+  jsonLd={jsonLd}
 >
   <!-- ── Hero ── -->
   <section class="hero">
@@ -19,7 +32,7 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
         </h1>
         <p class="lede hero__lede">
           We design the brand, shoot the photos on site, and build a custom
-          website you own outright — then keep it sharp for a flat yearly fee.
+          website you own outright, then keep it sharp for a flat yearly fee.
           No $200–$500 monthly rental. Built for one thing only: restaurants.
         </p>
         <div class="hero__actions">
@@ -34,7 +47,7 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
           <span class="stat__div"></span>
           <div class="stat">
             <span class="stat__num">$450 / yr</span>
-            <span class="stat__cap">Flat care — you own the site</span>
+            <span class="stat__cap">Flat care, you own the site</span>
           </div>
         </div>
       </div>
@@ -42,7 +55,7 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
       <div class="hero__media">
         <VideoSlot
           src={portfolioVideo.burgerLab}
-          alt="BURGER.LAB — a live restaurant site built by Front of House"
+          alt="BURGER.LAB, a live restaurant site built by Front of House"
           class="hero__photo"
         />
         <div class="livecard">
@@ -56,14 +69,18 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     </div>
   </section>
 
+  <!-- Gradient seam: blend the light hero into the dark services section -->
+  <div class="seam seam--into-ink" aria-hidden="true"></div>
+
   <!-- ── Services (dark) ── -->
-  <section class="services surface-ink">
+  <section id="services" class="services surface-ink">
     <div class="container">
       <div class="services__head">
+        <p class="kicker">What we do</p>
         <h2>Everything the storefront needs, under one roof.</h2>
-        <p>
-          Two core services every restaurant gets. Two optional ones for those
-          who want the full look.
+        <p class="services__sub">
+          Two core services every restaurant gets, plus two optional ones for
+          those who want the full look.
         </p>
       </div>
       <div class="services__grid">
@@ -87,8 +104,11 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     </div>
   </section>
 
+  <!-- Gradient seam: ease back out of the dark section into the light one -->
+  <div class="seam seam--out-ink" aria-hidden="true"></div>
+
   <!-- ── Why FOH ── -->
-  <section class="section">
+  <section id="why" class="section">
     <div class="container">
       <header class="head head--center">
         <p class="kicker">Why Front of House</p>
@@ -112,8 +132,97 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     </div>
   </section>
 
+  <!-- ── AI visibility (GEO selling point) ── -->
+  <section id="ai-search" class="section surface-bone">
+    <div class="container ai__grid">
+      <div class="ai__copy">
+        <p class="kicker">Built for AI search</p>
+        <h2>Can AI find your restaurant?</h2>
+        <p class="lede">
+          83% of restaurant locations are invisible in AI-generated
+          recommendations. When a diner asks ChatGPT, Perplexity, or Google AI
+          "where should we eat tonight," AI names 3 to 5 places and stops. There
+          is no page two. You are in the answer or you do not exist.
+        </p>
+        <p>
+          Every Front of House website ships with structured data, answer-engine
+          content, and machine-readable menus so AI assistants can recommend your
+          restaurant with confidence. We call it AEO, and it is built into every
+          build and every Care plan.
+        </p>
+      </div>
+      <div class="ai__stats">
+        <div class="ai__stat">
+          <span class="ai__num" data-count="83" data-suffix="%">83%</span>
+          <span class="ai__cap">of restaurants are invisible to AI search</span>
+        </div>
+        <div class="ai__stat">
+          <span class="ai__num">3 to 5</span>
+          <span class="ai__cap">restaurants per AI answer. No page two.</span>
+        </div>
+        <div class="ai__stat">
+          <span class="ai__num" data-count="28" data-suffix="%">28%</span>
+          <span class="ai__cap">of restaurant AI queries are dietary or allergen</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Mobile-first ── -->
+  <section id="mobile" class="section mobile">
+    <div class="container mobile__grid">
+      <div class="mobile__copy">
+        <p class="kicker">Built for the phone in their hand</p>
+        <h2>Most guests meet you on a phone first.</h2>
+        <p class="lede">
+          More than 3 in 4 diners check your website before they ever walk in,
+          and most of them do it on a phone. A site that's slow or clumsy on
+          mobile is covers walking to the place next door.
+        </p>
+        <div class="mobile__points">
+          <TickList
+            points={[
+              'Thumb-ready menu, hours, and "order now"',
+              "Loads fast on any connection",
+              "Tap to call and tap for directions, built in",
+            ]}
+          />
+        </div>
+        <p class="mobile__src">
+          Sources: Restaurant Dive survey; Think with Google, mobile dining.
+        </p>
+      </div>
+      <div class="mobile__device">
+        <div class="phone">
+          <span class="phone__notch"></span>
+          <VideoSlot
+            src={portfolioVideo.killa}
+            alt="A Front of House restaurant site running on a phone"
+            class="phone__screen"
+          />
+        </div>
+        <div class="phone__stat">
+          <span class="phone__statnum">60%+</span>
+          <span class="phone__statcap">of online orders come from a phone</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Pull quote (insider voice, full-bleed editorial break) ── -->
+  <section class="pullquote surface-ink" aria-label="Why Front of House">
+    <div class="container">
+      <p class="kicker pullquote__kicker">Built by insiders</p>
+      <blockquote class="pullquote__quote">
+        No one who built your website has ever
+        <em>worked a Friday rush.</em>
+      </blockquote>
+      <p class="pullquote__tag">We have. That is the whole difference.</p>
+    </div>
+  </section>
+
   <!-- ── Process ── -->
-  <section class="section surface-bone">
+  <section id="process" class="section surface-bone">
     <div class="container">
       <header class="head head--center">
         <h2>Three steps to a site that works.</h2>
@@ -143,21 +252,21 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
         <VideoSlot src={portfolioVideo.killa} alt="Killa Nikkei site preview" />
         <VideoSlot
           src={portfolioVideo.burgerLab}
-          alt="BURGER.LAB — video-led restaurant web design"
+          alt="BURGER.LAB, video-led restaurant web design"
         />
       </div>
     </div>
   </section>
 
   <!-- ── Pricing teaser ── -->
-  <section class="section">
+  <section id="pricing" class="section">
     <div class="container">
       <header class="head head--center">
         <p class="kicker">Pricing</p>
         <h2>One build. You own it. Flat yearly care.</h2>
         <p class="lede" style="margin-inline:auto;">
           Buy a custom site outright, then a flat yearly fee keeps it hosted and
-          sharp — about what the rental crowd charges in a single month.
+          sharp, about what the rental crowd charges in a single month.
         </p>
       </header>
       <Tiers showBuild={true} showLocations={false} />
@@ -167,8 +276,65 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     </div>
   </section>
 
+  <!-- ── FAQ (GEO: question-shaped, answer-first) ── -->
+  <section id="faq" class="section">
+    <div class="container">
+      <header class="head head--center">
+        <p class="kicker">Common questions</p>
+        <h2>What restaurant owners ask us.</h2>
+      </header>
+      <div class="faq-list">
+        {
+          homeFaq.map((item) => (
+            <details class="faq-item">
+              <summary class="faq-q">{item.q}</summary>
+              <p class="faq-a">{item.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
   <CtaBand />
 </Base>
+
+<script>
+  // One-shot count-up on stat numbers. Values already render in the HTML,
+  // so no-JS and reduced-motion users see the final figure untouched.
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const nums = document.querySelectorAll<HTMLElement>(".ai__num[data-count]");
+
+  if (!reduce && "IntersectionObserver" in window && nums.length) {
+    const run = (el: HTMLElement) => {
+      const target = Number(el.dataset.count);
+      const suffix = el.dataset.suffix ?? "";
+      const start = performance.now();
+      const dur = 900;
+      const tick = (now: number) => {
+        const t = Math.min((now - start) / dur, 1);
+        // easeOutCubic — settles onto the target, matches our quiet motion.
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            run(entry.target as HTMLElement);
+            obs.unobserve(entry.target); // one-shot
+          }
+        }
+      },
+      { threshold: 0.6 }
+    );
+    nums.forEach((n) => io.observe(n));
+  }
+</script>
 
 <style>
   /* ── Hero ── */
@@ -187,6 +353,22 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     gap: clamp(2rem, 5vw, 4rem);
     align-items: center;
     padding-block: clamp(3rem, 7vw, 5.5rem);
+  }
+  .hero .kicker {
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    color: var(--ember-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.1rem;
+  }
+  .hero .kicker::before {
+    content: "";
+    width: 1.8rem;
+    height: 2px;
+    background: var(--ember);
   }
   .hero__title {
     font-size: clamp(2.8rem, 6vw, 5rem);
@@ -274,44 +456,103 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     padding-block: clamp(4rem, 8vw, 6rem);
   }
   .services__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 3rem;
+    text-align: center;
+    max-width: 46ch;
+    margin: 0 auto 3rem;
   }
   .services__head h2 {
     color: var(--bone);
-    max-width: 16ch;
-    margin: 0;
+    margin: 0 0 0.8rem;
   }
-  .services__head p {
-    color: var(--muted);
-    max-width: 32ch;
-    margin: 0;
-    font-size: 0.95rem;
+  .services__sub {
+    color: var(--bone);
+    opacity: 0.86;
+    margin: 0 auto;
+    font-size: 1.08rem;
+    max-width: 44ch;
   }
   .services__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--ink-border);
-    border: 1px solid var(--ink-border);
-    border-radius: 8px;
-    overflow: hidden;
+    gap: 1rem;
   }
   .svc-cell {
-    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    background: #281f1a;
+    border: 1px solid var(--ink-border);
+    border-radius: 14px;
     padding: 2.1rem 1.7rem;
     display: flex;
     flex-direction: column;
-    min-height: 250px;
+    min-height: 258px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: svc-rise 0.6s cubic-bezier(0.22, 0.7, 0.2, 1) forwards;
+    transition: transform 0.28s ease, border-color 0.28s ease,
+      box-shadow 0.28s ease, background 0.28s ease;
+  }
+  /* Ember accent bar that draws across the top on hover */
+  .svc-cell::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: var(--ember);
+    transition: width 0.35s ease;
+  }
+  /* Soft ember glow that fades in from the corner */
+  .svc-cell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      90% 70% at 100% 0%,
+      rgba(199, 91, 57, 0.16),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .svc-cell:hover {
+    transform: translateY(-8px);
+    border-color: var(--ember);
+    background: #2f251e;
+    box-shadow: 0 22px 44px rgba(0, 0, 0, 0.38);
+  }
+  .svc-cell:hover::before {
+    width: 100%;
+  }
+  .svc-cell:hover::after {
+    opacity: 1;
+  }
+  .svc-cell:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .svc-cell:nth-child(2) {
+    animation-delay: 0.13s;
+  }
+  .svc-cell:nth-child(3) {
+    animation-delay: 0.21s;
+  }
+  .svc-cell:nth-child(4) {
+    animation-delay: 0.29s;
+  }
+  @keyframes svc-rise {
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
   .svc-cell__tag {
-    font-size: 0.62rem;
+    position: relative;
+    z-index: 1;
+    font-size: 0.64rem;
     letter-spacing: 0.2em;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     color: var(--ember);
     margin-bottom: auto;
@@ -320,14 +561,117 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     color: var(--brass);
   }
   .svc-cell h3 {
+    position: relative;
+    z-index: 1;
     color: var(--bone);
     font-size: 1.7rem;
     margin: 2rem 0 0.6rem;
+    transition: color 0.28s ease;
+  }
+  .svc-cell:hover h3 {
+    color: #fff;
   }
   .svc-cell p {
+    position: relative;
+    z-index: 1;
     color: var(--muted-on-ink);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     margin: 0;
+  }
+
+  /* ── Gradient seams between sections ── */
+  .seam {
+    height: clamp(56px, 9vw, 110px);
+  }
+  .seam--into-ink {
+    background: linear-gradient(
+      180deg,
+      var(--paper) 0%,
+      var(--bone) 38%,
+      var(--ink) 100%
+    );
+  }
+  .seam--out-ink {
+    background: linear-gradient(
+      180deg,
+      var(--ink) 0%,
+      var(--bone) 60%,
+      var(--paper) 100%
+    );
+  }
+
+  /* ── Mobile-first section ── */
+  .mobile {
+    background:
+      radial-gradient(
+        80% 120% at 100% 0%,
+        rgba(199, 91, 57, 0.06),
+        transparent 60%
+      ),
+      var(--paper);
+  }
+  .mobile__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  .mobile__points {
+    margin-top: 1.6rem;
+  }
+  .mobile__src {
+    margin: 1.6rem 0 0;
+    font-size: 0.76rem;
+    color: var(--muted);
+  }
+  .mobile__device {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .phone {
+    position: relative;
+    width: clamp(210px, 24vw, 248px);
+    aspect-ratio: 9 / 19;
+    border: 10px solid var(--ink);
+    border-radius: 40px;
+    background: var(--ink);
+    overflow: hidden;
+    box-shadow: var(--shadow-lift);
+  }
+  .phone__notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42%;
+    height: 18px;
+    background: var(--ink);
+    border-radius: 0 0 12px 12px;
+    z-index: 2;
+  }
+  .phone :global(.phone__screen) {
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+  }
+  .phone__statnum {
+    display: block;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 2.4rem;
+    color: var(--ember);
+    line-height: 1;
+    text-align: center;
+  }
+  .phone__statcap {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    text-align: center;
+    max-width: 22ch;
   }
 
   /* ── Section heads ── */
@@ -415,9 +759,113 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     height: clamp(220px, 30vw, 340px);
   }
 
+  /* ── AI visibility section ── */
+  .ai__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .ai__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    border-left: 3px solid var(--ember);
+    padding-left: 1.8rem;
+  }
+  .ai__num {
+    display: block;
+    font-family: var(--display);
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--ember);
+    line-height: 1;
+  }
+  .ai__cap {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--body);
+    margin-top: 0.3rem;
+  }
+
+  /* ── FAQ ── */
+  .faq-list {
+    max-width: 740px;
+    margin-inline: auto;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q {
+    cursor: pointer;
+    padding: 1.2rem 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .faq-q::after {
+    content: "+";
+    font-size: 1.3rem;
+    color: var(--ember);
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+  .faq-item[open] .faq-q::after {
+    content: "−";
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-a {
+    padding: 0 0 1.2rem;
+    color: var(--body);
+    max-width: 65ch;
+    margin: 0;
+  }
+
   .pricing-more {
     text-align: center;
     margin-top: 2.4rem;
+  }
+
+  /* ── Pull quote ── */
+  .pullquote {
+    /* Deliberately more generous than neighbouring sections: this is the
+       editorial "event", so the whitespace does the ranking. */
+    padding-block: clamp(4.5rem, 11vw, 8rem);
+    text-align: center;
+  }
+  .pullquote__kicker {
+    color: var(--ember);
+    display: block;
+    margin-bottom: 1.6rem;
+  }
+  .pullquote__quote {
+    font-family: var(--display);
+    /* Restrained weight — editorial hierarchy is carried by scale + space,
+       not mass. */
+    font-weight: 500;
+    font-size: clamp(2.1rem, 5vw, 3.6rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+    max-width: 20ch;
+    margin: 0 auto;
+    text-wrap: balance;
+  }
+  .pullquote__quote em {
+    font-style: italic;
+    color: var(--ember);
+  }
+  .pullquote__tag {
+    margin: 1.8rem 0 0;
+    color: var(--muted-on-ink);
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
   }
 
   @media (max-width: 900px) {
@@ -432,6 +880,15 @@ import { offerings, reasons, steps, site, portfolioVideo } from "../data/site.ts
     }
     .services__grid {
       grid-template-columns: 1fr 1fr;
+    }
+    .ai__grid {
+      grid-template-columns: 1fr;
+    }
+    .mobile__grid {
+      grid-template-columns: 1fr;
+    }
+    .mobile__device {
+      order: -1;
     }
     .reasons {
       grid-template-columns: 1fr;
