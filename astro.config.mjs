@@ -8,7 +8,7 @@ import vercel from "@astrojs/vercel";
 // opt out with `export const prerender = false` (the Maître API) run as Vercel
 // serverless functions, where the Anthropic key lives server-side.
 export default defineConfig({
-  site: "https://frontofhouse.studio",
+  site: "https://fohrestaurants.com",
   adapter: vercel(),
   integrations: [sitemap()],
 });

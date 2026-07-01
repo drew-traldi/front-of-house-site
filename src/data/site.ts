@@ -10,7 +10,7 @@ export const site = {
   studioType: "Restaurant Web Studio",
   description:
     "The web and brand studio built only for restaurants. We design the brand, capture the photos and video on site, and build a custom website you own outright, then host and keep it sharp for a flat yearly fee. Pay once, own it for good.",
-  url: "https://frontofhouse.studio",
+  url: "https://fohrestaurants.com",
   foundingYear: 2026,
   areaServed: [
     "Park City, Utah",
@@ -31,7 +31,7 @@ export const site = {
 
   // ── Contact: PLACEHOLDERS. Replace with real details. ──
   contact: {
-    email: "hello@frontofhouse.studio",
+    email: "hello@fohrestaurants.com",
     phone: "(555) 123-4567",
     phoneHref: "tel:+15551234567",
   },

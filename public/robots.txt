@@ -32,4 +32,4 @@ Allow: /
 User-agent: Bytespider
 Allow: /
 
-Sitemap: https://frontofhouse.studio/sitemap-index.xml
+Sitemap: https://fohrestaurants.com/sitemap-index.xml
