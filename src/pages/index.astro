@@ -4,7 +4,7 @@ import Tiers from "../components/Tiers.astro";
 import CtaBand from "../components/CtaBand.astro";
 import VideoSlot from "../components/VideoSlot.astro";
 import TickList from "../components/TickList.astro";
-import { offerings, reasons, steps, site, portfolioVideo, faq } from "../data/site.ts";
+import { offerings, reasons, steps, site, portfolioVideo, faq, specConcepts } from "../data/site.ts";
 
 const homeFaq = [...faq.pricing.slice(0, 3), ...faq.services.slice(0, 2)];
 const jsonLd = {
@@ -73,7 +73,7 @@ const jsonLd = {
   <div class="seam seam--into-ink" aria-hidden="true"></div>
 
   <!-- ── Services (dark) ── -->
-  <section id="services" class="services surface-ink">
+  <section id="services" class="services surface-ink surface-ink--glow">
     <div class="container">
       <div class="services__head">
         <p class="kicker">What we do</p>
@@ -108,7 +108,7 @@ const jsonLd = {
   <div class="seam seam--out-ink" aria-hidden="true"></div>
 
   <!-- ── Why FOH ── -->
-  <section id="why" class="section">
+  <section id="why" class="section surface-toast">
     <div class="container">
       <header class="head head--center">
         <p class="kicker">Why Front of House</p>
@@ -132,8 +132,35 @@ const jsonLd = {
     </div>
   </section>
 
+  <!-- ── Spec templates: the interactive hook ── -->
+  <section id="templates" class="section--tight">
+    <div class="container">
+      <div class="tryband">
+        <div class="tryband__copy">
+          <p class="kicker">Spec templates</p>
+          <h2>See your restaurant's site in <em>sixty</em> seconds.</h2>
+          <p class="lede">
+            Four live spec sites, one for every kind of place. Type your
+            restaurant's name, pick a vibe, and watch it become yours. No
+            email, nothing saved or sent.
+          </p>
+        </div>
+        <div class="tryband__side">
+          <ul class="tryband__list">
+            {specConcepts.map((s) => (
+              <li>
+                <a href={s.href}>{s.name} →</a>
+              </li>
+            ))}
+          </ul>
+          <a class="btn btn--primary" href="/templates">Try it with your name</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ── AI visibility (GEO selling point) ── -->
-  <section id="ai-search" class="section surface-bone">
+  <section id="ai-search" class="section surface-clay">
     <div class="container ai__grid">
       <div class="ai__copy">
         <p class="kicker">Built for AI search</p>
@@ -210,7 +237,7 @@ const jsonLd = {
   </section>
 
   <!-- ── Pull quote (insider voice, full-bleed editorial break) ── -->
-  <section class="pullquote surface-ink" aria-label="Why Front of House">
+  <section class="pullquote surface-dusk" aria-label="Why Front of House">
     <div class="container">
       <p class="kicker pullquote__kicker">Built by insiders</p>
       <blockquote class="pullquote__quote">
@@ -222,7 +249,7 @@ const jsonLd = {
   </section>
 
   <!-- ── Process ── -->
-  <section id="process" class="section surface-bone">
+  <section id="process" class="section surface-toast">
     <div class="container">
       <header class="head head--center">
         <h2>Three steps to a site that works.</h2>
@@ -337,15 +364,58 @@ const jsonLd = {
 </script>
 
 <style>
+  /* ── Spec templates band ── */
+  .tryband {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    background: var(--bone);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1.8rem, 4vw, 3rem);
+  }
+  .tryband h2 {
+    margin: 0.3rem 0 0.6rem;
+  }
+  .tryband h2 em {
+    font-style: italic;
+    color: var(--ember);
+  }
+  .tryband .lede {
+    margin: 0;
+  }
+  .tryband__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .tryband__list a {
+    display: inline-block;
+    padding: 0.35rem 0;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .tryband__list a:hover {
+    color: var(--ember-deep);
+  }
+  @media (max-width: 820px) {
+    .tryband {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* ── Hero ── */
   .hero {
     background:
       radial-gradient(
-        120% 80% at 90% -10%,
-        rgba(199, 91, 57, 0.09),
+        130% 90% at 88% -8%,
+        rgba(199, 91, 57, 0.16),
         transparent 55%
       ),
-      var(--paper);
+      linear-gradient(180deg, var(--paper) 0%, var(--clay) 100%);
   }
   .hero__grid {
     display: grid;
@@ -586,8 +656,8 @@ const jsonLd = {
   .seam--into-ink {
     background: linear-gradient(
       180deg,
-      var(--paper) 0%,
-      var(--bone) 38%,
+      var(--clay) 0%,
+      var(--dusk) 62%,
       var(--ink) 100%
     );
   }
@@ -595,8 +665,8 @@ const jsonLd = {
     background: linear-gradient(
       180deg,
       var(--ink) 0%,
-      var(--bone) 60%,
-      var(--paper) 100%
+      var(--dusk) 30%,
+      var(--toast) 100%
     );
   }
 
@@ -694,8 +764,8 @@ const jsonLd = {
     gap: 1.5rem;
   }
   .reason {
-    background: var(--bone);
-    border: 1px solid var(--line);
+    background: var(--paper);
+    border: 1px solid #decba9;
     border-radius: 8px;
     padding: 2.2rem;
     display: flex;
@@ -860,7 +930,7 @@ const jsonLd = {
   }
   .pullquote__quote em {
     font-style: italic;
-    color: var(--ember);
+    color: var(--ember-bright);
   }
   .pullquote__tag {
     margin: 1.8rem 0 0;

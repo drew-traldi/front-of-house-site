@@ -4,6 +4,14 @@ Astro marketing site for Front of House, the restaurant web studio.
 
 ## Design contract — read before any visual or copy work
 
+**Start with `Mac_Master_Design_claude_must_read.md`** (project root): the
+master doc that unifies all design guidance, sets the order of authority,
+and carries the merged pre-delivery checklist. It layers two installed
+skills on top of the contract below: `.claude/skills/frontend-design/`
+(design process, anti-default thinking) and `.claude/skills/ui-ux-pro-max/`
+(searchable UX/color/type database + Astro stack rules; its style generator
+never overrides a brand contract).
+
 Any agent generating or editing UI, layout, styling, imagery, or copy for this
 project MUST work against two sources of truth:
 

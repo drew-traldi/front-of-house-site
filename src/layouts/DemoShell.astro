@@ -1,0 +1,169 @@
+---
+// Shell for the interactive spec demos under /templates/*.
+// Deliberately does NOT use Base.astro or global.css: the demo below the
+// FOH bar is the visitor's restaurant, not FOH, so each template owns its
+// own tokens and type. Only the frame bar + intake are FOH-branded.
+import "@fontsource/cormorant/600.css";
+import "@fontsource-variable/inter";
+import FohBar from "../components/templates/FohBar.astro";
+import Intake from "../components/templates/Intake.astro";
+import type { TemplateDef } from "../data/templates";
+import { site } from "../data/site";
+
+interface Props {
+  t: TemplateDef;
+  description: string;
+  /** the demo's display-font woff2 (import with ?url); preloaded for fast hero paint */
+  preloadFont?: string;
+}
+const { t, description, preloadFont } = Astro.props;
+
+const title = `${t.label} spec template · ${site.name}`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImageUrl = new URL(`/og/${t.slug}.jpg`, site.url).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="theme-color" content="#221c18" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {preloadFont && (
+      <link
+        rel="preload"
+        href={preloadFont}
+        as="font"
+        type="font/woff2"
+        crossorigin
+      />
+    )}
+    {import.meta.env.PROD && <script defer src="/_vercel/insights/script.js" />}
+  </head>
+  <body>
+    <a href="#demo-main" class="visually-hidden">Skip to content</a>
+    <FohBar templateLabel={t.label} />
+    <div
+      id="demo-root"
+      data-slug={t.slug}
+      data-template-label={t.label}
+      data-default-name={t.demoName}
+      data-default-city={t.demoCity}
+      data-default-tagline={t.demoTagline}
+      data-vibe-a={t.vibes[0].key}
+      data-vibe-b={t.vibes[1].key}
+      data-vibe-a-label={t.vibes[0].label}
+      data-vibe-b-label={t.vibes[1].label}
+      data-vibe={t.vibes[0].key}
+    >
+      <main id="demo-main">
+        <slot />
+      </main>
+    </div>
+    <Intake t={t} />
+    <script>
+      import { initDemo } from "../scripts/personalize.js";
+      initDemo();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  /* Minimal shared reset; each demo brings its own tokens and type. */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 64px; /* clear the sticky FOH bar */
+  }
+  body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  img,
+  svg {
+    max-width: 100%;
+    display: block;
+  }
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  ul,
+  ol,
+  figure {
+    margin: 0;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* The one reveal moment after the intake: hero pieces rise in a short
+     stagger. Pages opt elements in with data-reveal and stagger with
+     style="--i: n". Runs only when personalize.js adds .is-revealed. */
+  #demo-root.is-revealed [data-reveal] {
+    animation: demo-rise 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+  @keyframes demo-rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Scroll-staggered reveals: hidden only once JS has arrived (.js gate),
+     revealed by personalize.js's IntersectionObserver. */
+  .js [data-scroll-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
+    transition-delay: calc(var(--sr, 0) * 70ms);
+  }
+  .js [data-scroll-reveal].sr-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>

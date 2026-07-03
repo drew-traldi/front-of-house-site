@@ -1,0 +1,281 @@
+---
+// The 60-second intake: one screen, four answers, no email, no steps.
+// FOH-branded chrome; validation follows .claude/craft/form-validation.md
+// (errors on blur/submit only, clear live once fixed) via personalize.js.
+import type { TemplateDef } from "../../data/templates";
+
+interface Props {
+  t: TemplateDef;
+}
+const { t } = Astro.props;
+---
+
+<dialog id="demo-intake" class="intake" aria-labelledby="intake-title">
+  <form novalidate>
+    <p class="intake__kicker">Front of House · {t.label} template</p>
+    <h2 id="intake-title">Make this site yours.</h2>
+    <p class="intake__lede">
+      Four quick answers and {t.demoName} becomes your restaurant. Nothing is
+      saved or sent, it stays in your browser until you decide to reach out.
+    </p>
+
+    <div class="intake__field">
+      <label for="intake-name">Your restaurant's name</label>
+      <input
+        id="intake-name"
+        name="name"
+        type="text"
+        autocomplete="organization"
+        aria-describedby="intake-name-err"
+        autofocus
+      />
+      <span class="intake__err" id="intake-name-err" role="alert"></span>
+    </div>
+
+    <div class="intake__field">
+      <label for="intake-city">City or neighborhood <em>optional</em></label>
+      <input
+        id="intake-city"
+        name="city"
+        type="text"
+        placeholder={t.demoCity}
+        autocomplete="address-level2"
+      />
+    </div>
+
+    <fieldset class="intake__vibes">
+      <legend>Pick the vibe</legend>
+      <div class="intake__vibe-row">
+        {
+          t.vibes.map((v, i) => (
+            <label class="intake__vibe">
+              <input
+                type="radio"
+                name="vibe"
+                value={v.key}
+                checked={i === 0}
+              />
+              <span class="intake__vibe-card">
+                <strong>{v.label}</strong>
+                <span>{v.hint}</span>
+              </span>
+            </label>
+          ))
+        }
+      </div>
+      <p class="intake__vibe-note">The page behind changes as you pick.</p>
+    </fieldset>
+
+    <div class="intake__field">
+      <label for="intake-tag">Tagline <em>optional</em></label>
+      <input
+        id="intake-tag"
+        name="tag"
+        type="text"
+        placeholder={t.demoTagline}
+      />
+    </div>
+
+    <div class="intake__actions">
+      <button type="submit" class="intake__go">Show me my site</button>
+      <button type="button" class="intake__skip" data-intake-skip>
+        Just browse
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<style>
+  .intake {
+    width: min(30rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    border: 1px solid #e4d9c4;
+    border-radius: 14px;
+    padding: clamp(1.4rem, 4vw, 2.1rem);
+    background: #fbf7f0;
+    color: #4a4038;
+    box-shadow: 0 2px 6px rgba(34, 28, 24, 0.08),
+      0 22px 50px rgba(34, 28, 24, 0.14);
+    font-family: "Inter Variable", "Inter", "Helvetica Neue", sans-serif;
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+  /* Keep the backdrop light: the vibe pick previews live on the page behind */
+  .intake::backdrop {
+    background: rgba(34, 28, 24, 0.38);
+  }
+  .intake__kicker {
+    margin: 0 0 0.8rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c75b39;
+  }
+  .intake h2 {
+    margin: 0 0 0.5rem;
+    font-family: "Cormorant", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.7rem, 4vw, 2.1rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: #221c18;
+  }
+  .intake__lede {
+    margin: 0 0 1.4rem;
+    font-size: 0.92rem;
+    color: #4a4038;
+  }
+
+  .intake__field {
+    margin-bottom: 1rem;
+  }
+  .intake label,
+  .intake legend {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #221c18;
+    margin-bottom: 0.4rem;
+  }
+  .intake label em {
+    font-style: normal;
+    font-weight: 500;
+    color: #9a8e7e;
+  }
+  .intake input[type="text"] {
+    width: 100%;
+    font: inherit;
+    color: #221c18;
+    background: #fff;
+    border: 1.5px solid #e4d9c4;
+    border-radius: 9px;
+    padding: 0.65rem 0.8rem;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  .intake input[type="text"]:focus {
+    outline: none;
+    border-color: #c75b39;
+    box-shadow: 0 0 0 3px rgba(199, 91, 57, 0.14);
+  }
+  .intake input[aria-invalid="true"] {
+    border-color: #b23122;
+  }
+  .intake__err {
+    display: block;
+    min-height: 1.05rem;
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #b23122;
+  }
+
+  .intake__vibes {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1rem;
+  }
+  .intake__vibe-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+  .intake__vibe input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .intake__vibe-card {
+    display: block;
+    border: 1.5px solid #e4d9c4;
+    border-radius: 9px;
+    background: #fff;
+    padding: 0.7rem 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  .intake__vibe-card strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #221c18;
+  }
+  .intake__vibe-card span {
+    display: block;
+    font-size: 0.78rem;
+    color: #9a8e7e;
+    margin-top: 0.15rem;
+  }
+  .intake__vibe input:checked + .intake__vibe-card {
+    border-color: #c75b39;
+    box-shadow: 0 0 0 3px rgba(199, 91, 57, 0.14);
+  }
+  .intake__vibe input:focus-visible + .intake__vibe-card {
+    outline: 2.5px solid #c75b39;
+    outline-offset: 3px;
+  }
+  .intake__vibe-note {
+    margin: 0.55rem 0 0;
+    font-size: 0.78rem;
+    color: #9a8e7e;
+  }
+
+  .intake__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1.3rem;
+  }
+  .intake__go {
+    flex: 1;
+    font: inherit;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #fbf7f0;
+    background: #c75b39;
+    border: 1.5px solid transparent;
+    border-radius: 999px;
+    padding: 0.8rem 1.4rem;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.16s ease,
+      box-shadow 0.18s ease;
+  }
+  .intake__go:hover {
+    background: #a8472b;
+    box-shadow: 0 10px 22px rgba(199, 91, 57, 0.28);
+  }
+  .intake__go:active {
+    transform: translateY(1px);
+  }
+  .intake__skip {
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #4a4038;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 0.5rem 0.4rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .intake__skip:hover {
+    color: #221c18;
+  }
+  .intake :is(button):focus-visible {
+    outline: 2.5px solid #c75b39;
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 460px) {
+    .intake__vibe-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

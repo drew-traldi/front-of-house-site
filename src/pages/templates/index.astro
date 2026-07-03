@@ -1,0 +1,214 @@
+---
+import Base from "../../layouts/Base.astro";
+import CtaBand from "../../components/CtaBand.astro";
+import { templates } from "../../data/templates";
+import { site } from "../../data/site";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Restaurant website templates you can try with your name",
+  description:
+    "Four spec restaurant websites by Front of House. Enter your restaurant's name, pick a vibe, and see your site in sixty seconds.",
+  url: `${site.url}/templates`,
+  mainEntity: {
+    "@id": `${site.url}/#organization`,
+  },
+};
+---
+
+<Base
+  title="Templates"
+  description="Try a Front of House spec site with your restaurant's name on it. Four styles, four quick questions, your site on screen in sixty seconds."
+  jsonLd={jsonLd}
+  ogImage="/og/templates.jpg"
+>
+  <section class="phead">
+    <div class="container">
+      <p class="kicker">Spec templates</p>
+      <h1>
+        See your restaurant's site in <em class="accent">sixty</em> seconds.
+      </h1>
+      <p class="lede">
+        These are real spec builds, not screenshots. Pick the one closest to
+        your kind of place, answer four quick questions, and watch it become
+        yours. When it feels right, send it to us and we build the real thing.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="tgrid">
+        {
+          templates.map((t, i) => (
+            <a class="tcard" href={t.href}>
+              <span class="tcard__swatch" aria-hidden="true">
+                {t.swatch.map((c) => (
+                  <span style={`background:${c}`} />
+                ))}
+              </span>
+              <span class="tcard__num" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h2>{t.label}</h2>
+              <p class="tcard__note">{t.note}</p>
+              <p class="tcard__meta">
+                Spec restaurant: {t.demoName}, {t.demoCity}. Two vibes:{" "}
+                {t.vibes[0].label} or {t.vibes[1].label}.
+              </p>
+              <span class="tcard__go">Try it with your name →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="how card">
+        <div class="how__step">
+          <span class="how__n">1</span>
+          <h3>Answer four questions</h3>
+          <p>
+            Your restaurant's name, your city, a vibe, a tagline if you have
+            one. No email, nothing saved or sent.
+          </p>
+        </div>
+        <div class="how__step">
+          <span class="how__n">2</span>
+          <h3>Watch it become yours</h3>
+          <p>
+            The template puts your name up in lights on the spot. Share the
+            link with a partner, it carries your answers.
+          </p>
+        </div>
+        <div class="how__step">
+          <span class="how__n">3</span>
+          <h3>Send it to us</h3>
+          <p>
+            Hit "Get this built" and we take it from there: a real custom
+            build you own outright, from $2,000.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .phead {
+    padding-block: clamp(3rem, 7vw, 5rem) clamp(1rem, 3vw, 2rem);
+  }
+  .phead h1 {
+    max-width: 18ch;
+  }
+  .phead h1 .accent {
+    font-style: italic;
+    color: var(--ember);
+  }
+  .phead .lede {
+    margin-top: 1rem;
+  }
+
+  .tgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 2.5vw, 1.6rem);
+  }
+  .tcard {
+    position: relative;
+    display: block;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1.4rem, 2.4vw, 2rem);
+    color: var(--body);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease,
+      transform 0.18s ease;
+  }
+  .tcard:hover {
+    border-color: var(--ink);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+    color: var(--body);
+  }
+  .tcard__swatch {
+    display: flex;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--line);
+  }
+  .tcard__swatch span {
+    flex: 1;
+  }
+  .tcard__num {
+    position: absolute;
+    top: clamp(1.2rem, 2.2vw, 1.8rem);
+    right: clamp(1.4rem, 2.4vw, 2rem);
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .tcard h2 {
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    margin-bottom: 0.35rem;
+  }
+  .tcard__note {
+    margin-bottom: 0.75rem;
+  }
+  .tcard__meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 1.1rem;
+  }
+  .tcard__go {
+    font-weight: 600;
+    font-size: 0.94rem;
+    color: var(--ember-deep);
+  }
+  .tcard:hover .tcard__go {
+    color: var(--ink);
+  }
+
+  .how {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.4rem, 3vw, 2.5rem);
+  }
+  .how__n {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    font-family: var(--display);
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.7rem;
+  }
+  .how h3 {
+    margin-bottom: 0.35rem;
+  }
+  .how p {
+    font-size: 0.94rem;
+    margin: 0;
+  }
+
+  @media (max-width: 820px) {
+    .tgrid {
+      grid-template-columns: 1fr;
+    }
+    .how {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

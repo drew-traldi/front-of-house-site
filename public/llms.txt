@@ -48,6 +48,16 @@ Subscription-site companies rent restaurants a website for $200 to $500 a month 
 
 - Services: https://fohrestaurants.com/services
 - Pricing: https://fohrestaurants.com/pricing
+- Templates / try a spec site with your restaurant's name: https://fohrestaurants.com/templates
 - Work / portfolio: https://fohrestaurants.com/work
 - About: https://fohrestaurants.com/about
 - Contact / scope your build: https://fohrestaurants.com/contact
+
+## Interactive spec templates
+
+Four live demo restaurant sites a visitor can personalize in about sixty seconds (restaurant name, city, vibe, tagline; nothing is saved or sent):
+
+- Fine Dining (tasting menu, reservation-led): https://fohrestaurants.com/templates/fine-dining
+- Fast Casual (order-first counter service): https://fohrestaurants.com/templates/fast-casual
+- Mexican / Cantina (big visual menu, margarita hour): https://fohrestaurants.com/templates/cantina
+- Neighborhood Bar (tap board, weekly events): https://fohrestaurants.com/templates/neighborhood-bar

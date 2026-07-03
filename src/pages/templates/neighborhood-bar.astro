@@ -1,0 +1,565 @@
+---
+// Spec demo: "The Grackle", a corner bar. Brief in TEMPLATES-DESIGN.md §4.
+// The site changes as fast as the chalkboard: taps and events are the
+// content. Oswald condensed display (caps, tracked), Inter body.
+import "@fontsource-variable/oswald";
+import oswaldUrl from "@fontsource-variable/oswald/files/oswald-latin-wght-normal.woff2?url";
+import { Image } from "astro:assets";
+import DemoShell from "../../layouts/DemoShell.astro";
+import { templateBySlug } from "../../data/templates";
+import tapsPhoto from "../../assets/demo/grackle-taps.jpg";
+
+const t = templateBySlug("neighborhood-bar");
+
+const taps = [
+  { n: 1, pour: "Hazy IPA", from: "Templin Family", price: "7" },
+  { n: 2, pour: "Czech Pils", from: "Bewilder", price: "6" },
+  { n: 3, pour: "Amber Ale", from: "RedRock", price: "6" },
+  { n: 4, pour: "Nitro Stout", from: "Kiitos", price: "7" },
+  { n: 5, pour: "Dry Cider", from: "Mountain West", price: "8" },
+  { n: 6, pour: "Guest tap", from: "Ask the bar", price: "?" },
+];
+
+const events = [
+  { day: "Mon", what: "Trivia with Reuben", when: "7:00" },
+  { day: "Thu", what: "Vinyl night, bring a record", when: "8:00" },
+  { day: "Sat", what: "Patio DJ, weather willing", when: "6:00" },
+  { day: "Sun", what: "Industry night, 20% off", when: "All night" },
+];
+
+const kitchen = [
+  { name: "Smash burger", price: "11" },
+  { name: "Fried pickles", price: "6" },
+  { name: "Hot wings, six or twelve", price: "12" },
+  { name: "Grilled cheese, late night", price: "8" },
+];
+---
+
+<DemoShell
+  t={t}
+  description="Neighborhood bar spec template by Front of House: tap board, events, and a site that changes as fast as the chalkboard. Try it with your bar's name."
+  preloadFont={oswaldUrl}
+>
+  <div class="nb">
+    <!-- ── Header ── -->
+    <header class="nb-head">
+      <p class="nb-head__brand" data-slot="name">{t.demoName}</p>
+      <nav class="nb-head__nav" aria-label="Bar">
+        <a href="#taps">On tap</a>
+        <a href="#week">This week</a>
+        <a href="#kitchen">Kitchen</a>
+        <a href="#visit">Find us</a>
+      </nav>
+    </header>
+
+    <!-- ── Hero ── -->
+    <section class="nb-hero">
+      <p class="nb-hero__est" data-reveal style="--i:0">Est. whenever</p>
+      <p class="nb-hero__open" data-reveal style="--i:0">
+        <span class="nb-dot" aria-hidden="true"></span>
+        Open till 1 · <span data-slot="city">{t.demoCity}</span>
+      </p>
+      <h1 data-reveal style="--i:1"><span data-slot="name">{t.demoName}</span></h1>
+      <div class="nb-chalkrule" aria-hidden="true" data-reveal style="--i:1"></div>
+      <p class="nb-hero__tag" data-reveal style="--i:2">
+        <span data-slot="tagline">{t.demoTagline}</span>
+      </p>
+      <p class="nb-hero__line" data-reveal style="--i:3">
+        Cash and cards. Dogs on the patio. Happy hour 3 to 6.
+      </p>
+    </section>
+
+    <!-- ── Signature: the tap board ── -->
+    <section class="nb-taps" id="taps">
+      <div class="nb-taps__inner">
+        <header class="nb-taps__head">
+          <h2>On tap tonight</h2>
+          <p class="nb-taps__updated">
+            <span class="nb-dot" aria-hidden="true"></span>
+            Board updated this afternoon
+          </p>
+        </header>
+        <ol class="nb-board">
+          {
+            taps.map((tap) => (
+              <li class="nb-tap">
+                <span class="nb-tap__n">{String(tap.n).padStart(2, "0")}</span>
+                <span class="nb-tap__pour">{tap.pour}</span>
+                <span class="nb-tap__from">{tap.from}</span>
+                <span class="nb-tap__price">{tap.price}</span>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="nb-taps__note">
+          Rotates weekly. When it kicks, it kicks. Ask what's next.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── This week ── -->
+    <section class="nb-week" id="week">
+      <h2>This week</h2>
+      <ul class="nb-events">
+        {
+          events.map((e) => (
+            <li>
+              <span class="nb-event__day">{e.day}</span>
+              <span class="nb-event__what">{e.what}</span>
+              <span class="nb-event__when">{e.when}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- ── Kitchen ── -->
+    <section class="nb-kitchen" id="kitchen">
+      <div class="nb-kitchen__text">
+        <h2>The kitchen's short list</h2>
+        <p>
+          A few things, done right, served until midnight. The full board is
+          on the wall.
+        </p>
+        <ul>
+          {
+            kitchen.map((k) => (
+              <li>
+                <span>{k.name}</span>
+                <span class="nb-kitchen__dots" aria-hidden="true" />
+                <span class="nb-kitchen__price">{k.price}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <figure class="nb-kitchen__ph">
+        <Image
+          src={tapsPhoto}
+          alt="A pint mid-pour at the taps"
+          widths={[480, 760]}
+          sizes="(max-width: 760px) 100vw, 28rem"
+        />
+        <figcaption>Mid-pour</figcaption>
+      </figure>
+    </section>
+
+    <!-- ── Visit / footer ── -->
+    <footer class="nb-visit" id="visit">
+      <div class="nb-visit__grid">
+        <div>
+          <h2 data-slot="name">{t.demoName}</h2>
+          <p class="nb-visit__tag" data-slot="tagline">{t.demoTagline}</p>
+        </div>
+        <div>
+          <h3>Find us</h3>
+          <p>1107 Wilmington Avenue<br /><span data-slot="city">{t.demoCity}</span></p>
+        </div>
+        <div>
+          <h3>Hours</h3>
+          <p>Every day<br />3:00 pm to 1:00 am</p>
+        </div>
+        <div>
+          <h3>House rules</h3>
+          <p>Dogs on the patio<br />Be good to the staff</p>
+        </div>
+      </div>
+      <p class="nb-visit__fine">
+        <span data-slot="name">{t.demoName}</span> ·
+        <span data-slot="city">{t.demoCity}</span> · See you tonight
+      </p>
+    </footer>
+  </div>
+</DemoShell>
+
+<style is:global>
+  /* ── The Grackle tokens: two vibes, switched by data-vibe on #demo-root ── */
+  #demo-root[data-vibe="dive"] {
+    --bg: #141815;
+    --surface: #1d221e;
+    --fg: #edefe8;
+    --muted: #9aa396;
+    --hair: rgba(237, 239, 232, 0.15);
+    --accent: #efa63e;
+    --on-accent: #141815;
+    --ph: linear-gradient(155deg, #232a25 0%, #2f3830 100%);
+  }
+  #demo-root[data-vibe="pub"] {
+    --bg: #f5efe4;
+    --surface: #e9ddc7;
+    --fg: #241d16;
+    --muted: #6b5f4f;
+    --hair: #ddd0b8;
+    --accent: #7d2a20;
+    --on-accent: #f5efe4;
+    --ph: linear-gradient(155deg, #d9c9a9 0%, #c7b28c 100%);
+  }
+
+  .nb {
+    --cond: "Oswald Variable", "Oswald", "Arial Narrow", sans-serif;
+    --sans: "Inter Variable", "Inter", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.62;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  .nb h1,
+  .nb h2,
+  .nb h3 {
+    font-family: var(--cond);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fg);
+  }
+  .nb :focus-visible {
+    outline: 2.5px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .nb-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+
+  /* ── Chalk devices: the Grackle identity ── */
+  .nb-hero__est {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .nb-chalkrule {
+    width: clamp(8rem, 22vw, 12rem);
+    border-top: 2px dashed color-mix(in srgb, var(--fg) 32%, transparent);
+    margin-bottom: 1rem;
+  }
+
+  /* ── Header ── */
+  .nb-head {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 1rem clamp(1.2rem, 5vw, 3.5rem);
+    border-bottom: 1px solid var(--hair);
+  }
+  .nb-head__brand {
+    font-family: var(--cond);
+    font-weight: 600;
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .nb-head__nav {
+    display: flex;
+    gap: 1.4rem;
+    margin-left: auto;
+  }
+  .nb-head__nav a {
+    font-family: var(--cond);
+    font-size: 0.86rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .nb-head__nav a:hover {
+    color: var(--accent);
+  }
+
+  /* ── Hero ── */
+  .nb-hero {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: clamp(3rem, 9vw, 6.5rem) clamp(1.2rem, 5vw, 2rem)
+      clamp(2.5rem, 7vw, 5rem);
+  }
+  .nb-hero__open {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .nb-hero h1 {
+    font-size: clamp(3.4rem, 11vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.8rem;
+  }
+  .nb-hero__tag {
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+    color: var(--fg);
+    max-width: 36ch;
+    margin-bottom: 0.8rem;
+  }
+  .nb-hero__line {
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+
+  /* ── Tap board ── */
+  .nb-taps {
+    background: var(--surface);
+    border-block: 1px solid var(--hair);
+    transition: background-color 0.35s ease;
+  }
+  .nb-taps__inner {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.2rem, 5vw, 2rem);
+  }
+  .nb-taps__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.6rem;
+  }
+  .nb-taps__head h2 {
+    font-size: clamp(2rem, 4.6vw, 3.1rem);
+  }
+  .nb-taps__updated {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .nb-board {
+    list-style: none;
+    padding: 0;
+    display: grid;
+  }
+  .nb-tap {
+    display: grid;
+    grid-template-columns: 2.6rem 1.2fr 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.85rem 0.2rem;
+    border-bottom: 1px dashed var(--hair);
+    position: relative;
+  }
+  .nb-tap:hover .nb-tap__pour {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+  .nb-tap__n {
+    font-family: var(--cond);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .nb-tap__pour {
+    font-family: var(--cond);
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .nb-tap__from {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .nb-tap__price {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .nb-taps__note {
+    margin-top: 1.4rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  /* ── This week ── */
+  .nb-week {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.2rem, 5vw, 2rem);
+  }
+  .nb-week h2 {
+    font-size: clamp(2rem, 4.6vw, 3.1rem);
+    margin-bottom: 1.4rem;
+  }
+  .nb-events {
+    list-style: none;
+    padding: 0;
+    display: grid;
+  }
+  .nb-events li {
+    display: grid;
+    grid-template-columns: 4rem 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.85rem 0.2rem;
+    border-bottom: 1px dashed var(--hair);
+  }
+  .nb-event__day {
+    font-family: var(--cond);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .nb-event__what {
+    font-weight: 500;
+  }
+  .nb-event__when {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Kitchen ── */
+  .nb-kitchen {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 0 clamp(1.2rem, 5vw, 2rem) clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .nb-kitchen h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    margin-bottom: 0.6rem;
+  }
+  .nb-kitchen__text > p {
+    color: var(--muted);
+    margin-bottom: 1.4rem;
+    max-width: 46ch;
+  }
+  .nb-kitchen ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .nb-kitchen li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-weight: 500;
+  }
+  .nb-kitchen__dots {
+    flex: 1;
+    border-bottom: 1px dashed var(--hair);
+    transform: translateY(-3px);
+  }
+  .nb-kitchen__price {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .nb-kitchen__ph {
+    position: relative;
+    margin: 0;
+    background: var(--ph);
+    border-radius: 12px;
+    aspect-ratio: 4 / 3.4;
+    overflow: hidden;
+  }
+  .nb-kitchen__ph img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .nb-kitchen__ph::after {
+    content: "";
+    position: absolute;
+    inset: 60% 0 0;
+    background: linear-gradient(to bottom, transparent, rgba(8, 10, 8, 0.55));
+    pointer-events: none;
+  }
+  .nb-kitchen__ph figcaption {
+    position: absolute;
+    left: 1.1rem;
+    bottom: 0.9rem;
+    z-index: 1;
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(237, 239, 232, 0.92);
+  }
+
+  /* ── Visit / footer ── */
+  .nb-visit {
+    border-top: 1px solid var(--hair);
+    background: var(--surface);
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.2rem, 5vw, 3.5rem) 2rem;
+    transition: background-color 0.35s ease;
+  }
+  .nb-visit__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: clamp(1.6rem, 4vw, 3rem);
+    max-width: 62rem;
+    margin: 0 auto;
+  }
+  .nb-visit h2 {
+    font-size: clamp(1.7rem, 3.4vw, 2.2rem);
+  }
+  .nb-visit__tag {
+    color: var(--muted);
+  }
+  .nb-visit h3 {
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .nb-visit__fine {
+    max-width: 62rem;
+    margin: clamp(2rem, 4vw, 3rem) auto 0;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--hair);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    .nb-head {
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+    }
+    .nb-head__nav {
+      order: 3;
+      width: 100%;
+      gap: 1.1rem;
+    }
+    .nb-tap {
+      grid-template-columns: 2.2rem 1fr auto;
+    }
+    .nb-tap__from {
+      grid-column: 2;
+    }
+    .nb-kitchen {
+      grid-template-columns: 1fr;
+    }
+    .nb-visit__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 460px) {
+    .nb-visit__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

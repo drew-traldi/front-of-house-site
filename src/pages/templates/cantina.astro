@@ -1,0 +1,649 @@
+---
+// Spec demo: "La Palma", a neighborhood cantina. Brief in TEMPLATES-DESIGN.md §3.
+// Warm, loud in color, margarita hour front and center. Alfa Slab One
+// display (headlines only, sparingly), Inter body.
+import "@fontsource/alfa-slab-one";
+import alfaSlabUrl from "@fontsource/alfa-slab-one/files/alfa-slab-one-latin-400-normal.woff2?url";
+import { Image } from "astro:assets";
+import DemoShell from "../../layouts/DemoShell.astro";
+import { templateBySlug } from "../../data/templates";
+import roomPhoto from "../../assets/demo/palma-room.jpg";
+import margsPhoto from "../../assets/demo/palma-margs.jpg";
+import mezcalPhoto from "../../assets/demo/palma-mezcal.jpg";
+import tacosPhoto from "../../assets/demo/palma-tacos.jpg";
+import birriaPhoto from "../../assets/demo/palma-birria.jpg";
+import asadaPhoto from "../../assets/demo/palma-asada.jpg";
+import enchiladasPhoto from "../../assets/demo/palma-enchiladas.jpg";
+import elotePhoto from "../../assets/demo/palma-elote.jpg";
+import churrosPhoto from "../../assets/demo/palma-churros.jpg";
+
+const t = templateBySlug("cantina");
+
+const margs = [
+  { name: "La Clásica", detail: "Blanco, lime, agave, salt rim", price: "9" },
+  { name: "Paloma", detail: "Grapefruit, blanco, chile salt", price: "10" },
+  { name: "Spicy Pepino", detail: "Cucumber, serrano, tajín", price: "11" },
+  { name: "Mezcal Negroni", detail: "Smoky, bitter, dangerous", price: "12" },
+];
+
+const menu = [
+  { name: "Tacos carnitas", detail: "Slow pork, salsa verde, onion, cilantro, rice and beans", price: "12", img: tacosPhoto, alt: "Two carnitas tacos with salsa verde, rice, and black beans" },
+  { name: "Birria quesadilla", detail: "Slow beef, oaxaca cheese, consomé for dunking", price: "14", img: birriaPhoto, alt: "Crisped birria quesadilla with limes and charred jalapeño" },
+  { name: "Carne asada", detail: "Flap steak, charred tomato, asparagus, jus", price: "18", img: asadaPhoto, alt: "Carne asada plated with asparagus and roasted tomato" },
+  { name: "Enchiladas verdes", detail: "Chicken, tomatillo, crema, queso fresco", price: "15", img: enchiladasPhoto, alt: "Enchiladas with tomatillo salsa and shaved vegetables" },
+  { name: "Elote callejero", detail: "Street corn, mayo, cotija, chile de árbol", price: "6", img: elotePhoto, alt: "Charred street corn with herbs and salt" },
+  { name: "Churros", detail: "Cinnamon sugar, cajeta, hot chocolate", price: "7", img: churrosPhoto, alt: "Churros with a cup of thick hot chocolate" },
+];
+---
+
+<DemoShell
+  t={t}
+  description="Mexican cantina spec template by Front of House: big visual menu, margarita hour energy. Try it with your restaurant's name."
+  preloadFont={alfaSlabUrl}
+>
+  <div class="cl">
+    <div class="cl-stripe" aria-hidden="true"></div>
+    <!-- ── Header ── -->
+    <header class="cl-head">
+      <p class="cl-head__brand" data-slot="name">{t.demoName}</p>
+      <nav class="cl-head__nav" aria-label="Restaurant">
+        <a href="#margs">Marg hour</a>
+        <a href="#menu">La carta</a>
+        <a href="#visit">Find us</a>
+      </nav>
+      <a class="cl-btn" href="#visit">Reserve a table</a>
+    </header>
+
+    <!-- ── Hero ── -->
+    <section class="cl-hero">
+      <div class="cl-hero__text">
+        <p class="cl-eyebrow" data-reveal style="--i:0">
+          <span data-slot="city">{t.demoCity}</span>
+        </p>
+        <h1 data-reveal style="--i:1"><span data-slot="name">{t.demoName}</span></h1>
+        <p class="cl-hero__tag" data-reveal style="--i:2">
+          <span data-slot="tagline">{t.demoTagline}</span>
+        </p>
+        <div class="cl-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="cl-hero__ctas" data-reveal style="--i:3">
+          <a class="cl-btn cl-btn--accent" href="#menu">See la carta</a>
+          <a class="cl-btn" href="#margs">Marg hour, 3 to 6</a>
+        </div>
+      </div>
+      <div class="cl-hero__tiles">
+        <figure class="cl-tile cl-tile--a">
+          <Image src={roomPhoto} alt="The dining room, serape booths and all" widths={[420, 700]} sizes="(max-width: 860px) 60vw, 22rem" />
+          <figcaption>The room</figcaption>
+        </figure>
+        <figure class="cl-tile cl-tile--b">
+          <Image src={margsPhoto} alt="Two frozen margaritas with lime" widths={[420, 700]} sizes="(max-width: 860px) 40vw, 18rem" />
+          <figcaption>Marg hour</figcaption>
+        </figure>
+        <figure class="cl-tile cl-tile--c">
+          <Image src={mezcalPhoto} alt="The backlit mezcal wall" widths={[420, 700]} sizes="(max-width: 860px) 40vw, 18rem" />
+          <figcaption>The mezcal wall</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ── Signature: the marg hour marquee ── -->
+    <section class="cl-margs" id="margs">
+      <div class="cl-marquee" aria-hidden="true">
+        <div class="cl-marquee__track">
+          {
+            Array.from({ length: 2 }).map(() => (
+              <span class="cl-marquee__run">
+                Marg hour · 3 to 6 · every day · dos por uno ·&nbsp;
+              </span>
+            ))
+          }
+        </div>
+      </div>
+      <div class="cl-margs__inner">
+        <h2>Marg hour, 3 to 6, every day.</h2>
+        <ul class="cl-margs__list">
+          {
+            margs.map((m) => (
+              <li>
+                <div class="cl-margs__row">
+                  <strong>{m.name}</strong>
+                  <span class="cl-margs__price">{m.price}</span>
+                </div>
+                <p>{m.detail}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── Big visual menu ── -->
+    <section class="cl-menu" id="menu">
+      <header class="cl-menu__head">
+        <p class="cl-eyebrow">La carta</p>
+        <h2>Order too much. Share most of it.</h2>
+      </header>
+      <div class="cl-menu__grid">
+        {
+          menu.map((m) => (
+            <article class="cl-dish">
+              <div class="cl-dish__ph">
+                <Image
+                  src={m.img}
+                  alt={m.alt}
+                  widths={[380, 600, 900]}
+                  sizes="(max-width: 560px) 100vw, (max-width: 860px) 50vw, 23rem"
+                />
+              </div>
+              <div class="cl-dish__row">
+                <h3>{m.name}</h3>
+                <span class="cl-dish__price">{m.price}</span>
+              </div>
+              <p>{m.detail}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ── Mezcal note ── -->
+    <section class="cl-mezcal">
+      <div>
+        <p class="cl-eyebrow">The mezcal wall</p>
+        <h2>Forty bottles, one question: espadín or wild?</h2>
+        <p>
+          Ask for a flight and we'll pour you three ways across Oaxaca.
+          <span data-slot="name">{t.demoName}</span> keeps the good stuff on
+          the wall, not in the back.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Visit / footer ── -->
+    <div class="cl-stripe" aria-hidden="true"></div>
+    <footer class="cl-visit" id="visit">
+      <div class="cl-visit__grid">
+        <div>
+          <h2 data-slot="name">{t.demoName}</h2>
+          <p class="cl-visit__tag" data-slot="tagline">{t.demoTagline}</p>
+        </div>
+        <div>
+          <h3>Find us</h3>
+          <p>512 Flat Shoals Avenue<br /><span data-slot="city">{t.demoCity}</span></p>
+        </div>
+        <div>
+          <h3>Hours</h3>
+          <p>Tuesday to Sunday<br />11:00 to 11:00, marg hour 3 to 6</p>
+        </div>
+        <div>
+          <h3>Tables</h3>
+          <p>(555) 010-0512<br />Walk-ins welcome, patio first-come</p>
+        </div>
+      </div>
+      <p class="cl-visit__fine">
+        <span data-slot="name">{t.demoName}</span> ·
+        <span data-slot="city">{t.demoCity}</span> · Y buena gente, siempre
+      </p>
+    </footer>
+  </div>
+</DemoShell>
+
+<style is:global>
+  /* ── La Palma tokens: two vibes, switched by data-vibe on #demo-root ── */
+  #demo-root[data-vibe="fiesta"] {
+    --bg: #fdf3e3;
+    --surface: #ffffff;
+    --fg: #2b1c14;
+    --muted: #75604e;
+    --hair: #ecdcc2;
+    --accent: #c3352b;
+    --on-accent: #fdf3e3;
+    --fill: #e9a13b;
+    --on-fill: #2b1c14;
+    --tile: #256d67;
+    --on-tile: #fdf3e3;
+    --ph-a: linear-gradient(155deg, #e9a13b 0%, #d0882a 100%);
+    --ph-b: linear-gradient(155deg, #c3352b 0%, #a02a22 100%);
+    --ph-c: linear-gradient(155deg, #256d67 0%, #1b544f 100%);
+  }
+  #demo-root[data-vibe="cocina"] {
+    --bg: #2e1f1a;
+    --surface: #3a2820;
+    --fg: #f6e7d3;
+    --muted: #c4a98d;
+    --hair: rgba(246, 231, 211, 0.18);
+    --accent: #e9a13b;
+    --on-accent: #2e1f1a;
+    --fill: #c3352b;
+    --on-fill: #f6e7d3;
+    --tile: #3a2820;
+    --on-tile: #f6e7d3;
+    --ph-a: linear-gradient(155deg, #4a332a 0%, #5c4133 100%);
+    --ph-b: linear-gradient(155deg, #6b3226 0%, #55271e 100%);
+    --ph-c: linear-gradient(155deg, #3d4a41 0%, #2f3a33 100%);
+  }
+
+  .cl {
+    --slab: "Alfa Slab One", "Rockwell", "Courier Bold", serif;
+    --sans: "Inter Variable", "Inter", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.62;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  .cl h1,
+  .cl h2 {
+    font-family: var(--slab);
+    font-weight: 400;
+    color: var(--fg);
+  }
+  .cl .cl-eyebrow {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .cl :focus-visible {
+    outline: 2.5px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ── Serape tri-stripe: the recurring frame device ── */
+  .cl-stripe {
+    height: 8px;
+    background: repeating-linear-gradient(
+      90deg,
+      #c3352b 0 24px,
+      #e9a13b 24px 48px,
+      #256d67 48px 72px
+    );
+  }
+  /* ── Three-dot punctuation ── */
+  .cl-dots {
+    display: inline-flex;
+    gap: 0.45rem;
+    margin-bottom: 1.4rem;
+  }
+  .cl-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .cl-dots span:nth-child(1) {
+    background: #c3352b;
+  }
+  .cl-dots span:nth-child(2) {
+    background: #e9a13b;
+  }
+  .cl-dots span:nth-child(3) {
+    background: #256d67;
+  }
+
+  .cl-btn {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    color: var(--fg);
+    background: transparent;
+    border: 2px solid var(--fg);
+    border-radius: 12px;
+    padding: 0.6rem 1.25rem;
+    text-decoration: none;
+    transition: transform 0.12s ease, background 0.18s ease, color 0.18s ease;
+  }
+  .cl-btn:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .cl-btn:active {
+    transform: translateY(2px);
+  }
+  .cl-btn--accent {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .cl-btn--accent:hover {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+
+  /* ── Header ── */
+  .cl-head {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 1.05rem clamp(1.2rem, 5vw, 3.5rem);
+    border-bottom: 2px dashed var(--hair);
+  }
+  .cl-head__brand {
+    font-family: var(--slab);
+    font-size: 1.35rem;
+    letter-spacing: 0.01em;
+  }
+  .cl-head__nav {
+    display: flex;
+    gap: 1.3rem;
+    margin-left: auto;
+  }
+  .cl-head__nav a {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .cl-head__nav a:hover {
+    color: var(--accent);
+  }
+
+  /* ── Hero ── */
+  .cl-hero {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 7vw, 5.5rem) clamp(1.2rem, 5vw, 2rem);
+  }
+  .cl-hero h1 {
+    font-size: clamp(2.9rem, 8vw, 5.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    margin: 0.9rem 0 1rem;
+  }
+  .cl-hero__tag {
+    font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+    font-weight: 500;
+    color: var(--muted);
+    max-width: 32ch;
+    margin-bottom: 1.6rem;
+  }
+  .cl-hero__ctas {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .cl-hero__tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.8rem;
+    aspect-ratio: 1 / 1;
+  }
+  .cl-tile {
+    position: relative;
+    margin: 0;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .cl-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cl-tile::after {
+    content: "";
+    position: absolute;
+    inset: 55% 0 0;
+    background: linear-gradient(to bottom, transparent, rgba(24, 12, 6, 0.55));
+    pointer-events: none;
+  }
+  .cl-tile figcaption {
+    position: absolute;
+    left: 0.9rem;
+    bottom: 0.75rem;
+    z-index: 1;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 245, 0.92);
+  }
+  .cl-tile--a {
+    background: var(--ph-a);
+    grid-row: span 2;
+  }
+  .cl-tile--b {
+    background: var(--ph-b);
+  }
+  .cl-tile--c {
+    background: var(--ph-c);
+  }
+
+  /* ── Marg hour ── */
+  .cl-margs {
+    border-block: 2px solid var(--fg);
+    background: var(--fill);
+    color: var(--on-fill);
+    transition: background-color 0.35s ease;
+  }
+  .cl-marquee {
+    overflow: hidden;
+    border-bottom: 2px solid var(--fg);
+    padding-block: 0.55rem;
+    background: var(--tile);
+    color: var(--on-tile);
+    transition: background-color 0.35s ease;
+  }
+  .cl-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: cl-scroll 26s linear infinite;
+  }
+  .cl-marquee:hover .cl-marquee__track {
+    animation-play-state: paused;
+  }
+  .cl-marquee__run {
+    font-family: var(--slab);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  @keyframes cl-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .cl-margs__inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.2rem, 5vw, 2rem);
+  }
+  .cl-margs__inner h2 {
+    font-size: clamp(1.9rem, 4.4vw, 2.9rem);
+    color: var(--on-fill);
+    margin-bottom: 1.6rem;
+  }
+  .cl-margs__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1.2rem, 3vw, 2rem);
+  }
+  .cl-margs__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 1.02rem;
+  }
+  .cl-margs__price {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .cl-margs__list p {
+    font-size: 0.88rem;
+    opacity: 0.8;
+    margin-top: 0.15rem;
+  }
+
+  /* ── Visual menu ── */
+  .cl-menu {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.2rem, 5vw, 2rem);
+  }
+  .cl-menu__head {
+    margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+  }
+  .cl-menu__head h2 {
+    font-size: clamp(2rem, 4.6vw, 3.1rem);
+    margin-top: 0.8rem;
+  }
+  .cl-menu__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.4rem, 3vw, 2.2rem);
+  }
+  .cl-dish__ph {
+    border-radius: 14px;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 0.9rem;
+    overflow: hidden;
+    background: var(--ph-a);
+  }
+  .cl-dish__ph img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .cl-dish:hover .cl-dish__ph img {
+    transform: scale(1.03);
+  }
+  .cl-dish__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .cl-dish h3 {
+    font-family: var(--sans);
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--fg);
+  }
+  .cl-dish__price {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .cl-dish p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+
+  /* ── Mezcal note ── */
+  .cl-mezcal {
+    background: var(--tile);
+    color: var(--on-tile);
+    transition: background-color 0.35s ease;
+  }
+  .cl-mezcal > div {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4rem) clamp(1.2rem, 5vw, 2rem);
+  }
+  .cl-mezcal h2 {
+    color: var(--on-tile);
+    font-size: clamp(1.7rem, 3.8vw, 2.5rem);
+    max-width: 24ch;
+    margin: 0.8rem 0 0.8rem;
+  }
+  .cl-mezcal p {
+    max-width: 56ch;
+    opacity: 0.92;
+  }
+  .cl-mezcal .cl-eyebrow {
+    color: var(--on-tile);
+    opacity: 0.75;
+  }
+
+  /* ── Visit / footer ── */
+  .cl-visit {
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.2rem, 5vw, 3.5rem) 2rem;
+  }
+  .cl-visit__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: clamp(1.6rem, 4vw, 3rem);
+    max-width: 72rem;
+    margin: 0 auto;
+  }
+  .cl-visit h2 {
+    font-size: clamp(1.7rem, 3.4vw, 2.2rem);
+  }
+  .cl-visit__tag {
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .cl-visit h3 {
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .cl-visit__fine {
+    max-width: 72rem;
+    margin: clamp(2rem, 4vw, 3rem) auto 0;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--hair);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cl-marquee__track {
+      animation: none;
+      transform: none;
+    }
+  }
+  @media (max-width: 860px) {
+    .cl-hero {
+      grid-template-columns: 1fr;
+    }
+    .cl-hero__tiles {
+      aspect-ratio: 16 / 10;
+    }
+    .cl-margs__list {
+      grid-template-columns: 1fr 1fr;
+    }
+    .cl-menu__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .cl-visit__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .cl-head {
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+    }
+    .cl-head__nav {
+      order: 3;
+      width: 100%;
+    }
+  }
+  @media (max-width: 560px) {
+    .cl-margs__list,
+    .cl-menu__grid,
+    .cl-visit__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

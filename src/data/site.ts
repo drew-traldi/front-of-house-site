@@ -117,17 +117,19 @@ export const caseStudies = [
   },
 ] as const;
 
-// ── Spec showcase: concept builds by restaurant category (in production). ──
+// ── Spec showcase: live interactive demos under /templates. ──
+// Full registry (vibes, demo identities): src/data/templates.ts
 export const specConcepts = [
-  { name: "Fine Dining", note: "Tasting-menu identity, reservation-led, editorial photography." },
-  { name: "Fast Casual", note: "Order-first, fast, menu and locations front and center." },
-  { name: "Mexican / Cantina", note: "Bold, warm, margarita-hour energy with a big visual menu." },
-  { name: "Neighborhood Bar", note: "Events, specials, and a site that changes as fast as the chalkboard." },
+  { name: "Fine Dining", note: "Tasting-menu identity, reservation-led, editorial photography.", href: "/templates/fine-dining" },
+  { name: "Fast Casual", note: "Order-first, fast, menu and locations front and center.", href: "/templates/fast-casual" },
+  { name: "Mexican / Cantina", note: "Bold, warm, margarita-hour energy with a big visual menu.", href: "/templates/cantina" },
+  { name: "Neighborhood Bar", note: "Events, specials, and a site that changes as fast as the chalkboard.", href: "/templates/neighborhood-bar" },
 ] as const;
 
 export const nav = [
   { label: "Services", href: "/services" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Templates", href: "/templates" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
 ] as const;

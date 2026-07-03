@@ -72,7 +72,12 @@ const jsonLd = {
         <div class="field-row">
           <div class="field">
             <label for="restaurant">Restaurant</label>
-            <input id="restaurant" name="restaurant" type="text" />
+            <input
+              id="restaurant"
+              name="restaurant"
+              type="text"
+              autocomplete="organization"
+            />
           </div>
           <div class="field">
             <label for="locations">Locations</label>
@@ -265,6 +270,32 @@ const jsonLd = {
   // Pattern A: no-JS users keep the browser's native validation; now that JS
   // is here, we repaint errors ourselves instead of the browser's bubbles.
   if (form) form.noValidate = true;
+
+  // Arriving from a spec template ("Get this built"): prefill the form with
+  // what they built so sales sees exactly what they want. Never overwrite
+  // anything the visitor already typed.
+  {
+    const q = new URLSearchParams(window.location.search);
+    const tpl = q.get("template");
+    if (tpl) {
+      const restaurant = q.get("restaurant") || "";
+      const city = q.get("city") || "";
+      const vibe = q.get("vibe") || "";
+      const tag = q.get("tag") || "";
+      const rInput = document.getElementById("restaurant");
+      if (rInput && !rInput.value && restaurant) rInput.value = restaurant;
+      const msg = document.getElementById("message");
+      if (msg && !msg.value) {
+        let text = `I customized the ${tpl} spec template`;
+        if (restaurant) text += ` as ${restaurant}`;
+        if (city) text += ` in ${city}`;
+        text += vibe ? `, ${vibe} vibe.` : ".";
+        if (tag) text += ` Tagline: "${tag}".`;
+        text += " Let's build the real thing.";
+        msg.value = text;
+      }
+    }
+  }
 
   // Fields that get inline, per-field validation.
   const validated = ["name", "email"]

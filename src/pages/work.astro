@@ -122,19 +122,20 @@ const jsonLd = {
         <p class="kicker">Spec builds</p>
         <h2>Don't see your kind of place yet?</h2>
         <p class="lede">
-          We're building showcase sites for every kind of restaurant, so you
-          can see exactly what yours could look like before we start. More going
-          live soon.
+          We built a live spec site for every kind of restaurant, so you can
+          see exactly what yours could look like before we start. Open one,
+          answer four quick questions, and it puts your name up in lights.
         </p>
       </header>
       <div class="specs">
         {
           specConcepts.map((s) => (
-            <article class="spec">
-              <span class="spec__tag">In production</span>
+            <a class="spec" href={s.href}>
+              <span class="spec__tag">Live spec</span>
               <h3>{s.name}</h3>
               <p>{s.note}</p>
-            </article>
+              <span class="spec__go">Try it with your name →</span>
+            </a>
           ))
         }
       </div>
@@ -305,10 +306,30 @@ const jsonLd = {
     gap: 1rem;
   }
   .spec {
+    display: block;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     padding: 1.6rem;
     background: var(--bone);
+    color: var(--body);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease,
+      transform 0.18s ease;
+  }
+  .spec:hover {
+    border-color: var(--ink);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+    color: var(--body);
+  }
+  .spec__go {
+    display: block;
+    margin-top: 0.9rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ember-deep);
+  }
+  .spec:hover .spec__go {
+    color: var(--ink);
   }
   .spec__tag {
     font-size: 0.62rem;

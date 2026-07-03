@@ -19,6 +19,11 @@
   --brass-deep: #8a6420;
   --bone: #f4ecdd;
   --paper: #fbf7f0;
+  /* Layered warm surfaces (brand revision, July 2026) */
+  --toast: #efe0c9; /* deeper bone — alternating light sections */
+  --clay: #f6e3d4; /* ember-tinted wash — warm feature sections */
+  --dusk: #2e231c; /* warm dark between Ink and Body — editorial breaks */
+  --ember-bright: #d97b57; /* ember accent legible on Dusk/Ink */
   --body: #4a4038;
   --muted: #9a8e7e;
 
@@ -213,14 +218,48 @@ img {
 .surface-bone {
   background: var(--bone);
 }
+.surface-toast {
+  background: var(--toast);
+}
+.surface-clay {
+  background: var(--clay);
+}
 .surface-ink {
   background: var(--ink);
   color: var(--bone);
 }
+/* Quiet ember glow for featured dark sections (not footer/utility ink) */
+.surface-ink--glow {
+  background:
+    radial-gradient(
+      110% 110% at 85% -10%,
+      rgba(199, 91, 57, 0.22),
+      transparent 58%
+    ),
+    var(--ink);
+}
+.surface-dusk {
+  background:
+    radial-gradient(
+      100% 140% at 50% 110%,
+      rgba(199, 91, 57, 0.2),
+      transparent 60%
+    ),
+    var(--dusk);
+  color: var(--bone);
+}
 .surface-ink h1,
 .surface-ink h2,
-.surface-ink h3 {
+.surface-ink h3,
+.surface-dusk h1,
+.surface-dusk h2,
+.surface-dusk h3 {
   color: var(--paper);
+}
+/* Cards sitting on Toast need a slightly deeper hairline */
+.surface-toast .card,
+.surface-clay .card {
+  border-color: #decba9;
 }
 
 /* Thin ember rule under the masthead, echoing the brand docs */

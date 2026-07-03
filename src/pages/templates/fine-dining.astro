@@ -1,0 +1,582 @@
+---
+// Spec demo: "Aurelia", a tasting-menu house. Brief in TEMPLATES-DESIGN.md §1.
+// This page is the visitor's restaurant, not FOH: it owns its own tokens
+// (candlelit / daylight vibes) and type (Fraunces display, Inter body).
+import "@fontsource-variable/fraunces";
+import "@fontsource-variable/fraunces/wght-italic.css";
+import frauncesUrl from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
+import { Image } from "astro:assets";
+import DemoShell from "../../layouts/DemoShell.astro";
+import { templateBySlug } from "../../data/templates";
+import tablePhoto from "../../assets/demo/aurelia-table.jpg";
+
+const t = templateBySlug("fine-dining");
+
+// Roman-numeral course indices — the Aurelia identity device
+const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+const courses = [
+  {
+    name: "Oyster",
+    detail: "Kusshi oyster, meyer lemon mignonette, high desert sage",
+    pairing: "Delamotte brut, Champagne",
+  },
+  {
+    name: "Beet & chèvre",
+    detail: "Chioggia beet, whipped chèvre, candied walnut, aged sherry",
+    pairing: "Grüner Veltliner, Kamptal",
+  },
+  {
+    name: "Agnolotti",
+    detail: "Handmade agnolotti, autumn squash, brown butter, crisp sage",
+    pairing: "Meursault, Côte de Beaune",
+  },
+  {
+    name: "King salmon",
+    detail: "Wild king salmon, shaved fennel, blood orange, chive oil",
+    pairing: "Sancerre rosé, Loire",
+  },
+  {
+    name: "Duck",
+    detail: "Dry aged duck breast, black garlic, preserved cherry, jus",
+    pairing: "Pinot noir, Willamette Valley",
+  },
+  {
+    name: "Alpine cheese",
+    detail: "High Uinta alpine cheese, wildflower honeycomb, rye crisp",
+    pairing: "Tawny port, ten year",
+  },
+  {
+    name: "Huckleberry",
+    detail: "Huckleberry soufflé, white chocolate, mountain mint",
+    pairing: "Moscato d'Asti, Piedmont",
+  },
+];
+---
+
+<DemoShell
+  t={t}
+  description="Fine dining spec template by Front of House: a reservation-led tasting menu site. Try it with your restaurant's name."
+  preloadFont={frauncesUrl}
+>
+  <div class="fd">
+    <!-- ── Masthead ── -->
+    <header class="fd-mast">
+      <span class="fd-mono fd-mono--sm" aria-hidden="true" data-slot="initial">{t.demoName[0]}</span>
+      <p class="fd-mast__brand" data-slot="name">{t.demoName}</p>
+      <nav class="fd-mast__nav" aria-label="Restaurant">
+        <a href="#menu">The tasting</a>
+        <a href="#story">The house</a>
+        <a href="#private">Private dining</a>
+      </nav>
+      <a class="fd-btn" href="#visit">Reserve</a>
+    </header>
+
+    <!-- ── Hero ── -->
+    <section class="fd-hero">
+      <div class="fd-mono" aria-hidden="true" data-reveal style="--i:0" data-slot="initial">{t.demoName[0]}</div>
+      <p class="fd-eyebrow" data-reveal style="--i:0">
+        <span data-slot="city">{t.demoCity}</span>
+      </p>
+      <h1 data-reveal style="--i:1"><span data-slot="name">{t.demoName}</span></h1>
+      <p class="fd-hero__tag" data-reveal style="--i:2">
+        <span data-slot="tagline">{t.demoTagline}</span>
+      </p>
+      <p class="fd-hero__meta" data-reveal style="--i:3">
+        Seatings Thursday through Sunday · 5:30 and 8:30
+      </p>
+      <a class="fd-btn fd-btn--accent" href="#visit" data-reveal style="--i:4">
+        Reserve a table
+      </a>
+    </section>
+
+    <!-- ── Signature: the tasting menu as typographic centerpiece ── -->
+    <section class="fd-menu" id="menu">
+      <header class="fd-menu__head">
+        <p class="fd-eyebrow">The tasting</p>
+        <h2>Seven courses, one evening.</h2>
+        <p class="fd-menu__price">
+          145 per person · wine pairings 85 · vegetarian on request
+        </p>
+      </header>
+      <ol class="fd-courses">
+        {
+          courses.map((c, i) => (
+            <li class="fd-course" data-scroll-reveal style={`--sr:${i % 4}`}>
+              <span class="fd-course__n">{roman[i]}</span>
+              <div>
+                <h3>{c.name}</h3>
+                <p>{c.detail}</p>
+                <p class="fd-course__pair">{c.pairing}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="fd-menu__note">
+        The menu turns with the season. Tonight's board is the kitchen's word.
+      </p>
+    </section>
+
+    <!-- ── Story ── -->
+    <section class="fd-story" id="story">
+      <figure class="fd-story__ph">
+        <Image
+          src={tablePhoto}
+          alt="A candlelit table set with wine and the evening's first course"
+          widths={[480, 760, 1100]}
+          sizes="(max-width: 760px) 100vw, 34rem"
+        />
+        <figcaption>At the table</figcaption>
+      </figure>
+      <div class="fd-story__text">
+        <p class="fd-eyebrow">The house</p>
+        <h2>A small room that takes its time.</h2>
+        <p>
+          Twenty six seats, one seating at a time, a kitchen you can hear.
+          <span data-slot="name">{t.demoName}</span> cooks what the mountains
+          and the market hand us that week, and nothing it can't stand behind.
+        </p>
+        <p>
+          Dinner runs a little over two hours. Come hungry, stay late, ask the
+          sommelier for the bottle she's excited about.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Private dining strip ── -->
+    <section class="fd-private" id="private">
+      <div>
+        <p class="fd-eyebrow">Private dining</p>
+        <h2>The cellar table seats twelve.</h2>
+        <p>
+          One long table beside the wine wall, its own menu, its own pace.
+          Weddings, buyouts, and the dinner you've been meaning to host.
+        </p>
+      </div>
+      <a class="fd-btn" href="#visit">Ask about dates</a>
+    </section>
+
+    <!-- ── Visit / footer ── -->
+    <footer class="fd-visit" id="visit">
+      <div class="fd-visit__grid">
+        <div>
+          <h2 data-slot="name">{t.demoName}</h2>
+          <p class="fd-visit__tag" data-slot="tagline">{t.demoTagline}</p>
+        </div>
+        <div>
+          <h3>Find us</h3>
+          <p>660 Main Street<br /><span data-slot="city">{t.demoCity}</span></p>
+        </div>
+        <div>
+          <h3>Hours</h3>
+          <p>Thursday to Sunday<br />Seatings 5:30 and 8:30</p>
+        </div>
+        <div>
+          <h3>Reservations</h3>
+          <p>
+            (555) 010-0660<br />
+            Online booking opens 30 days out
+          </p>
+        </div>
+      </div>
+      <p class="fd-visit__fine">
+        <span data-slot="name">{t.demoName}</span> ·
+        <span data-slot="city">{t.demoCity}</span> · Reservations recommended
+      </p>
+    </footer>
+  </div>
+</DemoShell>
+
+<style is:global>
+  /* ── Aurelia tokens: two vibes, switched by data-vibe on #demo-root ── */
+  #demo-root[data-vibe="candlelit"] {
+    --bg: #171310;
+    --surface: #211b16;
+    --fg: #f2ead9;
+    --muted: #b3a68e;
+    --hair: rgba(242, 234, 217, 0.16);
+    --accent: #d9ab5e;
+    --on-accent: #171310;
+    --ph: linear-gradient(160deg, #2a221a 0%, #3b2f23 100%);
+  }
+  #demo-root[data-vibe="daylight"] {
+    --bg: #faf7f1;
+    --surface: #ffffff;
+    --fg: #211d18;
+    --muted: #6f6554;
+    --hair: #e6ddcc;
+    --accent: #7d6a3f;
+    --on-accent: #faf7f1;
+    --ph: linear-gradient(160deg, #e9e0cd 0%, #d8ccb2 100%);
+  }
+
+  .fd {
+    --serif: "Fraunces Variable", Georgia, "Times New Roman", serif;
+    --sans: "Inter Variable", "Inter", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  .fd h1,
+  .fd h2,
+  .fd h3 {
+    font-family: var(--serif);
+    font-weight: 560;
+    color: var(--fg);
+  }
+  .fd .fd-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* Buttons: quiet, hairline, serif-adjacent */
+  .fd-btn {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg);
+    text-decoration: none;
+    border: 1px solid var(--hair);
+    padding: 0.7rem 1.5rem;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .fd-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .fd-btn--accent {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .fd-btn--accent:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+  .fd :focus-visible {
+    outline: 2.5px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ── The circled monogram: Aurelia's mark ── */
+  .fd-mono {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1.4rem;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .fd-mono--sm {
+    width: 2.1rem;
+    height: 2.1rem;
+    font-size: 1.05rem;
+    margin: 0;
+    flex: none;
+  }
+
+  /* ── Masthead ── */
+  .fd-mast {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.3rem clamp(1.2rem, 5vw, 4rem);
+    border-bottom: 1px solid var(--hair);
+  }
+  .fd-mast__brand {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .fd-mast__nav {
+    display: flex;
+    gap: 1.6rem;
+    margin-left: auto;
+  }
+  .fd-mast__nav a {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .fd-mast__nav a:hover {
+    color: var(--fg);
+  }
+
+  /* ── Hero ── */
+  .fd-hero {
+    text-align: center;
+    padding: clamp(4rem, 11vw, 8rem) clamp(1.2rem, 5vw, 4rem)
+      clamp(3.5rem, 9vw, 6.5rem);
+  }
+  .fd-hero h1 {
+    font-size: clamp(2.5rem, 7vw, 4.8rem);
+    font-weight: 460;
+    line-height: 1.04;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 1rem 0 1.2rem;
+  }
+  .fd-hero__tag {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+    color: var(--muted);
+    max-width: 34ch;
+    width: fit-content;
+    border-top: 1px solid var(--hair);
+    padding-top: 0.9rem;
+    margin: 0 auto 1.1rem;
+  }
+  .fd-hero__meta {
+    font-size: 0.82rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2.2rem;
+  }
+
+  /* ── The tasting: numbered typographic centerpiece ── */
+  .fd-menu {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: clamp(3rem, 7vw, 5rem) clamp(1.2rem, 5vw, 2rem);
+    border-top: 1px solid var(--hair);
+  }
+  .fd-menu__head {
+    text-align: center;
+    margin-bottom: clamp(2.2rem, 5vw, 3.4rem);
+  }
+  .fd-menu__head h2 {
+    font-size: clamp(2rem, 4.6vw, 3rem);
+    letter-spacing: -0.015em;
+    margin: 0.8rem 0 0.6rem;
+  }
+  .fd-menu__price {
+    font-size: 0.82rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .fd-courses {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: clamp(1.6rem, 3.5vw, 2.4rem);
+  }
+  .fd-course {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr;
+    gap: 0.4rem 1.2rem;
+    padding-bottom: clamp(1.6rem, 3.5vw, 2.4rem);
+    border-bottom: 1px solid var(--hair);
+  }
+  .fd-course:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .fd-course__n {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    color: var(--accent);
+    padding-top: 0.35rem;
+  }
+  .fd-course h3 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.35rem, 2.6vw, 1.7rem);
+    font-weight: 520;
+    margin-bottom: 0.25rem;
+  }
+  .fd-course p {
+    color: var(--fg);
+    margin: 0;
+  }
+  .fd-course__pair {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .fd-menu__note {
+    text-align: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  /* ── Story ── */
+  .fd-story {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: clamp(3rem, 7vw, 5.5rem) clamp(1.2rem, 5vw, 2rem);
+    border-top: 1px solid var(--hair);
+  }
+  .fd-story__ph {
+    position: relative;
+    margin: 0;
+    background: var(--ph);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+  .fd-story__ph img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .fd-story__ph::after {
+    content: "";
+    position: absolute;
+    inset: 55% 0 0;
+    background: linear-gradient(to bottom, transparent, rgba(12, 9, 7, 0.55));
+    pointer-events: none;
+  }
+  .fd-story__ph figcaption {
+    position: absolute;
+    left: 1.2rem;
+    bottom: 1rem;
+    z-index: 1;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(251, 247, 240, 0.9);
+  }
+  .fd-story__text h2 {
+    font-size: clamp(1.9rem, 4vw, 2.7rem);
+    letter-spacing: -0.015em;
+    margin: 0.8rem 0 1rem;
+  }
+  .fd-story__text p {
+    margin-bottom: 1rem;
+    max-width: 52ch;
+  }
+
+  /* ── Private dining ── */
+  .fd-private {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4rem) clamp(1.2rem, 5vw, 2rem);
+    border-top: 1px solid var(--hair);
+  }
+  .fd-private h2 {
+    font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+    letter-spacing: -0.015em;
+    margin: 0.8rem 0 0.6rem;
+  }
+  .fd-private p {
+    max-width: 52ch;
+    margin: 0;
+  }
+  .fd-private .fd-btn {
+    flex: none;
+  }
+
+  /* ── Visit / footer ── */
+  .fd-visit {
+    background: var(--surface);
+    border-top: 1px solid var(--hair);
+    padding: clamp(3rem, 7vw, 5rem) clamp(1.2rem, 5vw, 4rem) 2rem;
+    transition: background-color 0.35s ease;
+  }
+  .fd-visit__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: clamp(1.6rem, 4vw, 3rem);
+    max-width: 68rem;
+    margin: 0 auto;
+  }
+  .fd-visit h2 {
+    font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+    font-weight: 520;
+  }
+  .fd-visit__tag {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--muted);
+  }
+  .fd-visit h3 {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .fd-visit p {
+    color: var(--fg);
+  }
+  .fd-visit__fine {
+    max-width: 68rem;
+    margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--hair);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    .fd-mast {
+      flex-wrap: wrap;
+      gap: 0.8rem 1.4rem;
+    }
+    .fd-mast__nav {
+      order: 3;
+      width: 100%;
+      gap: 1.2rem;
+    }
+    .fd-mast .fd-btn {
+      margin-left: auto;
+    }
+    .fd-story {
+      grid-template-columns: 1fr;
+    }
+    .fd-story__ph {
+      aspect-ratio: 16 / 10;
+    }
+    .fd-private {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .fd-visit__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 460px) {
+    .fd-visit__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
