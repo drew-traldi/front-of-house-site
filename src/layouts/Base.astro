@@ -27,20 +27,28 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
 
 const orgSchema = {
   "@context": "https://schema.org",
-  "@type": ["ProfessionalService", "Organization"],
+  "@type": "Organization",
   "@id": `${site.url}/#organization`,
   name: site.name,
   alternateName: site.shortName,
   description: site.description,
   url: site.url,
   email: site.contact.email,
-  telephone: site.contact.phone,
+  telephone: site.contact.phoneHref.replace("tel:", ""),
+  contactPoint: {
+    "@type": "ContactPoint",
+    name: site.contact.name,
+    contactType: "sales",
+    email: site.contact.email,
+    telephone: site.contact.phoneHref.replace("tel:", ""),
+    availableLanguage: "English",
+  },
+  logo: `${site.url}/favicon.svg`,
   foundingDate: `${site.foundingYear}`,
   areaServed: site.areaServed.map((area) => ({
     "@type": "Place",
     name: area,
   })),
-  serviceType: "Restaurant website design, branding, photography, and AI search optimization",
   knowsAbout: site.knowsAbout,
   ...(site.sameAs.length > 0 && { sameAs: site.sameAs }),
   hasOfferCatalog: {

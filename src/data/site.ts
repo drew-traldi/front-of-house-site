@@ -14,8 +14,8 @@ export const site = {
   foundingYear: 2026,
   areaServed: [
     "Park City, Utah",
+    "Salt Lake City, Utah",
     "Metro Atlanta, Georgia",
-    "United States",
   ],
   knowsAbout: [
     "Restaurant website design",
@@ -29,11 +29,12 @@ export const site = {
   ],
   sameAs: [] as string[],
 
-  // ── Contact: PLACEHOLDERS. Replace with real details. ──
+  // ── Primary contact ──
   contact: {
+    name: "Drew Traldi",
     email: "hello@fohrestaurants.com",
-    phone: "(555) 123-4567",
-    phoneHref: "tel:+15551234567",
+    phone: "(770) 364-2664",
+    phoneHref: "tel:+17703642664",
   },
 
   // ── The AI that runs each client's front of house. ──
@@ -46,13 +47,6 @@ export const site = {
       "Maître is your front-of-house AI. Ask it to change a price, swap a photo, update your hours, answer a question, or book time with our team. It drafts the change, we make sure it's right, and it goes live.",
   },
 
-  // ── The promise we lead with: own it, don't rent it. ──
-  rival: {
-    // The category we position against (subscription site rentals).
-    name: "Owner.com & the rest",
-    monthly: "$200–$500 / mo",
-    yearly: "$2,400–$6,000 / yr",
-  },
 } as const;
 
 // ── HAI: the team behind Killa & Burger Lab is Front of House. ──
@@ -127,6 +121,7 @@ export const specConcepts = [
 ] as const;
 
 export const nav = [
+  { label: "Websites", href: "/websites-for-restaurants" },
   { label: "Services", href: "/services" },
   { label: "Pricing", href: "/pricing" },
   { label: "Templates", href: "/templates" },
@@ -170,7 +165,7 @@ export const reasons = [
   },
   {
     title: "Pay once, not every month",
-    body: "No $200–$500 monthly rental. Buy your site, then a flat yearly fee keeps it hosted and current.",
+    body: "Buy your custom site once, then a flat yearly Care fee keeps it hosted and current.",
   },
   {
     title: "Edit it yourself, or just ask Maître",
@@ -253,7 +248,7 @@ export const carePlans = [
     pill: "Own It, Stay Sharp",
     featured: true,
     goodFor:
-      "Everything it takes to keep your site live, current, and yours, for about what the rental crowd charges in a single month.",
+      "Hosting, maintenance, and support to keep your site live, current, and yours, with a flat yearly Care fee.",
     features: [
       "Reliable hosting, security, and backups",
       "Maître, your front-of-house AI, for edits and questions",
@@ -283,20 +278,20 @@ export const carePlans = [
 
 // ── Own-it vs. rent-it comparison (the pitch, in a table) ──
 export const comparison = {
-  rivalLabel: "Subscription rental",
-  rivalSub: "Owner.com & the rest",
+  rivalLabel: "Illustrative subscription",
+  rivalSub: "Example budget, not a vendor quote",
   fohLabel: "Front of House",
   fohSub: "Buy it, own it",
   rows: [
-    { label: "Up front", rival: "$0–$500 setup", foh: "From $2,000, you own the code" },
+    { label: "Up front", rival: "Not included in example", foh: "From $2,000, you own the code" },
     { label: "Every month", rival: "$200–$500", foh: "$0" },
     { label: "Every year", rival: "$2,400–$6,000", foh: "$450 (Care)" },
     { label: "3-year total*", rival: "$7,200–$18,000", foh: "$3,350–$5,350" },
-    { label: "Who owns it", rival: "They do, you rent", foh: "You do, code and all" },
-    { label: "If you leave", rival: "You lose the site", foh: "You keep your full code" },
+    { label: "Who owns it", rival: "Check the contract", foh: "You do, code and all" },
+    { label: "If you leave", rival: "Check export rights", foh: "You keep your full code" },
   ],
   footnote:
-    "*Illustrative: a typical $2,000–$4,000 build plus $450/yr Care over three years, vs. a $200–$500/mo rental. Your build is priced to scope.",
+    "*Illustration: a $2,000–$4,000 build plus three annual $450 Care payments, compared with 36 monthly payments of $200–$500. These are example budgets, not current competitor quotes. Setup, domain, third-party, processing, and out-of-scope charges are excluded. Confirm comparable services before choosing.",
 } as const;
 
 // ── Maître: the on-site AI concierge ──
@@ -334,7 +329,7 @@ export const faq = {
     },
     {
       q: "Is there a monthly subscription for a Front of House website?",
-      a: "No. Unlike subscription website rentals that charge $200 to $500 a month, Front of House charges a one-time build fee plus a flat yearly Care fee of $450. You buy and own your site instead of renting it.",
+      a: "Front of House charges a one-time build fee plus a flat yearly Care fee from $450. There is no monthly FOH website subscription. Any domain, third-party tools, or additional work are scoped separately.",
     },
     {
       q: "Do I own my restaurant website?",
@@ -346,7 +341,7 @@ export const faq = {
     },
     {
       q: "How much does a restaurant website subscription cost compared to Front of House?",
-      a: "Subscription rental sites like Owner.com charge $200 to $500 per month, totaling $7,200 to $18,000 over three years. Front of House costs $3,350 to $5,350 over the same period (a one-time $2,000 to $4,000 build plus $450/year Care), and you own the code.",
+      a: "For illustration, 36 monthly payments of $200 to $500 total $7,200 to $18,000. A $2,000 to $4,000 FOH build plus three annual $450 Care payments totals $3,350 to $5,350. These examples exclude setup for the subscription, domain registration, third-party tools, payment fees, and out-of-scope work. Compare the same services and current provider quotes.",
     },
   ],
   services: [
@@ -364,11 +359,11 @@ export const faq = {
     },
     {
       q: "Will my restaurant website be found by AI search like ChatGPT and Perplexity?",
-      a: "Yes. Every Front of House website is built with AI search optimization (AEO) from the start. We add structured data (JSON-LD schema), answer-engine-optimized content, and machine-readable menus so AI assistants can confidently recommend your restaurant. 83% of restaurants are currently invisible in AI-generated recommendations; we close that gap.",
+      a: "We build crawlable pages, readable menus, and structured data that matches your visible restaurant information. These foundations help search engines and AI assistants understand your site. Inclusion and rankings depend on the search service and the question being asked; we do not guarantee a recommendation.",
     },
     {
       q: "Is my website mobile-friendly?",
-      a: "Yes. Every Front of House website is mobile-first. More than 3 in 4 diners check a restaurant website on their phone before visiting, so we build for the phone in their hand first: fast loading, thumb-ready menus, tap-to-call, and tap-for-directions.",
+      a: "Yes. Every Front of House website is mobile-first, with readable menus, clear ordering and reservation links, tap-to-call, and tap-for-directions. We check the site on small screens as part of the build.",
     },
   ],
   about: [
@@ -382,7 +377,7 @@ export const faq = {
     },
     {
       q: "What makes Front of House different from other restaurant website companies?",
-      a: "Three things: (1) you own your website outright with real custom code and a full exit kit, (2) you pay once instead of renting monthly for $200 to $500, and (3) every site is built for AI search so diners find you through ChatGPT, Perplexity, and Google AI Overviews, not just traditional Google.",
+      a: "You own your custom website code and receive an exit kit. You pay for the build once, then a flat annual Care fee. We specialize in restaurants and include readable menus, crawlable pages, and accurate structured information to support discovery in search.",
     },
   ],
 } as const;

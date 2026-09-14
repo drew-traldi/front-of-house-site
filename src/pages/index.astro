@@ -33,7 +33,7 @@ const jsonLd = {
         <p class="lede hero__lede">
           We design the brand, shoot the photos on site, and build a custom
           website you own outright, then keep it sharp for a flat yearly fee.
-          No $200–$500 monthly rental. Built for one thing only: restaurants.
+          Built for one thing only: independent restaurants and small groups.
         </p>
         <div class="hero__actions">
           <a href="/contact" class="btn btn--primary">Scope your build</a>
@@ -61,7 +61,7 @@ const jsonLd = {
         <div class="livecard">
           <div class="livecard__row">
             <span class="livecard__dot"></span>
-            <span class="livecard__title">Site live · edited this morning</span>
+            <span class="livecard__title">BURGER.LAB · live restaurant site</span>
           </div>
           <p class="livecard__quote">"Just ask Maître. It gets done."</p>
         </div>
@@ -97,6 +97,11 @@ const jsonLd = {
               </span>
               <h3>{o.name}</h3>
               <p>{o.blurb}</p>
+              {o.name === "The Website" && (
+                <a class="svc-cell__link" href="/websites-for-restaurants">
+                  Explore websites for restaurants →
+                </a>
+              )}
             </article>
           ))
         }
@@ -113,7 +118,7 @@ const jsonLd = {
       <header class="head head--center">
         <p class="kicker">Why Front of House</p>
         <h2>
-          Most agencies rent you a site.<br />We build you one you own.
+          Your restaurant. Your website.<br />Your code to keep.
         </h2>
       </header>
       <div class="reasons">
@@ -166,30 +171,30 @@ const jsonLd = {
         <p class="kicker">Built for AI search</p>
         <h2>Can AI find your restaurant?</h2>
         <p class="lede">
-          83% of restaurant locations are invisible in AI-generated
-          recommendations. When a diner asks ChatGPT, Perplexity, or Google AI
-          "where should we eat tonight," AI names 3 to 5 places and stops. There
-          is no page two. You are in the answer or you do not exist.
+          When someone asks where to eat, your menu, location, hours, and
+          reservation options should be easy to find and understand. We build
+          that information into your site so search engines and AI assistants
+          can read it.
         </p>
         <p>
-          Every Front of House website ships with structured data, answer-engine
-          content, and machine-readable menus so AI assistants can recommend your
-          restaurant with confidence. We call it AEO, and it is built into every
-          build and every Care plan.
+          Every Front of House build includes crawlable pages, clear restaurant
+          information, and structured data that matches what guests see. These
+          foundations support discovery. Search results vary, and no website
+          company can guarantee a place in an AI answer.
         </p>
       </div>
       <div class="ai__stats">
         <div class="ai__stat">
-          <span class="ai__num" data-count="83" data-suffix="%">83%</span>
-          <span class="ai__cap">of restaurants are invisible to AI search</span>
+          <span class="ai__num">Readable menus</span>
+          <span class="ai__cap">Menu information in page text, ready for guests and search.</span>
         </div>
         <div class="ai__stat">
-          <span class="ai__num">3 to 5</span>
-          <span class="ai__cap">restaurants per AI answer. No page two.</span>
+          <span class="ai__num">Clear details</span>
+          <span class="ai__cap">Your hours, location, ordering, and reservation options.</span>
         </div>
         <div class="ai__stat">
-          <span class="ai__num" data-count="28" data-suffix="%">28%</span>
-          <span class="ai__cap">of restaurant AI queries are dietary or allergen</span>
+          <span class="ai__num">Connected pages</span>
+          <span class="ai__cap">Useful links and a sitemap that help crawlers find your content.</span>
         </div>
       </div>
     </div>
@@ -200,11 +205,11 @@ const jsonLd = {
     <div class="container mobile__grid">
       <div class="mobile__copy">
         <p class="kicker">Built for the phone in their hand</p>
-        <h2>Most guests meet you on a phone first.</h2>
+        <h2>Make the first visit work on a phone.</h2>
         <p class="lede">
-          More than 3 in 4 diners check your website before they ever walk in,
-          and most of them do it on a phone. A site that's slow or clumsy on
-          mobile is covers walking to the place next door.
+          A guest checking your menu on a phone should find the same clear
+          information as someone on a laptop. We put menus, reservations,
+          ordering, and directions within easy reach on a small screen.
         </p>
         <div class="mobile__points">
           <TickList
@@ -215,9 +220,6 @@ const jsonLd = {
             ]}
           />
         </div>
-        <p class="mobile__src">
-          Sources: Restaurant Dive survey; Think with Google, mobile dining.
-        </p>
       </div>
       <div class="mobile__device">
         <div class="phone">
@@ -229,8 +231,8 @@ const jsonLd = {
           />
         </div>
         <div class="phone__stat">
-          <span class="phone__statnum">60%+</span>
-          <span class="phone__statcap">of online orders come from a phone</span>
+          <span class="phone__statnum">Menu to table</span>
+          <span class="phone__statcap">Ordering, reservations, and directions within reach.</span>
         </div>
       </div>
     </div>
@@ -293,7 +295,7 @@ const jsonLd = {
         <h2>One build. You own it. Flat yearly care.</h2>
         <p class="lede" style="margin-inline:auto;">
           Buy a custom site outright, then a flat yearly fee keeps it hosted and
-          sharp, about what the rental crowd charges in a single month.
+          sharp, with the scope and annual cost agreed up front.
         </p>
       </header>
       <Tiers showBuild={true} showLocations={false} />
@@ -326,44 +328,22 @@ const jsonLd = {
   <CtaBand />
 </Base>
 
-<script>
-  // One-shot count-up on stat numbers. Values already render in the HTML,
-  // so no-JS and reduced-motion users see the final figure untouched.
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const nums = document.querySelectorAll<HTMLElement>(".ai__num[data-count]");
 
-  if (!reduce && "IntersectionObserver" in window && nums.length) {
-    const run = (el: HTMLElement) => {
-      const target = Number(el.dataset.count);
-      const suffix = el.dataset.suffix ?? "";
-      const start = performance.now();
-      const dur = 900;
-      const tick = (now: number) => {
-        const t = Math.min((now - start) / dur, 1);
-        // easeOutCubic — settles onto the target, matches our quiet motion.
-        const eased = 1 - Math.pow(1 - t, 3);
-        el.textContent = Math.round(target * eased) + suffix;
-        if (t < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    };
-
-    const io = new IntersectionObserver(
-      (entries, obs) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            run(entry.target as HTMLElement);
-            obs.unobserve(entry.target); // one-shot
-          }
-        }
-      },
-      { threshold: 0.6 }
-    );
-    nums.forEach((n) => io.observe(n));
-  }
-</script>
 
 <style>
+  .svc-cell__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--paper);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--ember-bright);
+    text-underline-offset: 4px;
+  }
+  .svc-cell__link:hover {
+    color: var(--paper);
+  }
   /* ── Spec templates band ── */
   .tryband {
     display: grid;
@@ -846,9 +826,9 @@ const jsonLd = {
   .ai__num {
     display: block;
     font-family: var(--display);
-    font-size: 2.6rem;
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
     font-weight: 700;
-    color: var(--ember);
+    color: var(--ink);
     line-height: 1;
   }
   .ai__cap {

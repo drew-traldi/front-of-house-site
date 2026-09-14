@@ -57,7 +57,7 @@ THE PITCH (own it, don't rent it)
 - Custom website you own outright, code and all — from ${build.from}.
 - A flat yearly Care fee keeps it hosted and current — no monthly rental.
 - Care plans: ${carePlans.map((p) => `${p.name} ${p.price}${p.period}`).join("; ")}.
-- We position against subscription site rentals (${site.rival.name}) at ${site.rival.monthly}.
+- Compare equal-scope quotes. The pricing page's subscription budget is an illustration, not current vendor pricing. Do not quote competitors' prices.
 - Offerings: ${offerings.map((o) => o.name).join(", ")}.
 
 NAVIGATION MAP (use a navigate action when a visitor wants to see something)
