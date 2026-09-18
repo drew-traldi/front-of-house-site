@@ -1,6 +1,11 @@
 ---
 import Base from "../layouts/Base.astro";
 import { site, carePlans } from "../data/site.ts";
+import { directions } from "../data/directions";
+
+const directionLabels = Object.fromEntries(
+  directions.map((direction) => [direction.slug, direction.label]),
+);
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -57,6 +62,7 @@ const jsonLd = {
         id="lead-form"
         data-endpoint={import.meta.env.PUBLIC_LEAD_ENDPOINT ?? ""}
       >
+        <input id="build-brief" name="build_brief" type="hidden" value="" />
         <div class="field">
           <label for="name">Your name</label>
           <input
@@ -262,7 +268,7 @@ const jsonLd = {
   }
 </style>
 
-<script is:inline define:vars={{ to: site.contact.email }}>
+<script is:inline define:vars={{ to: site.contact.email, directionLabels }}>
   const form = document.getElementById("lead-form");
   const note = document.getElementById("form-note");
   const submit = form?.querySelector(".form__submit");
@@ -271,27 +277,60 @@ const jsonLd = {
   // is here, we repaint errors ourselves instead of the browser's bubbles.
   if (form) form.noValidate = true;
 
-  // Arriving from a spec template ("Get this built"): prefill the form with
-  // what they built so sales sees exactly what they want. Never overwrite
-  // anything the visitor already typed.
+  // Arriving from a spec template or build brief: prefill the form with what
+  // they chose so sales sees the useful context. Never overwrite anything the
+  // visitor already typed.
   {
     const q = new URLSearchParams(window.location.search);
     const tpl = q.get("template");
-    if (tpl) {
-      const restaurant = q.get("restaurant") || "";
-      const city = q.get("city") || "";
+    const isBrief = q.get("brief") === "1";
+    const restaurant = q.get("restaurant") || "";
+    const city = q.get("city") || "";
+    const rInput = document.getElementById("restaurant");
+    if (rInput && !rInput.value && restaurant) rInput.value = restaurant;
+    const msg = document.getElementById("message");
+
+    if (tpl && msg && !msg.value) {
       const vibe = q.get("vibe") || "";
       const tag = q.get("tag") || "";
-      const rInput = document.getElementById("restaurant");
-      if (rInput && !rInput.value && restaurant) rInput.value = restaurant;
-      const msg = document.getElementById("message");
-      if (msg && !msg.value) {
         let text = `I customized the ${tpl} spec template`;
         if (restaurant) text += ` as ${restaurant}`;
         if (city) text += ` in ${city}`;
         text += vibe ? `, ${vibe} vibe.` : ".";
         if (tag) text += ` Tagline: "${tag}".`;
         text += " Let's build the real thing.";
+        msg.value = text;
+    }
+
+    if (isBrief) {
+      const selectedDirections = (q.get("directions") || "")
+        .split(",")
+        .map((slug) => slug.trim())
+        .filter(Boolean)
+        .map((slug) => directionLabels[slug] || slug.replace(/-/g, " "));
+      const priority = q.get("priority") || "not sure yet";
+      const needs = q.getAll("needs").filter(Boolean);
+      const tag = q.get("tag") || "";
+      const note = q.get("note") || "";
+      const briefInput = document.getElementById("build-brief");
+      const parts = [];
+      if (selectedDirections.length) parts.push(`Directions: ${selectedDirections.join(" + ")}`);
+      if (priority) parts.push(`Primary action: ${priority.replace(/-/g, " ")}`);
+      if (needs.length) parts.push(`Needs: ${needs.map((need) => need.replace(/-/g, " ")).join(", ")}`);
+      if (city) parts.push(`City: ${city}`);
+      if (tag) parts.push(`Tagline: ${tag}`);
+      if (briefInput) briefInput.value = parts.join("; ");
+
+      if (msg && !msg.value) {
+        let text = "I started a website build brief";
+        if (selectedDirections.length) text += ` around ${selectedDirections.join(" and ")}`;
+        if (restaurant) text += ` for ${restaurant}`;
+        if (city) text += ` in ${city}`;
+        text += `. The main guest action is ${priority.replace(/-/g, " ")}.`;
+        if (needs.length) text += ` We need ${needs.map((need) => need.replace(/-/g, " ")).join(", ")}.`;
+        if (tag) text += ` Suggested tagline: "${tag}".`;
+        if (note) text += ` Note: ${note}`;
+        text += " Let's scope the real build.";
         msg.value = text;
       }
     }
@@ -395,6 +434,7 @@ const jsonLd = {
       `Email: ${data.email}`,
       `Phone: ${data.phone || "n/a"}`,
       `Interested in: ${data.tier || "Not sure yet"}`,
+      `Build brief: ${data.build_brief || "n/a"}`,
       "",
       `${data.message || ""}`,
     ].join("\n");

@@ -1,13 +1,13 @@
 ---
-// Spec demo: "Stacked", counter-service smashburgers and bowls.
+// Spec demo: "The Counter", counter-service smashburgers and bowls.
 // Brief in TEMPLATES-DESIGN.md §2. Order-first: the order CTA floats,
 // the menu board is the centerpiece. Archivo display, Inter body.
 import "@fontsource-variable/archivo";
 import archivoUrl from "@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2?url";
-import { Image } from "astro:assets";
 import DemoShell from "../../layouts/DemoShell.astro";
+import HeroVideo from "../../components/templates/HeroVideo.astro";
 import { templateBySlug } from "../../data/templates";
-import boardPhoto from "../../assets/demo/stacked-board.jpg";
+import counterGriddlePoster from "../../assets/directions/counter-griddle.jpg";
 
 const t = templateBySlug("fast-casual");
 
@@ -52,6 +52,7 @@ const board = [
       <p class="fs-head__brand"><span data-slot="name">{t.demoName}</span><span class="fs-stop" aria-hidden="true">.</span></p>
       <nav class="fs-head__nav" aria-label="Restaurant">
         <a href="#menu">Menu</a>
+        <a href="#tonight">Tonight</a>
         <a href="#how">How it works</a>
         <a href="#visit">Find us</a>
       </nav>
@@ -80,15 +81,38 @@ const board = [
           Line right now: about four minutes
         </p>
       </div>
-      <figure class="fs-hero__ph">
-        <Image
-          src={boardPhoto}
-          alt="The classic burger with crispy potatoes and house salsa on a board"
-          widths={[480, 760, 1100]}
-          sizes="(max-width: 860px) 100vw, 36rem"
-        />
-        <figcaption>The classic, board and all</figcaption>
-      </figure>
+      <HeroVideo
+        className="fs-hero__media"
+        mp4="/videos/directions/counter-griddle.mp4"
+        webm="/videos/directions/counter-griddle.webm"
+        poster={counterGriddlePoster.src}
+        label="the fast casual direction video"
+      />
+    </section>
+
+    <!-- ── Live-changeable bar / events module ── -->
+    <section class="fs-tonight" id="tonight">
+      <header>
+        <p>Tonight's board</p>
+        <h2>Give people a reason to come by now.</h2>
+      </header>
+      <div class="fs-tonight__grid">
+        <article>
+          <span>01</span>
+          <h3>Drinks</h3>
+          <p>Happy hour, a short cocktail list, tap changes, or whatever the bar is pouring this week.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Programming</h3>
+          <p>Trivia, a DJ, the game, a guest kitchen, or a neighborhood reason to make a plan.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Groups</h3>
+          <p>Large tables, catering, and private parties, with a clear path to ask without a phone tag loop.</p>
+        </article>
+      </div>
     </section>
 
     <!-- ── Signature: the menu board ── -->
@@ -171,7 +195,7 @@ const board = [
 </DemoShell>
 
 <style is:global>
-  /* ── Stacked tokens: two vibes, switched by data-vibe on #demo-root ── */
+  /* ── Fast-casual tokens: two vibes, switched by data-vibe on #demo-root ── */
   #demo-root[data-vibe="bold"] {
     --bg: #fff8ec;
     --surface: #ffffff;
@@ -356,46 +380,14 @@ const board = [
     border-radius: 50%;
     background: var(--accent);
     flex: none;
-    animation: fs-pulse 1.8s ease-in-out infinite;
   }
-  @keyframes fs-pulse {
-    50% {
-      opacity: 0.35;
-      transform: scale(0.8);
-    }
-  }
-  .fs-hero__ph {
-    position: relative;
+  :global(.fs-hero__media) {
     margin: 0;
-    background: var(--ph);
     border: 2px solid var(--fg);
     border-radius: 18px;
     aspect-ratio: 4 / 3.4;
-    overflow: hidden;
-  }
-  .fs-hero__ph img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .fs-hero__ph::after {
-    content: "";
-    position: absolute;
-    inset: 60% 0 0;
-    background: linear-gradient(to bottom, transparent, rgba(20, 15, 10, 0.5));
-    pointer-events: none;
-  }
-  .fs-hero__ph figcaption {
-    position: absolute;
-    left: 1.1rem;
-    bottom: 0.9rem;
-    z-index: 1;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #fff8ec;
   }
 
   /* ── The board ── */
@@ -467,6 +459,71 @@ const board = [
     font-size: 0.88rem;
     color: var(--muted);
     margin-top: 0.15rem;
+  }
+
+  /* ── The module that keeps the site alive after launch ── */
+  .fs-tonight {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+    padding: clamp(2.8rem, 7vw, 5rem) clamp(1.2rem, 5vw, 2rem);
+    background: var(--fill);
+    color: var(--on-fill);
+  }
+  .fs-tonight > header,
+  .fs-tonight__grid {
+    max-width: 72rem;
+  }
+  .fs-tonight > header {
+    justify-self: end;
+    width: min(100%, 26rem);
+  }
+  .fs-tonight > header > p {
+    margin-bottom: 0.65rem;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+  .fs-tonight h2,
+  .fs-tonight h3 {
+    color: var(--on-fill);
+  }
+  .fs-tonight h2 {
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
+    font-weight: 900;
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+  }
+  .fs-tonight__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    width: min(100%, 52rem);
+  }
+  .fs-tonight article {
+    padding: 1rem 0.2rem 0;
+    border-top: 2px solid color-mix(in srgb, var(--on-fill) 55%, transparent);
+  }
+  .fs-tonight article > span {
+    display: inline-block;
+    margin-bottom: 1.1rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .fs-tonight h3 {
+    margin-bottom: 0.3rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  .fs-tonight article p {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.5;
   }
 
   /* ── Steps ── */
@@ -581,6 +638,15 @@ const board = [
       grid-template-columns: 1fr;
     }
     .fs-steps {
+      grid-template-columns: 1fr;
+    }
+    .fs-tonight {
+      grid-template-columns: 1fr;
+    }
+    .fs-tonight > header {
+      justify-self: start;
+    }
+    .fs-tonight__grid {
       grid-template-columns: 1fr;
     }
     .fs-visit__grid {

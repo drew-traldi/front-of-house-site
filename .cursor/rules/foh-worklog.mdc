@@ -1,0 +1,24 @@
+---
+description: Append a FOH work-log line after meaningful work so Chamber 2 can brief Drew
+alwaysApply: true
+---
+
+# FOH work log
+
+When you finish meaningful work in a Front of House project, append one work-log line.
+
+```bash
+~/.redmax/chambers/bin/worklog "what you did"
+```
+
+Example: `~/.redmax/chambers/bin/worklog "fixed the gateway port mismatch"`
+
+If the helper is missing, append one line under today's heading in `WORKLOG.md`:
+
+```
+## YYYY-MM-DD
+- HH:MM | cursor | note | what you did
+```
+
+One short sentence. Intent and outcome. Append only. Do not rewrite history.
+This applies to Claude Code, Codex, Cursor, and local agents.

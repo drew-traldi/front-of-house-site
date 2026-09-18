@@ -1,5 +1,5 @@
 ---
-// Spec demo: "Aurelia", a tasting-menu house. Brief in TEMPLATES-DESIGN.md §1.
+// Spec demo: "The Table", a tasting-menu house. Brief in TEMPLATES-DESIGN.md §1.
 // This page is the visitor's restaurant, not FOH: it owns its own tokens
 // (candlelit / daylight vibes) and type (Fraunces display, Inter body).
 import "@fontsource-variable/fraunces";
@@ -7,19 +7,21 @@ import "@fontsource-variable/fraunces/wght-italic.css";
 import frauncesUrl from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
 import { Image } from "astro:assets";
 import DemoShell from "../../layouts/DemoShell.astro";
+import HeroVideo from "../../components/templates/HeroVideo.astro";
 import { templateBySlug } from "../../data/templates";
 import tablePhoto from "../../assets/demo/aurelia-table.jpg";
+import cinematicDiningPoster from "../../assets/directions/cinematic-dining.jpg";
 
 const t = templateBySlug("fine-dining");
 
-// Roman-numeral course indices — the Aurelia identity device
+// Roman-numeral course indices — the tasting-menu identity device
 const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 
 const courses = [
   {
     name: "Oyster",
     detail: "Kusshi oyster, meyer lemon mignonette, high desert sage",
-    pairing: "Delamotte brut, Champagne",
+    pairing: "Brut sparkling, traditional method",
   },
   {
     name: "Beet & chèvre",
@@ -74,20 +76,30 @@ const courses = [
 
     <!-- ── Hero ── -->
     <section class="fd-hero">
-      <div class="fd-mono" aria-hidden="true" data-reveal style="--i:0" data-slot="initial">{t.demoName[0]}</div>
-      <p class="fd-eyebrow" data-reveal style="--i:0">
-        <span data-slot="city">{t.demoCity}</span>
-      </p>
-      <h1 data-reveal style="--i:1"><span data-slot="name">{t.demoName}</span></h1>
-      <p class="fd-hero__tag" data-reveal style="--i:2">
-        <span data-slot="tagline">{t.demoTagline}</span>
-      </p>
-      <p class="fd-hero__meta" data-reveal style="--i:3">
-        Seatings Thursday through Sunday · 5:30 and 8:30
-      </p>
-      <a class="fd-btn fd-btn--accent" href="#visit" data-reveal style="--i:4">
-        Reserve a table
-      </a>
+      <HeroVideo
+        className="fd-hero__media"
+        mp4="/videos/directions/cinematic-dining.mp4"
+        webm="/videos/directions/cinematic-dining.webm"
+        poster={cinematicDiningPoster.src}
+        label="the fine dining direction video"
+      />
+      <div class="fd-hero__wash" aria-hidden="true"></div>
+      <div class="fd-hero__content">
+        <div class="fd-mono" aria-hidden="true" data-reveal style="--i:0" data-slot="initial">{t.demoName[0]}</div>
+        <p class="fd-eyebrow" data-reveal style="--i:0">
+          <span data-slot="city">{t.demoCity}</span>
+        </p>
+        <h1 data-reveal style="--i:1"><span data-slot="name">{t.demoName}</span></h1>
+        <p class="fd-hero__tag" data-reveal style="--i:2">
+          <span data-slot="tagline">{t.demoTagline}</span>
+        </p>
+        <p class="fd-hero__meta" data-reveal style="--i:3">
+          Seatings Thursday through Sunday · 5:30 and 8:30
+        </p>
+        <a class="fd-btn fd-btn--accent" href="#visit" data-reveal style="--i:4">
+          Reserve a table
+        </a>
+      </div>
     </section>
 
     <!-- ── Signature: the tasting menu as typographic centerpiece ── -->
@@ -189,7 +201,7 @@ const courses = [
 </DemoShell>
 
 <style is:global>
-  /* ── Aurelia tokens: two vibes, switched by data-vibe on #demo-root ── */
+  /* ── Fine-dining tokens: two vibes, switched by data-vibe on #demo-root ── */
   #demo-root[data-vibe="candlelit"] {
     --bg: #171310;
     --surface: #211b16;
@@ -268,7 +280,7 @@ const courses = [
     outline-offset: 3px;
   }
 
-  /* ── The circled monogram: Aurelia's mark ── */
+  /* ── The circled monogram: a quiet, place-specific mark ── */
   .fd-mono {
     width: 3rem;
     height: 3rem;
@@ -327,9 +339,33 @@ const courses = [
 
   /* ── Hero ── */
   .fd-hero {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: clamp(35rem, 78svh, 52rem);
+    overflow: hidden;
     text-align: center;
-    padding: clamp(4rem, 11vw, 8rem) clamp(1.2rem, 5vw, 4rem)
-      clamp(3.5rem, 9vw, 6.5rem);
+    isolation: isolate;
+  }
+  :global(.fd-hero__media) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .fd-hero__wash {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(16, 11, 8, 0.38), rgba(16, 11, 8, 0.82));
+    pointer-events: none;
+  }
+  .fd-hero__content {
+    position: relative;
+    z-index: 2;
+    padding: clamp(5rem, 12vw, 8rem) clamp(1.2rem, 5vw, 4rem)
+      clamp(4rem, 10vw, 6.5rem);
   }
   .fd-hero h1 {
     font-size: clamp(2.5rem, 7vw, 4.8rem);

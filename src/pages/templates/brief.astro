@@ -1,0 +1,459 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import { directionBySlug, directions } from "../../data/directions";
+import { site } from "../../data/site";
+
+const requestedSlugs = (Astro.url.searchParams.get("directions") || "")
+  .split(",")
+  .map((slug) => slug.trim())
+  .filter(Boolean)
+  .slice(0, 2);
+const selectedDirections = requestedSlugs
+  .map((slug) => directionBySlug(slug))
+  .filter((direction): direction is NonNullable<typeof direction> => Boolean(direction));
+const selectedSlugs = selectedDirections.map((direction) => direction.slug);
+const suggestedNeeds = new Set(selectedDirections.flatMap((direction) => direction.suggestedNeeds));
+const initialRestaurant = Astro.url.searchParams.get("restaurant") || "";
+const initialCity = Astro.url.searchParams.get("city") || "";
+const initialTag = Astro.url.searchParams.get("tag") || "";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Restaurant website build brief",
+  description: "A short Front of House build brief for a custom restaurant website.",
+  url: `${site.url}/templates/brief`,
+};
+---
+
+<Base
+  title="Build Brief"
+  description="Choose a restaurant website direction and the operating needs it should support, then bring that brief to Front of House."
+  jsonLd={jsonLd}
+>
+  <section class="brief-head">
+    <div class="container">
+      <p class="kicker">Your build brief</p>
+      <h1>Give us the direction. We’ll bring the restaurant to life.</h1>
+      <p class="lede">
+        This is not a template checkout. It is the short version of the first
+        good conversation: what kind of place you are, what a guest should do,
+        and what needs to stay useful once the site is live.
+      </p>
+    </div>
+  </section>
+
+  <section class="brief-main section">
+    <div class="container brief-main__grid">
+      <aside class="brief-selection" aria-labelledby="selection-title">
+        <p class="brief-selection__step">01</p>
+        <h2 id="selection-title">Your direction{selectedDirections.length === 1 ? "" : "s"}</h2>
+        {
+          selectedDirections.length ? (
+            <div class="brief-selection__cards">
+              {selectedDirections.map((direction) => (
+                <article class="brief-direction">
+                  <Image
+                    src={direction.image}
+                    alt={direction.imageAlt}
+                    widths={[420, 680]}
+                    sizes="(max-width: 820px) 100vw, 28rem"
+                  />
+                  <div>
+                    <p>{direction.eyebrow}</p>
+                    <h3>{direction.label}</h3>
+                    <span>{direction.signature}</span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div class="brief-selection__empty">
+              <h3>No direction selected yet.</h3>
+              <p>Pick one below, or return to the library to make a short list.</p>
+              <a href="/templates">Browse directions</a>
+            </div>
+          )
+        }
+        <p class="brief-selection__note">
+          We use this as a starting point, then tailor the visual identity,
+          photography, menu, and integrations around your restaurant.
+        </p>
+      </aside>
+
+      <form class="brief-form card" action="/contact" method="get">
+        <input type="hidden" name="brief" value="1" />
+        {initialTag && <input type="hidden" name="tag" value={initialTag} />}
+        {
+          selectedSlugs.length ? (
+            <input type="hidden" name="directions" value={selectedSlugs.join(",")} />
+          ) : (
+            <div class="brief-field">
+              <label for="direction">Choose a direction</label>
+              <select id="direction" name="directions" required>
+                <option value="">Choose one to start</option>
+                {directions.map((direction) => <option value={direction.slug}>{direction.label}</option>)}
+              </select>
+            </div>
+          )
+        }
+
+        <div class="brief-form__heading">
+          <p class="brief-form__step">02</p>
+          <div>
+            <h2>What should the site help do first?</h2>
+            <p>Pick the guest action that matters most right now.</p>
+          </div>
+        </div>
+
+        <fieldset class="brief-fieldset">
+          <legend class="visually-hidden">Primary guest action</legend>
+          <div class="brief-priorities">
+            <label>
+              <input type="radio" name="priority" value="reservations" />
+              <span><strong>Fill more tables</strong><small>Reservations and the right occasion.</small></span>
+            </label>
+            <label>
+              <input type="radio" name="priority" value="ordering" />
+              <span><strong>Move more orders</strong><small>Pickup, delivery, and menu clarity.</small></span>
+            </label>
+            <label>
+              <input type="radio" name="priority" value="events" />
+              <span><strong>Keep tonight moving</strong><small>Specials, programming, and repeat visits.</small></span>
+            </label>
+            <label>
+              <input type="radio" name="priority" value="private-dining" />
+              <span><strong>Book bigger moments</strong><small>Groups, catering, and buyouts.</small></span>
+            </label>
+            <label>
+              <input type="radio" name="priority" value="not-sure" checked />
+              <span><strong>Help me decide</strong><small>We will make the call together.</small></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="brief-form__heading brief-form__heading--needs">
+          <p class="brief-form__step">03</p>
+          <div>
+            <h2>What needs a place on the site?</h2>
+            <p>Choose what is true today. We will leave the rest out.</p>
+          </div>
+        </div>
+
+        <fieldset class="brief-fieldset">
+          <legend class="visually-hidden">Operating needs</legend>
+          <div class="brief-needs">
+            <label><input type="checkbox" name="needs" value="reservations" checked={suggestedNeeds.has("reservations")} /><span>Reservations or waitlist</span></label>
+            <label><input type="checkbox" name="needs" value="ordering" checked={suggestedNeeds.has("ordering")} /><span>Online ordering</span></label>
+            <label><input type="checkbox" name="needs" value="drinks" checked={suggestedNeeds.has("drinks")} /><span>Beer, wine, or cocktails</span></label>
+            <label><input type="checkbox" name="needs" value="events" checked={suggestedNeeds.has("events")} /><span>Events or weekly specials</span></label>
+            <label><input type="checkbox" name="needs" value="private-dining" checked={suggestedNeeds.has("private-dining")} /><span>Private dining or groups</span></label>
+            <label><input type="checkbox" name="needs" value="catering" checked={suggestedNeeds.has("catering")} /><span>Catering</span></label>
+            <label><input type="checkbox" name="needs" value="locations" checked={suggestedNeeds.has("locations")} /><span>More than one location</span></label>
+            <label><input type="checkbox" name="needs" value="seasonal-menu" checked={suggestedNeeds.has("seasonal-menu")} /><span>Seasonal menus or live boards</span></label>
+            <label><input type="checkbox" name="needs" value="photo-video" checked={suggestedNeeds.has("photo-video")} /><span>New photo or video direction</span></label>
+          </div>
+        </fieldset>
+
+        <div class="brief-form__heading brief-form__heading--details">
+          <p class="brief-form__step">04</p>
+          <div>
+            <h2>Give us a little context.</h2>
+            <p>We will carry these answers into the conversation.</p>
+          </div>
+        </div>
+
+        <div class="brief-field-row">
+          <div class="brief-field">
+            <label for="restaurant">Restaurant name <em>optional</em></label>
+            <input id="restaurant" name="restaurant" type="text" autocomplete="organization" value={initialRestaurant} />
+          </div>
+          <div class="brief-field">
+            <label for="city">City or neighborhood <em>optional</em></label>
+            <input id="city" name="city" type="text" autocomplete="address-level2" value={initialCity} />
+          </div>
+        </div>
+        <div class="brief-field">
+          <label for="note">Anything we should know? <em>optional</em></label>
+          <textarea id="note" name="note" rows="4" placeholder="A new opening, an old site that no longer feels right, a busy events calendar…"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn--primary brief-form__submit">Scope this build</button>
+        <p class="brief-form__fine">
+          Next, we will ask for the best way to reach you and turn this into a
+          real project conversation.
+        </p>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .brief-head {
+    padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 4vw, 3.5rem);
+    border-bottom: 1px solid var(--line);
+    background: var(--bone);
+  }
+  .brief-head h1 {
+    max-width: 14ch;
+    margin-bottom: 1rem;
+  }
+  .brief-main {
+    background: var(--paper);
+  }
+  .brief-main__grid {
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    align-items: start;
+  }
+  .brief-selection {
+    position: sticky;
+    top: 6.5rem;
+  }
+  .brief-selection__step,
+  .brief-form__step {
+    margin: 0 0 0.45rem;
+    color: var(--ember);
+    font-family: var(--display);
+    font-size: 1.45rem;
+    line-height: 1;
+  }
+  .brief-selection h2 {
+    margin-bottom: 1.1rem;
+  }
+  .brief-selection__cards {
+    display: grid;
+    gap: 1rem;
+  }
+  .brief-direction {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+  .brief-direction :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .brief-direction > div {
+    padding: 1rem;
+  }
+  .brief-direction p {
+    margin: 0 0 0.3rem;
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .brief-direction h3 {
+    margin-bottom: 0.4rem;
+  }
+  .brief-direction span {
+    color: var(--body);
+    font-family: var(--display);
+    font-size: 1rem;
+    font-style: italic;
+    line-height: 1.28;
+  }
+  .brief-selection__empty {
+    padding: 1.2rem;
+    border: 1px dashed var(--line);
+  }
+  .brief-selection__empty h3 {
+    margin-bottom: 0.4rem;
+  }
+  .brief-selection__empty p {
+    margin-bottom: 0.7rem;
+  }
+  .brief-selection__empty a {
+    color: var(--ink);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .brief-selection__note {
+    max-width: 40ch;
+    margin-top: 1.2rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .brief-form {
+    padding: clamp(1.4rem, 3vw, 2rem);
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .brief-form__heading {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .brief-form__heading h2 {
+    margin: 0 0 0.25rem;
+    font-size: clamp(1.55rem, 3vw, 2rem);
+  }
+  .brief-form__heading p:not(.brief-form__step) {
+    margin: 0;
+    color: var(--body);
+    font-size: 0.94rem;
+  }
+  .brief-form__heading--needs,
+  .brief-form__heading--details {
+    margin-top: 2rem;
+    padding-top: 1.7rem;
+    border-top: 1px solid var(--line-soft);
+  }
+  .brief-field,
+  .brief-fieldset {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: 0;
+  }
+  .brief-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .brief-field label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--ink);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .brief-field label em {
+    color: var(--muted);
+    font-style: normal;
+    font-weight: 400;
+  }
+  .brief-field input,
+  .brief-field select,
+  .brief-field textarea {
+    width: 100%;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 0.85rem;
+    color: var(--ink);
+    background: var(--paper);
+    font: inherit;
+    font-size: 0.95rem;
+  }
+  .brief-field textarea {
+    resize: vertical;
+  }
+  .brief-field :is(input, select, textarea):focus,
+  .brief-priorities input:focus-visible + span,
+  .brief-needs input:focus-visible + span {
+    outline: 2.5px solid var(--ember);
+    outline-offset: 3px;
+  }
+  .brief-priorities {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+  .brief-priorities label,
+  .brief-needs label {
+    position: relative;
+    cursor: pointer;
+  }
+  .brief-priorities input,
+  .brief-needs input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .brief-priorities span {
+    display: block;
+    min-height: 98px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem;
+    background: var(--paper);
+    transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+  }
+  .brief-priorities input:checked + span {
+    border-color: var(--ink);
+    background: var(--bone);
+  }
+  .brief-priorities strong,
+  .brief-priorities small {
+    display: block;
+  }
+  .brief-priorities strong {
+    color: var(--ink);
+    font-size: 0.9rem;
+  }
+  .brief-priorities small {
+    margin-top: 0.25rem;
+    color: var(--body);
+    font-size: 0.77rem;
+    line-height: 1.35;
+  }
+  .brief-needs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+  .brief-needs span {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 0.45rem 0.8rem;
+    color: var(--body);
+    font-size: 0.83rem;
+    font-weight: 600;
+    transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  }
+  .brief-needs input:checked + span {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .brief-needs input:checked + span::before {
+    content: "✓";
+    margin-right: 0.4rem;
+  }
+  .brief-form__submit {
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+  .brief-form__fine {
+    margin: 0.9rem 0 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-align: center;
+  }
+
+  @media (max-width: 820px) {
+    .brief-main__grid {
+      grid-template-columns: 1fr;
+    }
+    .brief-selection {
+      position: static;
+    }
+    .brief-selection__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 540px) {
+    .brief-selection__cards,
+    .brief-field-row,
+    .brief-priorities,
+    .brief-needs {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

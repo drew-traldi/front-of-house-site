@@ -1,0 +1,123 @@
+---
+interface Props {
+  mp4: string;
+  webm?: string;
+  poster: string;
+  className?: string;
+  label: string;
+}
+
+const { mp4, webm, poster, className, label } = Astro.props;
+---
+
+<figure class:list={["hero-video", className]} data-hero-video-shell>
+  <video
+    data-hero-video
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster={poster}
+    aria-hidden="true"
+  >
+    {webm && <source src={webm} type="video/webm" />}
+    <source src={mp4} type="video/mp4" />
+  </video>
+  <button
+    type="button"
+    class="hero-video__toggle"
+    data-video-toggle
+    aria-pressed="true"
+    aria-label={`Pause motion in ${label}`}
+  >
+    <span data-video-toggle-label>Pause motion</span>
+  </button>
+</figure>
+
+<style>
+  .hero-video {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    background: #221c18;
+  }
+  .hero-video video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-video__toggle {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    min-width: 44px;
+    min-height: 44px;
+    border: 1px solid rgba(251, 247, 240, 0.55);
+    border-radius: 999px;
+    padding: 0.55rem 0.85rem;
+    color: #fbf7f0;
+    background: rgba(34, 28, 24, 0.72);
+    font: 600 0.72rem/1 "Inter Variable", "Inter", sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: background 150ms ease, transform 100ms ease;
+  }
+  .hero-video__toggle:hover {
+    background: rgba(34, 28, 24, 0.94);
+  }
+  .hero-video__toggle:active {
+    transform: translateY(1px);
+  }
+  .hero-video__toggle:focus-visible {
+    outline: 2.5px solid #c75b39;
+    outline-offset: 3px;
+  }
+</style>
+
+<script>
+  document.querySelectorAll("[data-hero-video-shell]").forEach((shell) => {
+    const video = shell.querySelector("[data-hero-video]");
+    const toggle = shell.querySelector("[data-video-toggle]");
+    const label = shell.querySelector("[data-video-toggle-label]");
+    if (!(video instanceof HTMLVideoElement) || !(toggle instanceof HTMLButtonElement)) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const connection = (navigator as Navigator & {
+      connection?: { saveData?: boolean };
+    }).connection;
+    const saveData = connection?.saveData === true;
+
+    const setPlaying = (playing) => {
+      if (playing && !reducedMotion.matches && !saveData) {
+        video.play().then(
+          () => applyState(true),
+          () => applyState(false),
+        );
+        return;
+      }
+      video.pause();
+      applyState(false);
+    };
+
+    const applyState = (playing) => {
+      toggle.setAttribute("aria-pressed", String(playing));
+      toggle.setAttribute(
+        "aria-label",
+        `${playing ? "Pause" : "Play"} background motion`,
+      );
+      if (label) label.textContent = playing ? "Pause motion" : "Play motion";
+    };
+
+    if (reducedMotion.matches || saveData) setPlaying(false);
+    else video.play().then(() => applyState(true), () => applyState(false));
+
+    toggle.addEventListener("click", () => setPlaying(video.paused));
+    reducedMotion.addEventListener("change", (event) => {
+      if (event.matches) setPlaying(false);
+    });
+  });
+</script>

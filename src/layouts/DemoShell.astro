@@ -18,7 +18,7 @@ interface Props {
 }
 const { t, description, preloadFont } = Astro.props;
 
-const title = `${t.label} spec template · ${site.name}`;
+const title = `${t.label} website direction · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogImageUrl = new URL(`/og/${t.slug}.jpg`, site.url).href;
 ---
@@ -60,6 +60,7 @@ const ogImageUrl = new URL(`/og/${t.slug}.jpg`, site.url).href;
     <div
       id="demo-root"
       data-slug={t.slug}
+      data-direction={t.directionSlug}
       data-template-label={t.label}
       data-default-name={t.demoName}
       data-default-city={t.demoCity}
