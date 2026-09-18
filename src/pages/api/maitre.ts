@@ -11,7 +11,7 @@ import { site, build, carePlans, offerings } from "../../data/site.ts";
 // Run as an on-demand serverless function, not a prerendered page.
 export const prerender = false;
 
-const MODEL = "claude-sonnet-4-6";
+const MODEL = "claude-sonnet-5";
 const MAX_TOKENS = 1024;
 const MAX_MESSAGES = 16; // most recent turns we forward to the model
 const MAX_CHARS = 1500; // per-message cap (defends cost + abuse)
