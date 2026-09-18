@@ -91,7 +91,7 @@ export const caseStudies = [
     ],
     video: portfolioVideo.burgerLab,
     url: "https://www.burgerlabbar.com",
-    alt: "Burger Lab — gourmet burgers and cocktail lab in Salt Lake City",
+    alt: "Burger Lab: gourmet burgers and cocktail lab in Salt Lake City",
   },
   {
     name: "Killa",
@@ -107,7 +107,7 @@ export const caseStudies = [
     ],
     video: portfolioVideo.killa,
     url: "https://www.killanikkei.com",
-    alt: "Killa — Peruvian-Japanese Nikkei restaurant in Salt Lake City",
+    alt: "Killa: Peruvian-Japanese Nikkei restaurant in Salt Lake City",
   },
 ] as const;
 
