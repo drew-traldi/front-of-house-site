@@ -38,13 +38,13 @@ export const site = {
   },
 
   // ── The AI that runs each client's front of house. ──
-  // Maître drafts changes, answers questions, and books time with the team;
+  // The Host drafts changes, answers questions, and books time with the team;
   // we verify every change before it goes live. Runs on our own local models.
   assistant: {
-    name: "Maître",
+    name: "the Host",
     role: "your front-of-house AI",
     blurb:
-      "Maître is your front-of-house AI. Ask it to change a price, swap a photo, update your hours, answer a question, or book time with our team. It drafts the change, we make sure it's right, and it goes live.",
+      "The Host is your front-of-house AI. Ask it to change a price, swap a photo, update your hours, answer a question, or book time with our team. It drafts the change, we make sure it's right, and it goes live.",
   },
 
 } as const;
@@ -141,7 +141,7 @@ export const offerings = [
     name: "Care & Hosting",
     kind: "Core",
     blurb:
-      "Hosting, maintenance, and a flat yearly fee. Edit it yourself or ask Maître. Either way, it gets done.",
+      "Hosting, maintenance, and a flat yearly fee. Edit it yourself or ask the Host. Either way, it gets done.",
   },
   {
     name: "Brand & Identity",
@@ -168,8 +168,8 @@ export const reasons = [
     body: "Buy your custom site once, then a flat yearly Care fee keeps it hosted and current.",
   },
   {
-    title: "Edit it yourself, or just ask Maître",
-    body: "Change a price, swap a photo, ask a question. Maître drafts it, we check it, it goes live.",
+    title: "Edit it yourself, or just ask the Host",
+    body: "Change a price, swap a photo, ask a question. The Host drafts it, we check it, it goes live.",
   },
   {
     title: "Built for AI search",
@@ -251,7 +251,7 @@ export const carePlans = [
       "Hosting, maintenance, and support to keep your site live, current, and yours, with a flat yearly Care fee.",
     features: [
       "Reliable hosting, security, and backups",
-      "Maître, your front-of-house AI, for edits and questions",
+      "The Host, your front-of-house AI, for edits and questions",
       "Real changes handled by our team when you need them",
       "AEO foundation so AI search can find and cite you",
       "Your exit kit, always: leave anytime with your full code",
@@ -294,17 +294,18 @@ export const comparison = {
     "*Illustration: a $2,000–$4,000 build plus three annual $450 Care payments, compared with 36 monthly payments of $200–$500. These are example budgets, not current competitor quotes. Setup, domain, third-party, processing, and out-of-scope charges are excluded. Confirm comparable services before choosing.",
 } as const;
 
-// ── Maître: the on-site AI concierge ──
+// ── The Host: the on-site AI concierge (renamed from Maître, 2026-09-18) ──
 // The chat endpoint is set at build time via PUBLIC_MAITRE_ENDPOINT (ContRelate
 // local_server `/api/v1/maitre/chat`, via its Cloudflare tunnel). When unset,
 // the widget still renders and falls back gracefully to the contact page.
 export const maitre = {
-  name: "Maître",
+  name: "The Host", // headings and sentence starts
+  nameInline: "the Host", // mid-sentence: "Ask the Host"
   title: "Front-of-house AI",
   // Optional avatar image in /public (e.g. "/maitre-avatar.png"). Empty = built-in emblem.
   avatar: "",
   greeting:
-    "Hi, I'm Maître, the front-of-house AI. Ask me anything about Front of House, or tell me what you'd like to see and I'll take you there.",
+    "Hi, I'm the Host, Front of House's AI. Ask me anything about Front of House, or tell me what you'd like to see and I'll take you there.",
   suggestions: [
     "What does a website cost?",
     "Do I own my site?",
@@ -337,7 +338,7 @@ export const faq = {
     },
     {
       q: "What is the difference between Care and Care+ plans?",
-      a: "Care ($450/year) covers hosting, security, backups, the Maitre AI assistant, team-handled changes, and an AEO foundation. Care+ ($900/year) adds ongoing AI-search content and articles, analytics and email capture, competitor insights, seasonal refreshes, and scheduled strategy time with our team.",
+      a: "Care ($450/year) covers hosting, security, backups, the Host AI assistant, team-handled changes, and an AEO foundation. Care+ ($900/year) adds ongoing AI-search content and articles, analytics and email capture, competitor insights, seasonal refreshes, and scheduled strategy time with our team.",
     },
     {
       q: "How much does a restaurant website subscription cost compared to Front of House?",
@@ -351,11 +352,11 @@ export const faq = {
     },
     {
       q: "How do I make changes to my restaurant website?",
-      a: "Edit it yourself, or ask Maitre, your front-of-house AI. Maitre drafts the change, our team reviews it, and it goes live. You can also reach our team directly for any update.",
+      a: "Edit it yourself, or ask the Host, your front-of-house AI. The Host drafts the change, our team reviews it, and it goes live. You can also reach our team directly for any update.",
     },
     {
-      q: "What is Maitre?",
-      a: "Maitre is Front of House's AI assistant included with every Care plan. It helps restaurant owners update their website: change a price, swap a photo, update hours, or answer questions. Maitre runs on our own local models with no per-message billing. Every change it drafts is reviewed by our team before going live.",
+      q: "What is the Host?",
+      a: "The Host is Front of House's AI assistant included with every Care plan. It helps restaurant owners update their website: change a price, swap a photo, update hours, or answer questions. The Host runs on our own local models with no per-message billing. Every change it drafts is reviewed by our team before going live.",
     },
     {
       q: "Will my restaurant website be found by AI search like ChatGPT and Perplexity?",

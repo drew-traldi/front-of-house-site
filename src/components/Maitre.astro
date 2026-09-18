@@ -11,7 +11,7 @@ const endpoint = import.meta.env.PUBLIC_MAITRE_ENDPOINT || "/api/maitre";
 
 <div id="maitre" class="maitre" data-endpoint={endpoint}>
   <!-- Launcher -->
-  <button id="maitre-launch" class="maitre__launch" aria-label={`Chat with ${maitre.name}`} aria-expanded="false">
+  <button id="maitre-launch" class="maitre__launch" aria-label={`Chat with ${maitre.nameInline}`} aria-expanded="false">
     <span class="maitre__avatar" aria-hidden="true">
       {maitre.avatar ? (
         <img src={maitre.avatar} alt="" />
@@ -32,7 +32,7 @@ const endpoint = import.meta.env.PUBLIC_MAITRE_ENDPOINT || "/api/maitre";
         </svg>
       )}
     </span>
-    <span class="maitre__launchlabel">Ask {maitre.name}</span>
+    <span class="maitre__launchlabel">Ask {maitre.nameInline}</span>
   </button>
 
   <!-- Panel -->
@@ -78,7 +78,7 @@ const endpoint = import.meta.env.PUBLIC_MAITRE_ENDPOINT || "/api/maitre";
         class="maitre__input"
         type="text"
         autocomplete="off"
-        placeholder={`Ask ${maitre.name}…`}
+        placeholder={`Ask ${maitre.nameInline}…`}
         aria-label="Message"
       />
       <button type="submit" class="maitre__send" aria-label="Send">
@@ -87,7 +87,7 @@ const endpoint = import.meta.env.PUBLIC_MAITRE_ENDPOINT || "/api/maitre";
         </svg>
       </button>
     </form>
-    <p class="maitre__foot">Maître is an AI assistant. It can take you around the site.</p>
+    <p class="maitre__foot">The Host is an AI assistant. It can take you around the site.</p>
   </section>
 </div>
 

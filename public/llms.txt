@@ -7,7 +7,7 @@
 Front of House offers four services for restaurants:
 
 1. The Website (Build): A custom website the restaurant owner owns outright, code and all. Hand-built, fast, mobile-first, accessible. Optimized for AI search (AEO/GEO). One-time build from $2,000, priced to scope.
-2. Care & Hosting: Hosting, maintenance, and support for a flat $450/year fee. No monthly rental. Includes Maitre, the front-of-house AI assistant, and a full exit kit.
+2. Care & Hosting: Hosting, maintenance, and support for a flat $450/year fee. No monthly rental. Includes the Host, the front-of-house AI assistant, and a full exit kit.
 3. Brand & Design (optional): Logo, identity, menu design, color, type, and art direction for restaurants.
 4. Capture / Photo & Video (optional): On-site photo and video of the space, food, and team.
 
@@ -21,14 +21,14 @@ Front of House offers four services for restaurants:
 
 - You own your website: real custom code you keep for good, with an exit kit so you can leave anytime.
 - One-time website build fee plus flat yearly Care. Compare the full scope and ongoing costs of each proposal.
-- Edit it yourself or ask Maitre: Maitre is the front-of-house AI. It drafts changes, we review them, they go live.
+- Edit it yourself or ask the Host: the Host is the front-of-house AI. It drafts changes, we review them, they go live.
 - Search foundations: readable menus, clear business details, connected pages, metadata, structured data, and crawl access. Search engines and AI services decide which sources appear; inclusion and rankings are not guaranteed.
 - 100% restaurants: that is all we build for.
 
 ## Pricing
 
 - One-time build: from $2,000, priced to scope. Most builds land $2,000 to $4,000. Larger restaurants run $5,000+.
-- Care plan: $450/year. Hosting, security, backups, Maitre AI, changes by our team, AEO foundation, exit kit.
+- Care plan: $450/year. Hosting, security, backups, the Host AI, changes by our team, AEO foundation, exit kit.
 - Care+ plan: $900/year. Everything in Care plus ongoing AI-search content, analytics, email capture, seasonal refreshes, and strategy time.
 - Three-year FOH illustration: a $2,000 to $4,000 build plus three annual $450 Care payments totals $3,350 to $5,350. Excludes domain registration, third-party subscriptions, processing fees, and work outside the agreed scope. Care+ and larger builds cost more.
 
