@@ -314,6 +314,15 @@ export const maitre = {
   ],
 } as const;
 
+// ── Analytics: Umami, self-hosted on the FOH server ──
+// umamiWebsiteId comes from the Umami dashboard (Settings, Websites). Empty =
+// no tracking script is rendered. See Infrastructure/ANALYTICS.md.
+export const analytics = {
+  umamiScript: "https://analytics.fohrestaurants.com/insights.js",
+  umamiWebsiteId: "",
+  domains: "fohrestaurants.com,www.fohrestaurants.com",
+} as const;
+
 // ── Multi-location discounts (applied to annual Care; build stays full per site) ──
 export const locationDiscounts = [
   { range: "2 to 3 locations", off: "10% off care" },

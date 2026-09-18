@@ -1,0 +1,66 @@
+---
+// Umami analytics, self-hosted on the FOH server (analytics.fohrestaurants.com).
+// Cookieless, no personal data, so no consent banner. Renders nothing until
+// analytics.umamiWebsiteId is set in src/data/site.ts, and only counts visits
+// on the domains listed there (not localhost or preview URLs).
+//
+// Events (see Infrastructure/ANALYTICS.md for the full list):
+//   cta_contact, cta_pricing  clicks on links to /contact or /pricing
+//   call_click, email_click   tel: and mailto: links
+//   outbound_click            links to other websites
+//   host_open, host_message, host_navigate   the Host chat (Maitre.astro)
+//   lead_submitted, lead_form_invalid        the contact form (contact.astro)
+import { analytics } from "../data/site";
+
+const enabled = import.meta.env.PROD && Boolean(analytics.umamiWebsiteId);
+---
+
+{enabled && (
+  <script
+    is:inline
+    defer
+    src={analytics.umamiScript}
+    data-website-id={analytics.umamiWebsiteId}
+    data-domains={analytics.domains}
+  />
+)}
+
+<script is:inline>
+  // Safe event helper: a no-op until Umami loads, or when it is blocked.
+  window.fohTrack = function (name, data) {
+    try {
+      if (window.umami && typeof window.umami.track === "function") {
+        window.umami.track(name, data);
+      }
+    } catch (_) {
+      /* never let analytics break the page */
+    }
+  };
+
+  // One delegated listener classifies every meaningful link click.
+  document.addEventListener(
+    "click",
+    function (e) {
+      var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+      if (!a) return;
+      var href = a.getAttribute("href") || "";
+      var label = (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 60);
+      var page = window.location.pathname;
+      if (href.indexOf("tel:") === 0) return window.fohTrack("call_click", { page: page });
+      if (href.indexOf("mailto:") === 0) return window.fohTrack("email_click", { page: page });
+      var url;
+      try {
+        url = new URL(href, window.location.href);
+      } catch (_) {
+        return;
+      }
+      if (url.origin !== window.location.origin) {
+        return window.fohTrack("outbound_click", { host: url.hostname, page: page });
+      }
+      var path = url.pathname.replace(/\/$/, "") || "/";
+      if (path === "/contact") return window.fohTrack("cta_contact", { label: label, page: page });
+      if (path === "/pricing") return window.fohTrack("cta_pricing", { label: label, page: page });
+    },
+    { capture: true }
+  );
+</script>

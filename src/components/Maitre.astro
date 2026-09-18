@@ -370,6 +370,7 @@ const endpoint = import.meta.env.PUBLIC_MAITRE_ENDPOINT || "/api/maitre";
     }
 
     function setOpen(state) {
+      if (state && !open) window.fohTrack?.("host_open", { page: window.location.pathname });
       open = state;
       panel.hidden = !state;
       launch.setAttribute("aria-expanded", String(state));
@@ -399,6 +400,7 @@ const endpoint = import.meta.env.PUBLIC_MAITRE_ENDPOINT || "/api/maitre";
       if (!Array.isArray(actions)) return;
       for (const a of actions) {
         if (a && a.type === "navigate" && a.path) {
+          window.fohTrack?.("host_navigate", { path: a.path, from: window.location.pathname });
           const here = window.location.pathname.replace(/\/$/, "") || "/";
           const dest = a.path.replace(/\/$/, "") || "/";
           if (here === dest) {
@@ -416,6 +418,7 @@ const endpoint = import.meta.env.PUBLIC_MAITRE_ENDPOINT || "/api/maitre";
     async function send(text) {
       text = (text || "").trim();
       if (!text) return;
+      window.fohTrack?.("host_message", { page: window.location.pathname });
       chips.style.display = "none";
       bubble("user", text);
       transcript.push({ role: "user", content: text });

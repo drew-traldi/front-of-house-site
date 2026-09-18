@@ -4,6 +4,7 @@ import cormorant700Url from "@fontsource/cormorant/files/cormorant-latin-700-nor
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Maitre from "../components/Maitre.astro";
+import Analytics from "../components/Analytics.astro";
 import { site } from "../data/site.ts";
 
 interface Props {
@@ -130,7 +131,7 @@ const schemaBlocks = jsonLd
       crossorigin
     />
 
-    {import.meta.env.PROD && <script defer src="/_vercel/insights/script.js" />}
+    <Analytics />
 
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
     {schemaBlocks.map((block) => (

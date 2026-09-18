@@ -358,6 +358,7 @@ const jsonLd = {
     });
     if (firstInvalid) {
       firstInvalid.focus();
+      window.fohTrack?.("lead_form_invalid", { field: firstInvalid.name || firstInvalid.id });
       showNote("A couple of fields need a look.", "err");
       return;
     }
@@ -378,6 +379,7 @@ const jsonLd = {
         if (res.ok) {
           form.reset();
           setSubmitting(false);
+          window.fohTrack?.("lead_submitted", { via: "form", tier: data.tier || "unsure" });
           showNote("Thanks, we'll be in touch within a business day.", "ok");
           return;
         }
@@ -402,6 +404,7 @@ const jsonLd = {
       subject
     )}&body=${encodeURIComponent(body)}`;
     setSubmitting(false);
+    window.fohTrack?.("lead_submitted", { via: "email_app", tier: data.tier || "unsure" });
     showNote("Opening your email app to send. Almost there.", "ok");
   });
 
