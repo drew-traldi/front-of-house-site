@@ -8,12 +8,18 @@
 //   LEAD_TO_EMAIL      where leads go (drew@fohrestaurants.com)
 //   LEAD_FROM_EMAIL    a SendGrid-verified sender
 //   LEAD_FROM_NAME     optional display name (default "Front of House website")
+//   LEAD_CONFIRM_FROM  optional sender of the prospect's thank-you email
+//                      (default LEAD_TO_EMAIL, so replies reach the studio)
+//
+// After the studio email sends, the prospect gets a branded thank-you email
+// (src/lib/lead-emails.ts). A failure there is logged and never blocks the lead.
 //
 // If sending fails, the lead is written to the server log (so it is never
 // silently dropped) and the endpoint returns 502; the form then falls back
 // to opening the visitor's email app, exactly as before.
 import type { APIRoute } from "astro";
 import { site } from "../../data/site.ts";
+import { buildConfirmation } from "../../lib/lead-emails.ts";
 
 export const prerender = false;
 
@@ -145,25 +151,47 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return reply(false, "Our form is not set up yet.", 502);
   }
 
-  try {
-    const res = await fetch("https://api.sendgrid.com/v3/mail/send", {
+  const sandbox = env("LEAD_SANDBOX") === "1" ? { sandbox_mode: { enable: true } } : undefined;
+  const sendMail = (payload: Record<string, unknown>) =>
+    fetch("https://api.sendgrid.com/v3/mail/send", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: to }] }],
-        from: { email: from, name: env("LEAD_FROM_NAME") || "Front of House website" },
-        reply_to: { email: lead.email, name: lead.name },
-        subject,
-        content: [
-          { type: "text/plain", value: text },
-          { type: "text/html", value: html },
-        ],
-        categories: ["foh-lead"],
-        mail_settings: env("LEAD_SANDBOX") === "1" ? { sandbox_mode: { enable: true } } : undefined,
-      }),
+      body: JSON.stringify({ ...payload, mail_settings: sandbox }),
+    });
+
+  try {
+    const res = await sendMail({
+      personalizations: [{ to: [{ email: to }] }],
+      from: { email: from, name: env("LEAD_FROM_NAME") || "Front of House website" },
+      reply_to: { email: lead.email, name: lead.name },
+      subject,
+      content: [
+        { type: "text/plain", value: text },
+        { type: "text/html", value: html },
+      ],
+      categories: ["foh-lead"],
     });
     if (res.ok) {
       console.log(`[lead] sent: ${lead.restaurant || lead.name} (${receivedAt})`);
+      // Branded thank-you to the prospect. Never blocks or fails the lead.
+      try {
+        const confirm = buildConfirmation({ name: lead.name, restaurant: lead.restaurant });
+        const confirmFrom = env("LEAD_CONFIRM_FROM") || to;
+        const c = await sendMail({
+          personalizations: [{ to: [{ email: lead.email, name: lead.name }] }],
+          from: { email: confirmFrom, name: "Front of House" },
+          reply_to: { email: to, name: "Front of House" },
+          subject: confirm.subject,
+          content: [
+            { type: "text/plain", value: confirm.text },
+            { type: "text/html", value: confirm.html },
+          ],
+          categories: ["foh-lead-confirmation"],
+        });
+        if (!c.ok) console.error(`[lead] confirmation SendGrid ${c.status}: ${(await c.text()).slice(0, 200)}`);
+      } catch (err) {
+        console.error("[lead] confirmation failed:", err);
+      }
       return reply(true, "Thanks, we'll be in touch within a business day.");
     }
     console.error(`[lead] SendGrid ${res.status}: ${(await res.text()).slice(0, 300)}; lead kept in log:`, JSON.stringify({ receivedAt, ...lead }));
