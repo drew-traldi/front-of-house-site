@@ -97,20 +97,38 @@ function json(reply: string, actions: unknown[] = [], status = 200): Response {
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   // Same-origin guard: if a browser sends an Origin, it must be ours.
+  // Allows the main domain and its subdomains (www, next), Vercel previews,
+  // and local dev.
   const origin = request.headers.get("origin");
   if (origin) {
+    let host = "";
+    try {
+      host = new URL(origin).hostname;
+    } catch {
+      /* malformed Origin: rejected below */
+    }
+    const siteHost = new URL(site.url).hostname;
     const allowed =
-      origin === site.url ||
-      origin.endsWith(".vercel.app") ||
+      host === siteHost ||
+      host.endsWith("." + siteHost) ||
+      host.endsWith(".vercel.app") ||
       origin.startsWith("http://localhost");
     if (!allowed) return json("Not allowed.", [], 403);
   }
 
-  let ip = "unknown";
-  try {
-    ip = clientAddress ?? "unknown";
-  } catch {
-    /* clientAddress unavailable in some runtimes */
+  // Behind Cloudflare and the server's proxy, clientAddress is the proxy, so
+  // every visitor would share one rate-limit bucket. Use the visitor IP that
+  // Cloudflare forwards, then X-Forwarded-For, then the socket address.
+  let ip =
+    request.headers.get("cf-connecting-ip") ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "";
+  if (!ip) {
+    try {
+      ip = clientAddress ?? "unknown";
+    } catch {
+      ip = "unknown"; /* clientAddress unavailable in some runtimes */
+    }
   }
   if (rateLimited(ip)) {
     return json("One moment — too many messages at once. Try again shortly.");
