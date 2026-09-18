@@ -45,18 +45,21 @@ const jsonLd = {
       </div>
 
       <!--
-        Lead capture: posts to the Front of House lead endpoint (ContRelate's
-        local_server `/api/v1/leads`, reached via its Cloudflare tunnel), which
-        writes to a local SQLite DB on the studio Mac. Set the URL at build time:
-          PUBLIC_LEAD_ENDPOINT=https://<tunnel-host>/api/v1/leads
+        Lead capture: posts to /api/lead on the FOH server (src/pages/api/lead.ts),
+        which emails the lead to the studio through SendGrid. To send leads
+        elsewhere, set at build time: PUBLIC_LEAD_ENDPOINT=https://.../leads
         If it's unset or the POST fails, the form falls back to opening the
         visitor's mail client, pre-filled, so it always works.
       -->
       <form
         class="form card"
         id="lead-form"
-        data-endpoint={import.meta.env.PUBLIC_LEAD_ENDPOINT ?? ""}
+        data-endpoint={import.meta.env.PUBLIC_LEAD_ENDPOINT || "/api/lead"}
       >
+        <div class="hp" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden">
+          <label for="company_website">Leave this field empty</label>
+          <input id="company_website" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
         <div class="field">
           <label for="name">Your name</label>
           <input
