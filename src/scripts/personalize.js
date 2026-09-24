@@ -6,7 +6,9 @@
 // No backend: URLs are shareable, state survives MPA navigation.
 // ─────────────────────────────────────────────────────────────
 
-const PARAMS = ["name", "city", "vibe", "tag"];
+import { applyBrand, normalizeHex, suggest } from "./brand-color.js";
+
+const PARAMS = ["name", "city", "vibe", "tag", "accent", "finish"];
 
 function readParams() {
   const q = new URLSearchParams(window.location.search);
@@ -90,6 +92,8 @@ export function initDemo() {
       city: state.city || cfg.defaults.city,
       tag: state.tag || cfg.defaults.tag,
       vibe: validVibe(state.vibe),
+      accent: normalizeHex(state.accent) || "",
+      finish: state.finish === "tonal" ? "tonal" : "solid",
     };
   }
 
@@ -97,6 +101,7 @@ export function initDemo() {
   function apply() {
     const m = merged();
     root.setAttribute("data-vibe", m.vibe);
+    applyBrand(root, m.accent, m.finish);
     for (const [slot, value] of [
       ["name", m.name],
       ["city", m.city],
@@ -124,6 +129,8 @@ export function initDemo() {
       if (state.city) q.set("city", state.city);
       if (state.tag) q.set("tag", state.tag);
     }
+    if (m.accent) q.set("accent", m.accent.slice(1));
+    if (m.finish === "tonal") q.set("finish", "tonal");
     document
       .querySelectorAll("a[data-foh-cta]")
       .forEach((a) => (a.href = `/templates/brief?${q.toString()}`));
@@ -142,6 +149,95 @@ export function initDemo() {
     }
   }
 
+  // ── Brand color picker (inside the intake) ──
+  const picker = form?.querySelector("[data-brand-picker]");
+  const customInput = document.getElementById("intake-brand-custom");
+  const brandStatus = picker?.querySelector("[data-brand-status]");
+  const CHECK =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  const NOTE =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>';
+
+  function formVibe() {
+    return validVibe(form?.querySelector('input[name="vibe"]:checked')?.value);
+  }
+  function formFinish() {
+    return form?.querySelector('input[name="finish"]:checked')?.value === "tonal" ? "tonal" : "solid";
+  }
+  function formAccent() {
+    const r = picker?.querySelector('input[name="brand"]:checked');
+    if (!r || !r.value) return "";
+    return r.value === "custom" ? normalizeHex(customInput?.value) || "" : normalizeHex(r.value) || "";
+  }
+
+  // Suggestions are fitted to the vibe's background, so rebuild them
+  // whenever the vibe changes. Keeps the visitor's slot selection.
+  function buildSwatches(vibe) {
+    if (!picker) return;
+    root.setAttribute("data-vibe", vibe);
+    const { bg, fg, vibeAccent } = applyBrand(root, "", "solid");
+    const tChip = picker.querySelector("[data-brand-template]");
+    if (tChip) tChip.style.setProperty("--chip", vibeAccent || "#ccc");
+    const list = bg ? suggest(bg, fg, vibeAccent) : [];
+    picker.querySelectorAll("[data-brand-slot]").forEach((slot, i) => {
+      const sug = list[i];
+      slot.hidden = !sug;
+      if (!sug) return;
+      slot.querySelector("input").value = sug.hex;
+      slot.querySelector(".intake__chip").style.setProperty("--chip", sug.hex);
+      slot.querySelector(".intake__swatch-name").textContent = sug.name;
+      slot.title = `${sug.name} ${sug.hex}`;
+    });
+  }
+
+  function previewBrand() {
+    if (!form) return;
+    const vibe = formVibe();
+    root.setAttribute("data-vibe", vibe);
+    const accent = formAccent();
+    const { fit } = applyBrand(root, accent, formFinish());
+    if (!brandStatus) return;
+    if (!fit) {
+      brandStatus.dataset.state = "template";
+      brandStatus.textContent = "Using this template's own color.";
+    } else if (fit.weak) {
+      brandStatus.dataset.state = "adjusted";
+      brandStatus.innerHTML = `${NOTE}<span>This color is hard to read on this background. We used the closest readable shade, ${fit.accent}.</span>`;
+    } else if (fit.adjusted) {
+      brandStatus.dataset.state = "adjusted";
+      brandStatus.innerHTML = `${NOTE}<span>Deepened slightly to ${fit.accent} so it stays readable (${fit.ratio.toFixed(1)}:1).</span>`;
+    } else {
+      brandStatus.dataset.state = "ok";
+      brandStatus.innerHTML = `${CHECK}<span>Readable on this background, ${fit.ratio.toFixed(1)}:1.</span>`;
+    }
+  }
+
+  function prefillBrand() {
+    if (!picker) return;
+    const m = merged();
+    buildSwatches(m.vibe);
+    const radios = [...picker.querySelectorAll('input[name="brand"]')];
+    let match = radios.find((r) => r.value && r.value !== "custom" && r.value === m.accent);
+    if (!match && m.accent) {
+      match = radios.find((r) => r.value === "custom");
+      if (customInput) customInput.value = m.accent;
+    }
+    (match || radios[0]).checked = true;
+    const fin = form.querySelector(`input[name="finish"][value="${m.finish}"]`);
+    if (fin) fin.checked = true;
+    previewBrand();
+  }
+
+  picker?.addEventListener("change", (e) => {
+    if (e.target.name === "brand" || e.target.name === "finish") previewBrand();
+  });
+  // The color well sits on top of the Custom chip: using it selects Custom.
+  customInput?.addEventListener("input", () => {
+    const r = picker.querySelector('input[name="brand"][value="custom"]');
+    if (r) r.checked = true;
+    previewBrand();
+  });
+
   // ── Intake overlay ──
   function prefillIntake() {
     if (!form) return;
@@ -154,6 +250,7 @@ export function initDemo() {
     const radio = form.querySelector(`input[name="vibe"][value="${m.vibe}"]`);
     if (radio) radio.checked = true;
     setNameError("");
+    prefillBrand();
   }
 
   function openIntake() {
@@ -190,7 +287,8 @@ export function initDemo() {
   // Vibe cards preview live behind the overlay
   form?.querySelectorAll('input[name="vibe"]').forEach((radio) => {
     radio.addEventListener("change", () => {
-      root.setAttribute("data-vibe", validVibe(radio.value));
+      buildSwatches(validVibe(radio.value));
+      previewBrand();
     });
   });
 
@@ -209,6 +307,9 @@ export function initDemo() {
     if (city) state.city = city;
     if (tag) state.tag = tag;
     if (vibe) state.vibe = validVibe(vibe);
+    const accent = formAccent();
+    if (accent) state.accent = accent.slice(1);
+    if (formFinish() === "tonal") state.finish = "tonal";
     personalized = true;
 
     store(cfg.slug, state);
@@ -226,7 +327,7 @@ export function initDemo() {
 
   // Esc / "keep browsing" closes without answers: restore the real vibe
   dialog?.addEventListener("close", () => {
-    root.setAttribute("data-vibe", merged().vibe);
+    apply();
   });
   dialog
     ?.querySelector("[data-intake-skip]")

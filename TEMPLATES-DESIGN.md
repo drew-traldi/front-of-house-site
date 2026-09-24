@@ -156,7 +156,7 @@ chalkboard: taps and events are the content.
 
 ## Intake (FOH chrome, shared)
 
-Four inputs, in this order, per `form-validation.md` and `laws-of-ux.md`:
+Five inputs, in this order, per `form-validation.md` and `laws-of-ux.md`:
 
 1. **Restaurant name** (text, required, autofocus). Error only on blur or
    submit: "Add your restaurant's name and we'll put it up in lights."
@@ -164,7 +164,12 @@ Four inputs, in this order, per `form-validation.md` and `laws-of-ux.md`:
    default city).
 3. **Vibe** (two tappable cards, radio semantics, template-specific labels,
    default preselected).
-4. **Tagline** (text, optional, placeholder suggests the demo default).
+4. **Brand color** (optional, radio swatches: "Template" keeps the demo's
+   own accent, six suggestions, and a Custom color well), plus a
+   **Solid / Tonal gradient** button finish where the demo has accent-filled
+   buttons (`accentFinish: false` in `templates.ts` hides it). See
+   "Brand color layer" below.
+5. **Tagline** (text, optional, placeholder suggests the demo default).
 
 One screen, no steps, submit label "Show me my site". Completing it updates
 the URL (shareable) and reveals the personalized demo with one restrained
@@ -177,3 +182,31 @@ Slim ink bar, always visible, Cormorant wordmark "Front of House", Inter
 label "Spec template · built for {name}", ember "Get this built" button
 linking to `/contact?restaurant=&template=&city=&vibe=&tag=`, ghost "Change
 details" button. On mobile it collapses to wordmark + CTA.
+
+## Brand color layer (shared, `src/scripts/brand-color.js`)
+
+Lets a visitor see the demo in their own brand color without breaking the
+demo's contrast gates. It only overrides `--accent`, `--on-accent`, and
+`--accent-fill` inline on `#demo-root`; neutrals, fills, and type stay the
+demo's own, so the demo still reads as its brand, just in their color.
+
+- **Suggestions** are six restaurant hue families (chile, marigold, olive,
+  herb, tile teal, harbor, wine; the indigo/violet band is excluded per
+  `anti-ai-slop.md`), minus whichever sits closest to the vibe's own accent,
+  each fitted to the current vibe's background. They rebuild when the vibe
+  changes.
+- **Contrast gate:** the accent must hold 3:1 against `--bg` and its button
+  label 4.5:1. If a chosen color fails, its lightness is walked away from the
+  background (hue and saturation kept) until both pass, and the intake says
+  so in plain words ("Deepened slightly to #ad8a00 so it stays readable").
+  The raw choice is stored and refitted per vibe, so one brand color works on
+  both vibes of every demo.
+- **Label color** prefers the demo's own `--fg`/`--bg` when they pass 4.5:1,
+  falling back to ink or white only when neither does.
+- **Tonal gradient** is same-hue only (a lighter and a deeper stop of the
+  chosen accent). Never a two-hue sweep. Accent-filled buttons use
+  `background: var(--accent-fill, var(--accent))`, so solid stays the default.
+- **State** rides the URL (`?accent=1f5f8b&finish=tonal`) with the other
+  answers, is passed to `/templates/brief`, and lands in the contact form's
+  build brief and message ("Brand color: #1F5F8B with tonal gradient buttons"),
+  so it reaches the lead email.

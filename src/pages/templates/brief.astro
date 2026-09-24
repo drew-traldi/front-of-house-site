@@ -76,6 +76,13 @@ const jsonLd = {
             </div>
           )
         }
+        <div class="brief-brand" data-brief-brand hidden>
+          <span class="brief-brand__chip" data-brief-brand-chip></span>
+          <div>
+            <p class="brief-brand__label">Your brand color</p>
+            <p class="brief-brand__value"><strong data-brief-brand-hex></strong> <span data-brief-brand-finish></span></p>
+          </div>
+        </div>
         <p class="brief-selection__note">
           We use this as a starting point, then tailor the visual identity,
           photography, menu, and integrations around your restaurant.
@@ -85,6 +92,8 @@ const jsonLd = {
       <form class="brief-form card" action="/contact" method="get">
         <input type="hidden" name="brief" value="1" />
         {initialTag && <input type="hidden" name="tag" value={initialTag} />}
+        <input type="hidden" name="accent" data-brief-accent disabled />
+        <input type="hidden" name="finish" data-brief-finish disabled />
         {
           selectedSlugs.length ? (
             <input type="hidden" name="directions" value={selectedSlugs.join(",")} />
@@ -275,6 +284,44 @@ const jsonLd = {
     text-decoration: underline;
     text-underline-offset: 3px;
   }
+  .brief-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 1.2rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+  }
+  .brief-brand[hidden] {
+    display: none;
+  }
+  .brief-brand__chip {
+    flex: none;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: var(--ember);
+    box-shadow: inset 0 0 0 1px rgba(34, 28, 24, 0.14);
+  }
+  .brief-brand__label {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .brief-brand__value {
+    margin: 0.1rem 0 0;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .brief-brand__value span {
+    color: var(--body);
+    font-size: 0.9rem;
+  }
   .brief-selection__note {
     max-width: 40ch;
     margin-top: 1.2rem;
@@ -457,3 +504,32 @@ const jsonLd = {
     }
   }
 </style>
+
+<script>
+  // The brief is prerendered, so the brand color chosen in a spec template
+  // is read here in the browser and carried forward as hidden fields.
+  const q = new URLSearchParams(window.location.search);
+  const raw = (q.get("accent") || "").trim().replace(/^#/, "");
+  const finish = q.get("finish") === "tonal" ? "tonal" : "";
+  const accent = /^[0-9a-f]{6}$/i.test(raw) ? `#${raw.toLowerCase()}` : "";
+  const box = document.querySelector<HTMLElement>("[data-brief-brand]");
+  if (accent && box) {
+    box.hidden = false;
+    const chip = box.querySelector<HTMLElement>("[data-brief-brand-chip]");
+    if (chip) chip.style.background = accent;
+    const hex = box.querySelector("[data-brief-brand-hex]");
+    if (hex) hex.textContent = accent.toUpperCase();
+    const fin = box.querySelector("[data-brief-brand-finish]");
+    if (fin) fin.textContent = finish ? "· tonal gradient buttons" : "· solid buttons";
+  }
+  const accentInput = document.querySelector<HTMLInputElement>("[data-brief-accent]");
+  if (accent && accentInput) {
+    accentInput.value = accent.slice(1);
+    accentInput.disabled = false;
+  }
+  const finishInput = document.querySelector<HTMLInputElement>("[data-brief-finish]");
+  if (finish && finishInput) {
+    finishInput.value = finish;
+    finishInput.disabled = false;
+  }
+</script>

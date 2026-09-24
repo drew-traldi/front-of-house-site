@@ -289,6 +289,11 @@ const jsonLd = {
     const isBrief = q.get("brief") === "1";
     const restaurant = q.get("restaurant") || "";
     const city = q.get("city") || "";
+    const accentRaw = (q.get("accent") || "").trim().replace(/^#/, "");
+    const brandColor = /^[0-9a-f]{6}$/i.test(accentRaw) ? `#${accentRaw.toUpperCase()}` : "";
+    const brandLine = brandColor
+      ? `${brandColor}${q.get("finish") === "tonal" ? " with tonal gradient buttons" : ""}`
+      : "";
     const rInput = document.getElementById("restaurant");
     if (rInput && !rInput.value && restaurant) rInput.value = restaurant;
     const msg = document.getElementById("message");
@@ -301,6 +306,7 @@ const jsonLd = {
         if (city) text += ` in ${city}`;
         text += vibe ? `, ${vibe} vibe.` : ".";
         if (tag) text += ` Tagline: "${tag}".`;
+        if (brandLine) text += ` Brand color: ${brandLine}.`;
         text += " Let's build the real thing.";
         msg.value = text;
     }
@@ -322,6 +328,7 @@ const jsonLd = {
       if (needs.length) parts.push(`Needs: ${needs.map((need) => need.replace(/-/g, " ")).join(", ")}`);
       if (city) parts.push(`City: ${city}`);
       if (tag) parts.push(`Tagline: ${tag}`);
+      if (brandLine) parts.push(`Brand color: ${brandLine}`);
       if (briefInput) briefInput.value = parts.join("; ");
 
       if (msg && !msg.value) {
@@ -332,6 +339,7 @@ const jsonLd = {
         text += `. The main guest action is ${priority.replace(/-/g, " ")}.`;
         if (needs.length) text += ` We need ${needs.map((need) => need.replace(/-/g, " ")).join(", ")}.`;
         if (tag) text += ` Suggested tagline: "${tag}".`;
+        if (brandLine) text += ` Brand color: ${brandLine}.`;
         if (note) text += ` Note: ${note}`;
         text += " Let's scope the real build.";
         msg.value = text;

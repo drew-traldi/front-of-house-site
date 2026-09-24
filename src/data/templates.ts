@@ -31,6 +31,9 @@ export interface TemplateDef {
   vibes: [VibeDef, VibeDef];
   /** 3–4 palette chips for the gallery card preview */
   swatch: string[];
+  /** false when the demo has no accent-filled buttons, so the
+   *  solid / tonal-gradient finish choice would change nothing */
+  accentFinish?: boolean;
 }
 
 export const templates: TemplateDef[] = [
@@ -93,6 +96,7 @@ export const templates: TemplateDef[] = [
       { key: "pub", label: "Corner pub", hint: "Warm cream, wood, oxblood" },
     ],
     swatch: ["#141815", "#edefe8", "#efa63e"],
+    accentFinish: false,
   },
 ];
 

@@ -15,7 +15,7 @@ const { t } = Astro.props;
     <p class="intake__kicker">Front of House · {t.label} direction</p>
     <h2 id="intake-title">Make this site yours.</h2>
     <p class="intake__lede">
-      Four quick answers and {t.demoName} becomes your restaurant. Nothing is
+      A few quick answers and {t.demoName} becomes your restaurant, in your colors. Nothing is
       saved or sent, it stays in your browser until you decide to reach out.
     </p>
 
@@ -66,6 +66,53 @@ const { t } = Astro.props;
       <p class="intake__vibe-note">The page behind changes as you pick.</p>
     </fieldset>
 
+    <fieldset class="intake__brand" data-brand-picker>
+      <legend>Your brand color <em>optional</em></legend>
+      <div class="intake__swatches">
+        <label class="intake__swatch intake__swatch--template" title="Keep the template's color">
+          <input type="radio" name="brand" value="" checked />
+          <span class="intake__chip" data-brand-template></span>
+          <span class="intake__swatch-name">Template</span>
+        </label>
+        {
+          [0, 1, 2, 3, 4, 5].map((i) => (
+            <label class="intake__swatch" data-brand-slot={i}>
+              <input type="radio" name="brand" value="" />
+              <span class="intake__chip"></span>
+              <span class="intake__swatch-name"></span>
+            </label>
+          ))
+        }
+        <label class="intake__swatch intake__swatch--custom" title="Pick any color">
+          <input type="radio" name="brand" value="custom" />
+          <span class="intake__chip intake__chip--custom">
+            <input
+              type="color"
+              id="intake-brand-custom"
+              value="#1f5f8b"
+              aria-label="Choose a custom brand color"
+            />
+          </span>
+          <span class="intake__swatch-name">Custom</span>
+        </label>
+      </div>
+      {
+        t.accentFinish !== false && (
+          <div class="intake__finish" role="radiogroup" aria-label="Button finish">
+            <label>
+              <input type="radio" name="finish" value="solid" checked />
+              <span>Solid buttons</span>
+            </label>
+            <label>
+              <input type="radio" name="finish" value="tonal" />
+              <span>Tonal gradient</span>
+            </label>
+          </div>
+        )
+      }
+      <p class="intake__brand-status" data-brand-status aria-live="polite"></p>
+    </fieldset>
+
     <div class="intake__field">
       <label for="intake-tag">Tagline <em>optional</em></label>
       <input
@@ -89,6 +136,8 @@ const { t } = Astro.props;
   .intake {
     width: min(30rem, calc(100vw - 2rem));
     max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     border: 1px solid #e4d9c4;
     border-radius: 14px;
     padding: clamp(1.4rem, 4vw, 2.1rem);
@@ -138,7 +187,8 @@ const { t } = Astro.props;
     color: #221c18;
     margin-bottom: 0.4rem;
   }
-  .intake label em {
+  .intake label em,
+  .intake legend em {
     font-style: normal;
     font-weight: 500;
     color: #9a8e7e;
@@ -273,7 +323,141 @@ const { t } = Astro.props;
     outline-offset: 3px;
   }
 
+
+  /* Brand color: swatches are radios; the page behind previews live. */
+  .intake__brand {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1rem;
+  }
+  .intake__swatches {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem 0.4rem;
+  }
+  .intake__swatch {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0;
+    cursor: pointer;
+    min-width: 0;
+  }
+  .intake__swatch[hidden] {
+    display: none;
+  }
+  .intake__swatch > input[type="radio"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .intake__chip {
+    position: relative;
+    display: block;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--chip, #ddd);
+    box-shadow: inset 0 0 0 1px rgba(34, 28, 24, 0.14);
+    transition: box-shadow 0.16s ease, transform 0.16s ease;
+  }
+  .intake__swatch:hover .intake__chip {
+    transform: translateY(-1px);
+  }
+  .intake__swatch > input:checked + .intake__chip {
+    box-shadow: 0 0 0 2px #fbf7f0, 0 0 0 4px #c75b39;
+  }
+  .intake__swatch > input:focus-visible + .intake__chip {
+    outline: 2.5px solid #c75b39;
+    outline-offset: 4px;
+  }
+  .intake__chip--custom {
+    background: conic-gradient(from 90deg, #c3352b, #e9a13b, #7a8b3a, #256d67, #1f5f8b, #8a3a52, #c3352b);
+    overflow: hidden;
+  }
+  .intake__chip--custom input[type="color"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+  }
+  .intake__swatch-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #4a4038;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .intake__finish {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .intake__finish label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    min-height: 44px;
+    padding: 0.45rem 0.75rem;
+    border: 1.5px solid #e4d9c4;
+    border-radius: 9px;
+    background: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #221c18;
+    cursor: pointer;
+  }
+  .intake__finish input {
+    accent-color: #c75b39;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+  }
+  .intake__finish label:has(input:checked) {
+    border-color: #c75b39;
+  }
+  .intake__finish label:has(input:focus-visible) {
+    outline: 2.5px solid #c75b39;
+    outline-offset: 3px;
+  }
+  .intake__brand-status {
+    margin: 0.55rem 0 0;
+    min-height: 1.1rem;
+    font-size: 0.78rem;
+    color: #4a4038;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .intake__brand-status svg {
+    flex: none;
+  }
+  .intake__brand-status[data-state="adjusted"] {
+    color: #8a4b12;
+  }
+
   @media (max-width: 460px) {
+    .intake__swatches {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
     .intake__vibe-row {
       grid-template-columns: 1fr;
     }
