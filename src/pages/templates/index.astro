@@ -211,15 +211,25 @@ const jsonLd = {
     background: var(--ink);
     color: var(--paper);
   }
-  :global(.direction-hero__video) {
+  /* Scoped under .direction-hero so it outranks HeroVideo's own
+     `.hero-video { position: relative }`, which otherwise stacks the video
+     above the copy instead of behind it. */
+  .direction-hero :global(.direction-hero__video) {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
   }
+  /* Top corner, clear of the floating Host button. */
+  .direction-hero :global(.hero-video__toggle) {
+    z-index: 2;
+    top: 1rem;
+    bottom: auto;
+  }
   .direction-hero__wash {
     position: absolute;
     inset: 0;
+    pointer-events: none;
     background: linear-gradient(90deg, rgba(34, 28, 24, 0.9) 0%, rgba(34, 28, 24, 0.58) 48%, rgba(34, 28, 24, 0.22) 100%);
   }
   .direction-hero__copy {
