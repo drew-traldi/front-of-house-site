@@ -1,15 +1,18 @@
 ---
+import { Image } from "astro:assets";
 import Base from "../../layouts/Base.astro";
 import CtaBand from "../../components/CtaBand.astro";
-import { templates } from "../../data/templates";
+import HeroVideo from "../../components/templates/HeroVideo.astro";
+import { directionFilters, directions } from "../../data/directions";
 import { site } from "../../data/site";
+import cinematicDiningPoster from "../../assets/directions/cinematic-dining.jpg";
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Restaurant website templates you can try with your name",
+  name: "Restaurant website directions from Front of House",
   description:
-    "Four spec restaurant websites by Front of House. Enter your restaurant's name, pick a vibe, and see your site in sixty seconds.",
+    "Browse restaurant website directions, make a short list, and send Front of House the operating needs behind your next custom build.",
   url: `${site.url}/templates`,
   mainEntity: {
     "@id": `${site.url}/#organization`,
@@ -18,80 +21,179 @@ const jsonLd = {
 ---
 
 <Base
-  title="Templates"
-  description="Try a Front of House spec site with your restaurant's name on it. Four styles, four quick questions, your site on screen in sixty seconds."
+  title="Website Directions"
+  description="Browse restaurant website directions, make a short list, and send Front of House the operating needs behind your next custom build."
   jsonLd={jsonLd}
   ogImage="/og/templates.jpg"
 >
-  <section class="phead">
-    <div class="container">
-      <p class="kicker">Spec templates</p>
+  <section class="direction-hero">
+    <HeroVideo
+      className="direction-hero__video"
+      mp4="/videos/directions/cinematic-dining.mp4"
+      webm="/videos/directions/cinematic-dining.webm"
+      poster={cinematicDiningPoster.src}
+      label="the website directions reel"
+    />
+    <div class="direction-hero__wash" aria-hidden="true"></div>
+    <div class="container direction-hero__copy">
+      <p class="kicker">Restaurant website directions</p>
       <h1>
-        See your restaurant's site in <em class="accent">sixty</em> seconds.
+        Start with a direction. Make it <em>yours.</em>
       </h1>
       <p class="lede">
-        These are real spec builds, not screenshots. Pick the one closest to
-        your kind of place, answer four quick questions, and watch it become
-        yours. When it feels right, send it to us and we build the real thing.
+        These are live directions built around how a restaurant actually works.
+        Choose what fits the room, the guest action that matters most, and the
+        parts of the operation your site needs to carry.
       </p>
+      <a class="direction-hero__jump" href="#directions">Browse directions</a>
     </div>
   </section>
 
-  <section class="section--tight">
+  <section id="directions" class="catalog section" aria-labelledby="directions-title">
     <div class="container">
-      <div class="tgrid">
+      <header class="catalog__head">
+        <div>
+          <p class="kicker">Find the closest fit</p>
+          <h2 id="directions-title">Choose the room, then the work it needs to do.</h2>
+        </div>
+        <p class="catalog__intro">
+          A direction is not a locked template. It is a sharper place to begin
+          the conversation, with the right menu, conversion, and operations
+          questions already on the table.
+        </p>
+      </header>
+
+      <div class="filters" data-direction-filters>
+        <div class="filters__group">
+          <p class="filters__label">Restaurant type</p>
+          <div class="filters__choices" aria-label="Filter by restaurant type">
+            {
+              directionFilters.formats.map((filter) => (
+                <button type="button" data-filter-group="format" data-filter-value={filter.value} aria-pressed="false">
+                  {filter.label}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+        <div class="filters__group">
+          <p class="filters__label">Main guest action</p>
+          <div class="filters__choices" aria-label="Filter by main guest action">
+            {
+              directionFilters.priorities.map((filter) => (
+                <button type="button" data-filter-group="priority" data-filter-value={filter.value} aria-pressed="false">
+                  {filter.label}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+        <div class="filters__group">
+          <p class="filters__label">Visual feel</p>
+          <div class="filters__choices" aria-label="Filter by visual feel">
+            {
+              directionFilters.moods.map((filter) => (
+                <button type="button" data-filter-group="mood" data-filter-value={filter.value} aria-pressed="false">
+                  {filter.label}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+        <button type="button" class="filters__clear" data-clear-filters hidden>Clear choices</button>
+      </div>
+
+      <div class="catalog__utility">
+        <p data-direction-results role="status" aria-live="polite">
+          Showing all {directions.length} directions.
+        </p>
+        <p>Pick up to two to compare in your build brief.</p>
+      </div>
+
+      <div class="brief-bar" data-brief-bar hidden>
+        <div>
+          <p class="brief-bar__eyebrow">Your short list</p>
+          <p class="brief-bar__text" data-brief-summary>Choose up to two directions.</p>
+        </div>
+        <div class="brief-bar__actions">
+          <a class="btn btn--on-ink" href="/templates/brief" data-brief-link>Build your brief</a>
+          <button type="button" data-clear-brief>Clear</button>
+        </div>
+      </div>
+
+      <div class="direction-grid" data-direction-grid>
         {
-          templates.map((t, i) => (
-            <a class="tcard" href={t.href}>
-              <span class="tcard__swatch" aria-hidden="true">
-                {t.swatch.map((c) => (
-                  <span style={`background:${c}`} />
-                ))}
-              </span>
-              <span class="tcard__num" aria-hidden="true">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h2>{t.label}</h2>
-              <p class="tcard__note">{t.note}</p>
-              <p class="tcard__meta">
-                Spec restaurant: {t.demoName}, {t.demoCity}. Two vibes:{" "}
-                {t.vibes[0].label} or {t.vibes[1].label}.
-              </p>
-              <span class="tcard__go">Try it with your name →</span>
-            </a>
+          directions.map((direction, index) => (
+            <article
+              class:list={["direction-card", { "direction-card--featured": index < 2 }]}
+              data-direction-card
+              data-direction-slug={direction.slug}
+              data-format={direction.formats.join(" ")}
+              data-priority={direction.priorities.join(" ")}
+              data-mood={direction.moods.join(" ")}
+            >
+              <div class="direction-card__media">
+                <Image
+                  src={direction.image}
+                  alt={direction.imageAlt}
+                  widths={[420, 680, 900]}
+                  sizes="(max-width: 760px) 100vw, (max-width: 1080px) 50vw, 33vw"
+                  loading={index < 2 ? "eager" : "lazy"}
+                />
+                <span class="direction-card__number" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <div class="direction-card__body">
+                <p class="direction-card__eyebrow">{direction.eyebrow}</p>
+                <h3>{direction.label}</h3>
+                <p class="direction-card__note">{direction.note}</p>
+                <p class="direction-card__signature">{direction.signature}</p>
+                <ul class="direction-card__capabilities" aria-label={`${direction.label} capabilities`}>
+                  {direction.capabilities.map((capability) => <li>{capability}</li>)}
+                </ul>
+                <div class="direction-card__actions">
+                  <a class="direction-card__go" href={direction.href}>{direction.actionLabel} <span aria-hidden="true">→</span></a>
+                  <button
+                    type="button"
+                    class="direction-card__add"
+                    data-add-to-brief={direction.slug}
+                    aria-pressed="false"
+                  >
+                    Add to brief
+                  </button>
+                </div>
+              </div>
+            </article>
           ))
         }
+      </div>
+
+      <div class="catalog-empty" data-catalog-empty hidden>
+        <p class="kicker">No exact match yet</p>
+        <h3>Try removing one choice.</h3>
+        <p>
+          Every good restaurant is its own mix. Clear a filter or start a brief
+          and tell us what makes your place different.
+        </p>
+        <button type="button" class="btn btn--primary" data-clear-filters>Show all directions</button>
       </div>
     </div>
   </section>
 
-  <section class="section--tight">
+  <section class="section--tight catalog-promise">
     <div class="container">
-      <div class="how card">
-        <div class="how__step">
-          <span class="how__n">1</span>
-          <h3>Answer four questions</h3>
-          <p>
-            Your restaurant's name, your city, a vibe, a tagline if you have
-            one. No email, nothing saved or sent.
-          </p>
+      <div class="catalog-promise__grid">
+        <p class="catalog-promise__number" aria-hidden="true">01</p>
+        <div>
+          <p class="kicker">A better first meeting</p>
+          <h2>Enough to feel the direction. Not so much that the site is decided before we meet.</h2>
         </div>
-        <div class="how__step">
-          <span class="how__n">2</span>
-          <h3>Watch it become yours</h3>
-          <p>
-            The template puts your name up in lights on the spot. Share the
-            link with a partner, it carries your answers.
-          </p>
-        </div>
-        <div class="how__step">
-          <span class="how__n">3</span>
-          <h3>Send it to us</h3>
-          <p>
-            Hit "Get this built" and we take it from there: a real custom
-            build you own outright, from $2,000.
-          </p>
-        </div>
+        <p class="catalog-promise__copy">
+          Your selected direction becomes a build brief, not a boxed product.
+          We use it to ask better questions about your menu, your guests, your
+          room, and the work your site needs to do on a Friday night.
+        </p>
       </div>
     </div>
   </section>
@@ -100,115 +202,414 @@ const jsonLd = {
 </Base>
 
 <style>
-  .phead {
-    padding-block: clamp(3rem, 7vw, 5rem) clamp(1rem, 3vw, 2rem);
-  }
-  .phead h1 {
-    max-width: 18ch;
-  }
-  .phead h1 .accent {
-    font-style: italic;
-    color: var(--ember);
-  }
-  .phead .lede {
-    margin-top: 1rem;
-  }
-
-  .tgrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(1rem, 2.5vw, 1.6rem);
-  }
-  .tcard {
+  .direction-hero {
     position: relative;
-    display: block;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: clamp(1.4rem, 2.4vw, 2rem);
-    color: var(--body);
-    transition: border-color 0.18s ease, box-shadow 0.18s ease,
-      transform 0.18s ease;
-  }
-  .tcard:hover {
-    border-color: var(--ink);
-    box-shadow: var(--shadow-lift);
-    transform: translateY(-2px);
-    color: var(--body);
-  }
-  .tcard__swatch {
-    display: flex;
-    height: 10px;
-    border-radius: 999px;
+    display: grid;
+    align-items: end;
+    min-height: min(42rem, calc(100svh - 74px));
     overflow: hidden;
-    margin-bottom: 1.2rem;
-    border: 1px solid var(--line);
+    background: var(--ink);
+    color: var(--paper);
   }
-  .tcard__swatch span {
-    flex: 1;
-  }
-  .tcard__num {
+  :global(.direction-hero__video) {
     position: absolute;
-    top: clamp(1.2rem, 2.2vw, 1.8rem);
-    right: clamp(1.4rem, 2.4vw, 2rem);
-    font-family: var(--display);
-    font-size: 1.1rem;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .direction-hero__wash {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(34, 28, 24, 0.9) 0%, rgba(34, 28, 24, 0.58) 48%, rgba(34, 28, 24, 0.22) 100%);
+  }
+  .direction-hero__copy {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(6rem, 13vw, 10rem) clamp(3rem, 7vw, 5.5rem);
+  }
+  .direction-hero h1 {
+    max-width: 12ch;
+    color: var(--paper);
+    font-size: clamp(3.2rem, 7.5vw, 6rem);
+    letter-spacing: -0.025em;
+    margin-bottom: 1rem;
+  }
+  .direction-hero h1 em {
+    color: var(--ember-bright);
+    font-style: italic;
+  }
+  .direction-hero .lede {
+    max-width: 53ch;
+    color: var(--muted-on-ink);
+  }
+  .direction-hero__jump {
+    display: inline-block;
+    margin-top: 1.3rem;
+    color: var(--paper);
+    font-size: 0.84rem;
     font-weight: 600;
-    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-transform: uppercase;
   }
-  .tcard h2 {
-    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
-    margin-bottom: 0.35rem;
-  }
-  .tcard__note {
-    margin-bottom: 0.75rem;
-  }
-  .tcard__meta {
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 1.1rem;
-  }
-  .tcard__go {
-    font-weight: 600;
-    font-size: 0.94rem;
-    color: var(--ember-deep);
-  }
-  .tcard:hover .tcard__go {
-    color: var(--ink);
+  .direction-hero__jump:hover {
+    color: var(--paper);
   }
 
-  .how {
+  .catalog {
+    background: var(--paper);
+  }
+  .catalog__head {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1.4rem, 3vw, 2.5rem);
+    grid-template-columns: minmax(0, 1.18fr) minmax(17rem, 0.82fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    align-items: end;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
   }
-  .how__n {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    border: 1.5px solid var(--line);
-    font-family: var(--display);
+  .catalog__head h2 {
+    max-width: 16ch;
+    margin: 0;
+  }
+  .catalog__intro {
+    max-width: 45ch;
+    margin: 0 0 0.2rem;
+  }
+
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+    gap: 1.2rem 1.5rem;
+    align-items: end;
+    padding: clamp(1rem, 2.5vw, 1.4rem);
+    border-block: 1px solid var(--line);
+  }
+  .filters__group {
+    min-width: 0;
+  }
+  .filters__label,
+  .brief-bar__eyebrow {
+    margin: 0 0 0.5rem;
+    color: var(--muted);
+    font-size: 0.68rem;
     font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .filters__choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .filters__choices button,
+  .filters__clear,
+  .direction-card__add,
+  .brief-bar__actions button {
+    min-height: 44px;
+    border: 1px solid var(--line);
     color: var(--ink);
-    margin-bottom: 0.7rem;
+    background: transparent;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 150ms ease, border-color 150ms ease, color 150ms ease, transform 100ms ease;
   }
-  .how h3 {
-    margin-bottom: 0.35rem;
+  .filters__choices button {
+    border-radius: 999px;
+    padding: 0.45rem 0.8rem;
   }
-  .how p {
-    font-size: 0.94rem;
+  .filters__choices button:hover,
+  .filters__choices button[aria-pressed="true"] {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .filters__choices button:active,
+  .direction-card__add:active,
+  .brief-bar__actions button:active {
+    transform: translateY(1px);
+  }
+  .filters__clear {
+    border: 0;
+    padding: 0.45rem 0;
+    color: var(--body);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+  }
+  .filters__clear:hover {
+    color: var(--ink);
+  }
+  .catalog__utility {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 1rem 0 1.5rem;
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+  .catalog__utility p {
     margin: 0;
   }
 
-  @media (max-width: 820px) {
-    .tgrid {
+  .brief-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1.15rem 1.3rem;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .brief-bar__eyebrow {
+    color: var(--muted-on-ink);
+  }
+  .brief-bar__text {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 1.3rem;
+    line-height: 1.1;
+  }
+  .brief-bar__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex: none;
+  }
+  .brief-bar__actions .btn {
+    padding: 0.7rem 1.1rem;
+  }
+  .brief-bar__actions button {
+    border-color: var(--ink-border);
+    color: var(--muted-on-ink);
+    padding: 0.5rem 0.6rem;
+  }
+  .brief-bar__actions button:hover {
+    color: var(--paper);
+    border-color: var(--paper);
+  }
+
+  .direction-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+  }
+  .direction-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #fff;
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+  .direction-card:hover {
+    border-color: var(--ink);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+  }
+  .direction-card[hidden] {
+    display: none;
+  }
+  .direction-card__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bone);
+  }
+  .direction-card__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 300ms ease;
+  }
+  .direction-card:hover .direction-card__media :global(img) {
+    transform: scale(1.025);
+  }
+  .direction-card__number {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.85rem;
+    color: var(--paper);
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-shadow: 0 1px 10px rgba(34, 28, 24, 0.55);
+  }
+  .direction-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: clamp(1.15rem, 2.5vw, 1.5rem);
+  }
+  .direction-card__eyebrow {
+    margin: 0 0 0.45rem;
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+  .direction-card h3 {
+    margin-bottom: 0.55rem;
+    font-size: clamp(1.45rem, 2.2vw, 1.85rem);
+  }
+  .direction-card__note {
+    margin-bottom: 0.85rem;
+    font-size: 0.94rem;
+  }
+  .direction-card__signature {
+    margin-bottom: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line-soft);
+    color: var(--body);
+    font-family: var(--display);
+    font-size: 1.08rem;
+    font-style: italic;
+    line-height: 1.3;
+  }
+  .direction-card__capabilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0;
+    margin: auto 0 1.2rem;
+    list-style: none;
+  }
+  .direction-card__capabilities li {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.24rem 0.5rem;
+    color: var(--body);
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  .direction-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line-soft);
+  }
+  .direction-card__go {
+    color: var(--ink);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .direction-card__go:hover {
+    color: var(--ink);
+  }
+  .direction-card__add {
+    border-radius: 999px;
+    padding: 0.42rem 0.7rem;
+    white-space: nowrap;
+  }
+  .direction-card__add:hover,
+  .direction-card__add[aria-pressed="true"] {
+    border-color: var(--ink);
+    background: var(--bone);
+  }
+  .direction-card__add[aria-pressed="true"]::before {
+    content: "✓ ";
+  }
+  .catalog-empty {
+    max-width: 38rem;
+    margin: 3rem auto 0;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid var(--line);
+    background: var(--bone);
+    text-align: center;
+  }
+  .catalog-empty h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  .catalog-promise {
+    border-top: 1px solid var(--line);
+    background: var(--bone);
+  }
+  .catalog-promise__grid {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+    gap: clamp(1.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .catalog-promise__number {
+    margin: 0;
+    color: var(--ember);
+    font-family: var(--display);
+    font-size: clamp(2.6rem, 4vw, 4rem);
+    line-height: 0.9;
+  }
+  .catalog-promise h2 {
+    max-width: 15ch;
+    margin-bottom: 0;
+  }
+  .catalog-promise__copy {
+    max-width: 42ch;
+    margin: 0.15rem 0 0;
+  }
+
+  @media (max-width: 1040px) {
+    .filters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .direction-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 760px) {
+    .direction-hero {
+      min-height: 38rem;
+    }
+    .direction-hero__wash {
+      background: linear-gradient(180deg, rgba(34, 28, 24, 0.36) 0%, rgba(34, 28, 24, 0.88) 88%);
+    }
+    .catalog__head,
+    .catalog-promise__grid {
       grid-template-columns: 1fr;
     }
-    .how {
+    .catalog__head {
+      gap: 1rem;
+    }
+    .catalog-promise__number {
+      display: none;
+    }
+    .filters {
       grid-template-columns: 1fr;
+    }
+    .catalog__utility,
+    .brief-bar,
+    .brief-bar__actions {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .brief-bar__actions {
+      width: 100%;
+    }
+    .brief-bar__actions .btn {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+  @media (max-width: 540px) {
+    .direction-grid {
+      grid-template-columns: 1fr;
+    }
+    .direction-card__actions {
+      align-items: flex-start;
+      flex-direction: column;
     }
   }
 </style>
+
+<script>
+  import { initDirectionCatalog } from "../../scripts/template-catalog.js";
+  initDirectionCatalog();
+</script>

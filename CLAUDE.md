@@ -54,3 +54,15 @@ them — if you change one, change the other.
 > This design contract was seeded from the Open Design toolkit
 > (`Claude Design/open-design`, `craft/` + 9-section `DESIGN.md` schema).
 > To refresh the craft rulebooks, re-copy from that repo's `craft/` folder.
+
+
+## FOH work log (required)
+
+When you finish meaningful work, append one line so Chamber 2 can brief Drew:
+
+```bash
+~/.redmax/chambers/bin/worklog "what you did"
+```
+
+That writes this project's `WORKLOG.md` and `~/Desktop/FrontOfHouse/.foh-worklogs/index.jsonl`.
+Append only. Do not rewrite history.

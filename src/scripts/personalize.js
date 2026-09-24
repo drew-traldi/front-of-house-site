@@ -56,6 +56,7 @@ export function initDemo() {
 
   const cfg = {
     slug: root.dataset.slug,
+    direction: root.dataset.direction || root.dataset.slug,
     label: root.dataset.templateLabel,
     defaults: {
       name: root.dataset.defaultName,
@@ -115,20 +116,20 @@ export function initDemo() {
         : "try it with your name";
     }
 
-    // CTA links carry the full context to /contact
-    const q = new URLSearchParams({ template: cfg.label });
+    // CTA links carry the useful context into a short build brief before
+    // asking for contact information.
+    const q = new URLSearchParams({ directions: cfg.direction });
     if (personalized) {
       q.set("restaurant", m.name);
       if (state.city) q.set("city", state.city);
       if (state.tag) q.set("tag", state.tag);
-      q.set("vibe", m.vibe);
     }
     document
       .querySelectorAll("a[data-foh-cta]")
-      .forEach((a) => (a.href = `/contact?${q.toString()}`));
+      .forEach((a) => (a.href = `/templates/brief?${q.toString()}`));
 
     if (personalized) {
-      document.title = `${m.name} · ${cfg.label} spec template · Front of House`;
+      document.title = `${m.name} · ${cfg.label} website direction · Front of House`;
     }
 
     // The one-tap vibe switch names its destination

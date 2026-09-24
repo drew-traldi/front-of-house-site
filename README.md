@@ -21,7 +21,7 @@ Run from this `site/` folder:
 | Command           | Action                                  |
 | :---------------- | :-------------------------------------- |
 | `npm install`     | Install dependencies                    |
-| `npm run dev`     | Dev server at `localhost:4321`          |
+| `npm run dev`     | Dev server at `localhost:4999`          |
 | `npm run build`   | Build production site to `./dist/`      |
 | `npm run preview` | Preview the production build locally    |
 

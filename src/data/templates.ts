@@ -17,6 +17,8 @@ export interface VibeDef {
 
 export interface TemplateDef {
   slug: string;
+  /** Matching anonymous direction in the larger catalog and build-brief route. */
+  directionSlug: string;
   href: string;
   /** category label, e.g. "Fine Dining" */
   label: string;
@@ -34,10 +36,11 @@ export interface TemplateDef {
 export const templates: TemplateDef[] = [
   {
     slug: "fine-dining",
+    directionSlug: "cinematic-fine-dining",
     href: "/templates/fine-dining",
     label: "Fine Dining",
     note: "Tasting-menu identity, reservation-led, editorial photography.",
-    demoName: "Aurelia",
+    demoName: "The Table",
     demoCity: "Park City, Utah",
     demoTagline: "A seven course conversation.",
     vibes: [
@@ -48,10 +51,11 @@ export const templates: TemplateDef[] = [
   },
   {
     slug: "fast-casual",
+    directionSlug: "order-first-kitchen-bar",
     href: "/templates/fast-casual",
     label: "Fast Casual",
     note: "Order-first, fast, menu and locations front and center.",
-    demoName: "Stacked",
+    demoName: "The Counter",
     demoCity: "Midtown Atlanta",
     demoTagline: "Good food, fast, no fuss.",
     vibes: [
@@ -62,10 +66,11 @@ export const templates: TemplateDef[] = [
   },
   {
     slug: "cantina",
+    directionSlug: "big-table-cantina",
     href: "/templates/cantina",
     label: "Mexican / Cantina",
     note: "Bold, warm, margarita-hour energy with a big visual menu.",
-    demoName: "La Palma",
+    demoName: "The Cantina",
     demoCity: "East Atlanta Village",
     demoTagline: "Tacos, mezcal, y buena gente.",
     vibes: [
@@ -76,10 +81,11 @@ export const templates: TemplateDef[] = [
   },
   {
     slug: "neighborhood-bar",
+    directionSlug: "corner-bar",
     href: "/templates/neighborhood-bar",
     label: "Neighborhood Bar",
     note: "Events, specials, and a site that changes as fast as the chalkboard.",
-    demoName: "The Grackle",
+    demoName: "The Corner",
     demoCity: "Sugar House, Salt Lake City",
     demoTagline: "Your corner since whenever you found us.",
     vibes: [

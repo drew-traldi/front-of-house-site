@@ -1,28 +1,30 @@
 ---
-// Spec demo: "The Grackle", a corner bar. Brief in TEMPLATES-DESIGN.md §4.
+// Spec demo: "The Corner", a neighborhood bar. Brief in TEMPLATES-DESIGN.md §4.
 // The site changes as fast as the chalkboard: taps and events are the
 // content. Oswald condensed display (caps, tracked), Inter body.
 import "@fontsource-variable/oswald";
 import oswaldUrl from "@fontsource-variable/oswald/files/oswald-latin-wght-normal.woff2?url";
 import { Image } from "astro:assets";
 import DemoShell from "../../layouts/DemoShell.astro";
+import HeroVideo from "../../components/templates/HeroVideo.astro";
 import { templateBySlug } from "../../data/templates";
 import tapsPhoto from "../../assets/demo/grackle-taps.jpg";
+import barCocktailPoster from "../../assets/directions/bar-cocktail.jpg";
 
 const t = templateBySlug("neighborhood-bar");
 
 const taps = [
-  { n: 1, pour: "Hazy IPA", from: "Templin Family", price: "7" },
-  { n: 2, pour: "Czech Pils", from: "Bewilder", price: "6" },
-  { n: 3, pour: "Amber Ale", from: "RedRock", price: "6" },
-  { n: 4, pour: "Nitro Stout", from: "Kiitos", price: "7" },
-  { n: 5, pour: "Dry Cider", from: "Mountain West", price: "8" },
+  { n: 1, pour: "Hazy IPA", from: "Local favorite", price: "7" },
+  { n: 2, pour: "Czech Pils", from: "Crisp and clean", price: "6" },
+  { n: 3, pour: "Amber Ale", from: "Malt forward", price: "6" },
+  { n: 4, pour: "Nitro Stout", from: "On the slow pour", price: "7" },
+  { n: 5, pour: "Dry Cider", from: "Bright and dry", price: "8" },
   { n: 6, pour: "Guest tap", from: "Ask the bar", price: "?" },
 ];
 
 const events = [
-  { day: "Mon", what: "Trivia with Reuben", when: "7:00" },
-  { day: "Thu", what: "Vinyl night, bring a record", when: "8:00" },
+  { day: "Mon", what: "Trivia, first round at seven", when: "7:00" },
+  { day: "Thu", what: "Records and requests", when: "8:00" },
   { day: "Sat", what: "Patio DJ, weather willing", when: "6:00" },
   { day: "Sun", what: "Industry night, 20% off", when: "All night" },
 ];
@@ -54,19 +56,29 @@ const kitchen = [
 
     <!-- ── Hero ── -->
     <section class="nb-hero">
-      <p class="nb-hero__est" data-reveal style="--i:0">Est. whenever</p>
-      <p class="nb-hero__open" data-reveal style="--i:0">
-        <span class="nb-dot" aria-hidden="true"></span>
-        Open till 1 · <span data-slot="city">{t.demoCity}</span>
-      </p>
-      <h1 data-reveal style="--i:1"><span data-slot="name">{t.demoName}</span></h1>
-      <div class="nb-chalkrule" aria-hidden="true" data-reveal style="--i:1"></div>
-      <p class="nb-hero__tag" data-reveal style="--i:2">
-        <span data-slot="tagline">{t.demoTagline}</span>
-      </p>
-      <p class="nb-hero__line" data-reveal style="--i:3">
-        Cash and cards. Dogs on the patio. Happy hour 3 to 6.
-      </p>
+      <HeroVideo
+        className="nb-hero__media"
+        mp4="/videos/directions/bar-cocktail.mp4"
+        webm="/videos/directions/bar-cocktail.webm"
+        poster={barCocktailPoster.src}
+        label="the neighborhood bar direction video"
+      />
+      <div class="nb-hero__wash" aria-hidden="true"></div>
+      <div class="nb-hero__content">
+        <p class="nb-hero__est" data-reveal style="--i:0">Est. whenever</p>
+        <p class="nb-hero__open" data-reveal style="--i:0">
+          <span class="nb-dot" aria-hidden="true"></span>
+          Open till 1 · <span data-slot="city">{t.demoCity}</span>
+        </p>
+        <h1 data-reveal style="--i:1"><span data-slot="name">{t.demoName}</span></h1>
+        <div class="nb-chalkrule" aria-hidden="true" data-reveal style="--i:1"></div>
+        <p class="nb-hero__tag" data-reveal style="--i:2">
+          <span data-slot="tagline">{t.demoTagline}</span>
+        </p>
+        <p class="nb-hero__line" data-reveal style="--i:3">
+          Cash and cards. Dogs on the patio. Happy hour 3 to 6.
+        </p>
+      </div>
     </section>
 
     <!-- ── Signature: the tap board ── -->
@@ -173,7 +185,7 @@ const kitchen = [
 </DemoShell>
 
 <style is:global>
-  /* ── The Grackle tokens: two vibes, switched by data-vibe on #demo-root ── */
+  /* ── Neighborhood-bar tokens: two vibes, switched by data-vibe on #demo-root ── */
   #demo-root[data-vibe="dive"] {
     --bg: #141815;
     --surface: #1d221e;
@@ -227,7 +239,7 @@ const kitchen = [
     flex: none;
   }
 
-  /* ── Chalk devices: the Grackle identity ── */
+  /* ── Chalk devices: the neighborhood-bar identity ── */
   .nb-hero__est {
     font-size: 0.78rem;
     font-weight: 600;
@@ -238,7 +250,7 @@ const kitchen = [
   }
   .nb-chalkrule {
     width: clamp(8rem, 22vw, 12rem);
-    border-top: 2px dashed color-mix(in srgb, var(--fg) 32%, transparent);
+    border-top: 2px dashed rgba(237, 239, 232, 0.45);
     margin-bottom: 1rem;
   }
 
@@ -277,10 +289,46 @@ const kitchen = [
 
   /* ── Hero ── */
   .nb-hero {
-    max-width: 62rem;
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: clamp(34rem, 70svh, 48rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  :global(.nb-hero__media) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  :global(.nb-hero__media .hero-video__toggle) {
+    z-index: 2;
+  }
+  .nb-hero__wash {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgba(12, 14, 12, 0.84) 0%, rgba(12, 14, 12, 0.58) 50%, rgba(12, 14, 12, 0.18) 100%);
+    pointer-events: none;
+  }
+  .nb-hero__content {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 62rem);
     margin: 0 auto;
-    padding: clamp(3rem, 9vw, 6.5rem) clamp(1.2rem, 5vw, 2rem)
+    padding: clamp(5rem, 12vw, 8rem) clamp(1.2rem, 5vw, 2rem)
       clamp(2.5rem, 7vw, 5rem);
+  }
+  .nb-hero :is(h1, h2, h3),
+  .nb-hero__tag {
+    color: #edefe8;
+  }
+  .nb-hero :is(.nb-hero__est, .nb-hero__open, .nb-hero__line) {
+    color: rgba(237, 239, 232, 0.78);
+  }
+  .nb-hero .nb-dot {
+    background: #efa63e;
   }
   .nb-hero__open {
     display: inline-flex;
@@ -289,7 +337,7 @@ const kitchen = [
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.02em;
-    color: var(--muted);
+    color: rgba(237, 239, 232, 0.78);
     margin-bottom: 1rem;
   }
   .nb-hero h1 {
@@ -300,13 +348,13 @@ const kitchen = [
   }
   .nb-hero__tag {
     font-size: clamp(1.15rem, 2.4vw, 1.5rem);
-    color: var(--fg);
+    color: #edefe8;
     max-width: 36ch;
     margin-bottom: 0.8rem;
   }
   .nb-hero__line {
     font-size: 0.92rem;
-    color: var(--muted);
+    color: rgba(237, 239, 232, 0.78);
   }
 
   /* ── Tap board ── */
