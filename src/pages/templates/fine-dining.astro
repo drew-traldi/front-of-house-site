@@ -347,12 +347,14 @@ const courses = [
     text-align: center;
     isolation: isolate;
   }
-  :global(.fd-hero__media) {
+  .fd-hero__media {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+  }
+  .fd-hero__media .hero-video__toggle {
+    z-index: 3;
   }
   .fd-hero__wash {
     position: absolute;

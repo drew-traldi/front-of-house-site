@@ -140,6 +140,12 @@ const FAMILIES = [
   { name: "Wine", h: 345, s: 55 },
 ];
 
+/** The hue families as raw mid-tone colors, for pickers that span several
+ *  templates at once (each template fits the raw color to its own ground). */
+export function familyColors() {
+  return FAMILIES.map((f) => ({ name: f.name, hex: fromHsl(f.h, f.s, 40) }));
+}
+
 /** Six suggestions fitted to the ground, excluding hues near the vibe accent. */
 export function suggest(bg, fg, vibeAccent) {
   const darkGround = luminance(bg) < 0.2;

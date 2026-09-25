@@ -154,34 +154,58 @@ chalkboard: taps and events are the content.
 
 ---
 
+## The flow: name, then the vision
+
+The visitor gives one answer, their restaurant's name, and then sees every
+direction wearing it. Color comes second, on top of something already theirs.
+
+1. **`/templates` hero** asks for the name only ("See your restaurant's site
+   first."). Submitting scrolls to the studio.
+2. **Studio** (`src/components/templates/Studio.astro`, `src/scripts/studio.js`)
+   shows all four demos live, side by side, each the real page in an iframe
+   (`?embed=1`) scaled from a 1280×820 desktop or 390×780 phone screen. A
+   sticky tool bar holds the name, the brand color (Original, the seven hue
+   families, Custom) and Solid / Tonal buttons; every change is pushed into
+   all four previews with `postMessage`, no reloads. Each card has its own
+   vibe toggle, "Open the full site", and "Start a brief with this". Phones
+   get a swipe row of phone-sized previews. Previews load when the studio
+   nears the viewport and show the video poster, not the reel.
+3. **Demo pages** pick the answers up (URL first, then this demo's session,
+   then the shared studio answers in `studio-state.js`), so a name typed once
+   follows the visitor. Answers given on a demo are written back to the
+   studio the same way.
+4. **Brief** (`/templates/brief`) is prerendered, so it reads directions,
+   restaurant, city, tagline and color in the browser, shows the chosen
+   direction cards, and pre-checks their suggested needs.
+
 ## Intake (FOH chrome, shared)
 
-Five inputs, in this order, per `form-validation.md` and `laws-of-ux.md`:
+Shown only when a visitor lands on a demo with no name yet. One required
+input, per `form-validation.md` and `laws-of-ux.md`:
 
 1. **Restaurant name** (text, required, autofocus). Error only on blur or
    submit: "Add your restaurant's name and we'll put it up in lights."
-2. **City or neighborhood** (text, optional, placeholder from the demo's
-   default city).
-3. **Vibe** (two tappable cards, radio semantics, template-specific labels,
-   default preselected).
-4. **Brand color** (optional, radio swatches: "Template" keeps the demo's
-   own accent, six suggestions, and a Custom color well), plus a
-   **Solid / Tonal gradient** button finish where the demo has accent-filled
-   buttons (`accentFinish: false` in `templates.ts` hides it). See
-   "Brand color layer" below.
-5. **Tagline** (text, optional, placeholder suggests the demo default).
+2. **City and tagline** sit behind "Add your city and tagline", optional,
+   placeholders from the demo's defaults.
 
-One screen, no steps, submit label "Show me my site". Completing it updates
-the URL (shareable) and reveals the personalized demo with one restrained
-reveal moment (fade + 12px rise on the hero, stagger 60ms, skipped under
-`prefers-reduced-motion`). "Change details" in the FOH bar reopens it.
+Submit label "Show me my site". Completing it updates the URL (shareable),
+reveals the personalized demo with one restrained reveal moment (fade + 12px
+rise on the hero, stagger 60ms, skipped under `prefers-reduced-motion`), then
+opens the Color & vibe panel. "Change details" in the FOH bar reopens it.
 
 ## FOH frame bar (FOH chrome, shared)
 
 Slim ink bar, always visible, Cormorant wordmark "Front of House", Inter
-label "Spec template · built for {name}", ember "Get this built" button
-linking to `/contact?restaurant=&template=&city=&vibe=&tag=`, ghost "Change
-details" button. On mobile it collapses to wordmark + CTA.
+label "{Template} direction · built for {name}", ghost "Change details",
+**Color & vibe** (a chip in the current accent plus the label), copy link,
+and ember "Build your brief". On phones the Color & vibe label collapses to
+its chip.
+
+**Color & vibe panel** drops from the bar (a bottom sheet on phones) and
+applies live, no submit: the two vibes, the brand color swatches (Template,
+six suggestions fitted to the current vibe, Custom), a readability note, and
+Solid / Tonal gradient buttons where the demo has accent-filled buttons
+(`accentFinish: false` in `templates.ts` hides it).
 
 ## Brand color layer (shared, `src/scripts/brand-color.js`)
 
@@ -198,7 +222,7 @@ demo's own, so the demo still reads as its brand, just in their color.
 - **Contrast gate:** the accent must hold 3:1 against `--bg` and its button
   label 4.5:1. If a chosen color fails, its lightness is walked away from the
   background (hue and saturation kept) until both pass, and the intake says
-  so in plain words ("Deepened slightly to #ad8a00 so it stays readable").
+  so in plain words ("Deepened slightly to #ad8a00 so every word stays readable").
   The raw choice is stored and refitted per vibe, so one brand color works on
   both vibes of every demo.
 - **Label color** prefers the demo's own `--fg`/`--bg` when they pass 4.5:1,
@@ -207,6 +231,13 @@ demo's own, so the demo still reads as its brand, just in their color.
   chosen accent). Never a two-hue sweep. Accent-filled buttons use
   `background: var(--accent-fill, var(--accent))`, so solid stays the default.
 - **State** rides the URL (`?accent=1f5f8b&finish=tonal`) with the other
-  answers, is passed to `/templates/brief`, and lands in the contact form's
+  answers, is shared through the studio answers, is passed to `/templates/brief`, and lands in the contact form's
   build brief and message ("Brand color: #1F5F8B with tonal gradient buttons"),
   so it reaches the lead email.
+
+## Hero video (`HeroVideo.astro`)
+
+Its base styles are zero-specificity (`:where(.hero-video)`) so the page's
+own class always places it. Demo pages use `<style is:global>`, so write
+plain selectors there: `:global()` inside a global style block is left as-is
+and the browser drops the rule.

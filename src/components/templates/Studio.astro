@@ -1,0 +1,560 @@
+---
+// The studio on /templates: the visitor's name and colors across every live
+// direction at once. Each preview is the real demo page in an iframe
+// (?embed=1), scaled down, so what they see is what they would get.
+// studio.js keeps the answers in the URL + sessionStorage and pushes every
+// change into the previews with postMessage (no reloads).
+import { templates } from "../../data/templates";
+import { directionBySlug } from "../../data/directions";
+
+const previews = templates.map((t) => ({ t, direction: directionBySlug(t.directionSlug) }));
+// The "Template" chip shows each direction's own accent, side by side.
+const templateAccents = ["#d9ab5e", "#c93a29", "#256d67", "#efa63e"];
+---
+
+<section id="studio" class="studio" aria-labelledby="studio-title" data-studio>
+  <div class="container">
+    <header class="studio__head">
+      <p class="kicker">Your site, {previews.length} ways</p>
+      <h2 id="studio-title" tabindex="-1">
+        <span data-studio-heading>Your restaurant</span>, <em>live.</em>
+      </h2>
+      <p class="studio__lede">
+        Every preview is a working site with your name on it. Pick a color and
+        watch all {previews.length} change, then open the one that feels like you.
+      </p>
+    </header>
+    <div class="studio__view-row">
+        <div class="studio__view" role="group" aria-labelledby="studio-view-label">
+          <p class="studio__label" id="studio-view-label">Preview on</p>
+          <div class="studio__seg">
+            <button type="button" data-studio-view="desktop" aria-pressed="true">Desktop</button>
+            <button type="button" data-studio-view="phone" aria-pressed="false">Phone</button>
+          </div>
+        </div>
+    </div>
+
+    <div class="studio__tools" data-studio-tools>
+      <div class="studio__name">
+        <label for="studio-name">Restaurant name</label>
+        <input id="studio-name" type="text" autocomplete="organization" maxlength="60" placeholder="Your restaurant" data-studio-name />
+      </div>
+
+      <div class="studio__colors" role="group" aria-labelledby="studio-color-label">
+        <p class="studio__label" id="studio-color-label">Brand color</p>
+        <div class="studio__swatches" data-studio-swatches>
+          <button type="button" class="studio__swatch" data-studio-color="" aria-pressed="true" title="Each direction in its own colors">
+            <span class="studio__chip" style={`--chip: conic-gradient(${templateAccents.map((c, i) => `${c} ${i * 25}% ${(i + 1) * 25}%`).join(", ")})`}></span>
+            <span class="studio__swatch-name">Original</span>
+          </button>
+          <!-- studio.js adds the hue families here, then the custom well -->
+          <label class="studio__swatch studio__swatch--custom" title="Pick any color" data-studio-custom-wrap>
+            <span class="studio__chip studio__chip--custom">
+              <input type="color" value="#1f5f8b" aria-label="Choose any brand color" data-studio-custom />
+            </span>
+            <span class="studio__swatch-name">Custom</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="studio__finish" role="group" aria-labelledby="studio-finish-label">
+        <p class="studio__label" id="studio-finish-label">Buttons</p>
+        <div class="studio__seg">
+          <button type="button" data-studio-finish="solid" aria-pressed="true">Solid</button>
+          <button type="button" data-studio-finish="tonal" aria-pressed="false">Tonal</button>
+        </div>
+      </div>
+
+      <p class="studio__status" data-studio-status aria-live="polite">Each direction in its own colors.</p>
+    </div>
+
+    <div class="studio__grid" data-studio-grid>
+      {
+        previews.map(({ t, direction }) => (
+          <article class="preview" data-preview={t.slug} data-href={t.href} data-direction={t.directionSlug} data-demo-name={t.demoName}>
+            <a class="preview__frame" href={t.href} data-preview-open tabindex="-1" aria-hidden="true">
+              <span class="preview__chrome">
+                <span class="preview__dots"><i /><i /><i /></span>
+                <span class="preview__url" data-preview-url>{t.demoName.toLowerCase().replace(/[^a-z0-9]+/g, "")}.com</span>
+              </span>
+              <span class="preview__viewport" data-preview-viewport>
+                <iframe
+                  title={`${t.label} direction, previewed with your name`}
+                  data-preview-iframe
+                  loading="lazy"
+                  tabindex="-1"
+                  scrolling="no"
+                />
+                <span class="preview__loading" data-preview-loading>Setting the table…</span>
+              </span>
+            </a>
+            <div class="preview__meta">
+              <div>
+                <p class="preview__eyebrow">{direction?.eyebrow ?? t.note}</p>
+                <h3>{direction?.label ?? t.label}</h3>
+              </div>
+              <div class="preview__vibes" role="group" aria-label={`${t.label} vibe`}>
+                {t.vibes.map((v, i) => (
+                  <button type="button" data-preview-vibe={v.key} aria-pressed={i === 0 ? "true" : "false"} title={v.hint}>
+                    {v.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div class="preview__actions">
+              <a class="preview__go" href={t.href} data-preview-open>
+                Open the full site <span aria-hidden="true">→</span>
+              </a>
+              <a class="preview__brief" href={`/templates/brief?directions=${t.directionSlug}`} data-preview-brief>
+                Start a brief with this
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .studio {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    background: var(--bone);
+    border-bottom: 1px solid var(--line);
+  }
+  .studio__head {
+    max-width: 44rem;
+    margin-bottom: clamp(1.2rem, 2.5vw, 1.6rem);
+  }
+  .studio__view-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.9rem;
+  }
+  .studio__view {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .studio__view .studio__label {
+    margin: 0;
+  }
+  .studio__head h2 {
+    margin-bottom: 0.8rem;
+    outline: none;
+  }
+  .studio__head h2 em {
+    color: var(--ember);
+    font-style: italic;
+  }
+  .studio__lede {
+    max-width: 48ch;
+    margin: 0;
+  }
+
+  /* ── Tools ── */
+  .studio__tools {
+    position: sticky;
+    top: 77px;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) auto;
+    gap: 0.6rem 1.4rem;
+    align-items: start;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+    padding: 0.85rem 1.1rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: rgba(251, 247, 240, 0.94);
+    backdrop-filter: saturate(140%) blur(10px);
+    box-shadow: var(--shadow);
+  }
+  .studio__label,
+  .studio__name label {
+    display: block;
+    margin: 0 0 0.45rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ember);
+  }
+  .studio__name input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.6rem 0.8rem;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  .studio__name input:focus {
+    outline: none;
+    border-color: var(--ember);
+    box-shadow: 0 0 0 3px rgba(199, 91, 57, 0.14);
+  }
+  .studio__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.35rem;
+  }
+  .studio__swatches :global(.studio__swatch) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    width: 3.05rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+  }
+  .studio__swatches :global(.studio__chip) {
+    position: relative;
+    display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--chip, #ddd);
+    box-shadow: inset 0 0 0 1px rgba(34, 28, 24, 0.14);
+    transition: box-shadow 0.16s ease, transform 0.16s ease;
+  }
+  .studio__swatches :global(.studio__swatch:hover .studio__chip) {
+    transform: translateY(-1px);
+  }
+  .studio__swatches :global(.studio__swatch[aria-pressed="true"] .studio__chip),
+  .studio__swatches :global(.studio__swatch--custom.is-on .studio__chip) {
+    box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ember);
+  }
+  .studio__swatches :global(.studio__swatch:focus-visible) {
+    outline: none;
+  }
+  .studio__swatches :global(.studio__swatch:focus-visible .studio__chip),
+  .studio__swatches :global(.studio__swatch--custom:focus-within .studio__chip) {
+    outline: 2.5px solid var(--ember);
+    outline-offset: 4px;
+  }
+  .studio__swatches :global(.studio__chip--custom) {
+    background: conic-gradient(from 90deg, #c3352b, #e9a13b, #7a8b3a, #256d67, #1f5f8b, #8a3a52, #c3352b);
+    overflow: hidden;
+  }
+  .studio__swatches :global(.studio__chip--custom input) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .studio__swatches :global(.studio__swatch-name) {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--body);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .studio__seg {
+    display: inline-flex;
+    padding: 3px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+  }
+  .studio__seg button {
+    min-height: 38px;
+    padding: 0.35rem 0.9rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--body);
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.16s ease, color 0.16s ease;
+  }
+  .studio__seg button[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .studio__seg button:focus-visible,
+  .preview__vibes button:focus-visible {
+    outline: 2.5px solid var(--ember);
+    outline-offset: 2px;
+  }
+  .studio__status {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 1.2rem;
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--body);
+  }
+  .studio__status :global(.studio__status-chip) {
+    flex: none;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--chip);
+  }
+
+  /* ── Previews ── */
+  .studio__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.4rem, 3vw, 2.2rem) clamp(1rem, 2.5vw, 1.8rem);
+  }
+  .studio__grid[data-view="phone"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .preview {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .preview__frame {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: var(--shadow);
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .preview__frame:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+  .studio__grid[data-view="phone"] .preview__frame {
+    border-radius: 22px;
+    border-width: 6px;
+    border-color: var(--ink);
+  }
+  .preview__chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    height: 30px;
+    padding: 0 0.7rem;
+    border-bottom: 1px solid var(--line-soft);
+    background: var(--paper);
+  }
+  .studio__grid[data-view="phone"] .preview__chrome {
+    justify-content: center;
+    height: 24px;
+    border-bottom: 0;
+    background: var(--ink);
+  }
+  .studio__grid[data-view="phone"] .preview__dots {
+    display: none;
+  }
+  .studio__grid[data-view="phone"] .preview__url {
+    background: rgba(251, 247, 240, 0.12);
+    color: var(--muted-on-ink);
+  }
+  .preview__dots {
+    display: inline-flex;
+    gap: 5px;
+  }
+  .preview__dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .preview__url {
+    overflow: hidden;
+    max-width: 70%;
+    padding: 0.1rem 0.7rem;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .preview__viewport {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    height: var(--vh, 340px);
+    background: var(--toast);
+  }
+  .preview__viewport iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+    background: #fff;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .preview.is-loaded iframe {
+    opacity: 1;
+  }
+  .preview__loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-style: italic;
+  }
+  .preview.is-loaded .preview__loading {
+    display: none;
+  }
+  .preview__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.6rem 1rem;
+    margin-top: 0.95rem;
+  }
+  .preview__eyebrow {
+    margin: 0 0 0.15rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .preview h3 {
+    margin: 0;
+    font-size: clamp(1.3rem, 2vw, 1.55rem);
+  }
+  .preview__vibes {
+    display: inline-flex;
+    gap: 0.35rem;
+  }
+  .preview__vibes button {
+    min-height: 36px;
+    padding: 0.3rem 0.75rem;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--body);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .preview__vibes button[aria-pressed="true"] {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .preview__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.2rem;
+    margin-top: 0.8rem;
+  }
+  .preview__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    padding: 0.55rem 1.15rem;
+    border-radius: 999px;
+    background: var(--ember);
+    color: var(--paper);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.18s ease;
+  }
+  .preview__go:hover {
+    background: var(--ember-deep);
+    color: var(--paper);
+  }
+  .preview__brief {
+    color: var(--ink);
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  /* Phone previews are narrow: stack the meta. */
+  .studio__grid[data-view="phone"] .preview__meta,
+  .studio__grid[data-view="phone"] .preview__actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 1040px) {
+    .studio__tools {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .studio__colors {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+    .studio__grid[data-view="phone"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  /* Phones: tools stack and stop sticking; previews become a swipe row
+     of phone-sized sites. */
+  @media (max-width: 760px) {
+    .studio__tools {
+      position: static;
+      grid-template-columns: 1fr auto;
+    }
+    .studio__name {
+      grid-column: 1 / -1;
+    }
+    .studio__view-row {
+      display: none;
+    }
+    .studio__grid,
+    .studio__grid[data-view="phone"] {
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-columns: none;
+      grid-auto-columns: min(78vw, 20rem);
+      gap: 1rem;
+      margin-inline: calc(var(--gutter) * -1);
+      padding: 0.3rem var(--gutter) 1rem;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      -webkit-overflow-scrolling: touch;
+    }
+    .preview {
+      scroll-snap-align: start;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .preview__frame,
+    .preview__viewport iframe {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { initStudio } from "../../scripts/studio.js";
+  initStudio();
+</script>

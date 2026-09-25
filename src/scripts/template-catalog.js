@@ -1,3 +1,5 @@
+import { readStudio } from "./studio-state.js";
+
 const FILTER_KEYS = ["format", "priority", "mood"];
 const STORAGE_KEY = "foh-direction-catalog";
 
@@ -117,6 +119,11 @@ export function initDirectionCatalog() {
     if (briefLink) {
       const params = new URLSearchParams();
       if (state.directions.length) params.set("directions", state.directions.join(","));
+      // The name and color from the studio ride along into the brief.
+      const studio = readStudio();
+      if (studio.name) params.set("restaurant", studio.name);
+      if (studio.accent) params.set("accent", String(studio.accent).replace(/^#/, ""));
+      if (studio.finish === "tonal") params.set("finish", "tonal");
       briefLink.href = `/templates/brief${params.toString() ? `?${params.toString()}` : ""}`;
     }
     sync();
@@ -166,6 +173,8 @@ export function initDirectionCatalog() {
     note = "";
     render();
   });
+
+  document.addEventListener("foh:studio", () => render());
 
   window.addEventListener("popstate", () => {
     state = parseState(cards);

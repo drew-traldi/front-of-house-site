@@ -1,5 +1,6 @@
 ---
-// The 60-second intake: one screen, four answers, no email, no steps.
+// The name intake: one answer (city and tagline tucked away), no email.
+// Color and vibe live in the FOH bar's panel, which opens right after.
 // FOH-branded chrome; validation follows .claude/craft/form-validation.md
 // (errors on blur/submit only, clear live once fixed) via personalize.js.
 import type { TemplateDef } from "../../data/templates";
@@ -13,10 +14,10 @@ const { t } = Astro.props;
 <dialog id="demo-intake" class="intake" aria-labelledby="intake-title">
   <form novalidate>
     <p class="intake__kicker">Front of House · {t.label} direction</p>
-    <h2 id="intake-title">Make this site yours.</h2>
+    <h2 id="intake-title">Put your name on it.</h2>
     <p class="intake__lede">
-      A few quick answers and {t.demoName} becomes your restaurant, in your colors. Nothing is
-      saved or sent, it stays in your browser until you decide to reach out.
+      Type your restaurant's name and {t.demoName} becomes yours. Colors come
+      next. Nothing is saved or sent until you decide to reach out.
     </p>
 
     <div class="intake__field">
@@ -32,96 +33,28 @@ const { t } = Astro.props;
       <span class="intake__err" id="intake-name-err" role="alert"></span>
     </div>
 
-    <div class="intake__field">
-      <label for="intake-city">City or neighborhood <em>optional</em></label>
-      <input
-        id="intake-city"
-        name="city"
-        type="text"
-        placeholder={t.demoCity}
-        autocomplete="address-level2"
-      />
-    </div>
-
-    <fieldset class="intake__vibes">
-      <legend>Pick the vibe</legend>
-      <div class="intake__vibe-row">
-        {
-          t.vibes.map((v, i) => (
-            <label class="intake__vibe">
-              <input
-                type="radio"
-                name="vibe"
-                value={v.key}
-                checked={i === 0}
-              />
-              <span class="intake__vibe-card">
-                <strong>{v.label}</strong>
-                <span>{v.hint}</span>
-              </span>
-            </label>
-          ))
-        }
+    <details class="intake__more">
+      <summary>Add your city and tagline <em>optional</em></summary>
+      <div class="intake__field">
+        <label for="intake-city">City or neighborhood</label>
+        <input
+          id="intake-city"
+          name="city"
+          type="text"
+          placeholder={t.demoCity}
+          autocomplete="address-level2"
+        />
       </div>
-      <p class="intake__vibe-note">The page behind changes as you pick.</p>
-    </fieldset>
-
-    <fieldset class="intake__brand" data-brand-picker>
-      <legend>Your brand color <em>optional</em></legend>
-      <div class="intake__swatches">
-        <label class="intake__swatch intake__swatch--template" title="Keep the template's color">
-          <input type="radio" name="brand" value="" checked />
-          <span class="intake__chip" data-brand-template></span>
-          <span class="intake__swatch-name">Template</span>
-        </label>
-        {
-          [0, 1, 2, 3, 4, 5].map((i) => (
-            <label class="intake__swatch" data-brand-slot={i}>
-              <input type="radio" name="brand" value="" />
-              <span class="intake__chip"></span>
-              <span class="intake__swatch-name"></span>
-            </label>
-          ))
-        }
-        <label class="intake__swatch intake__swatch--custom" title="Pick any color">
-          <input type="radio" name="brand" value="custom" />
-          <span class="intake__chip intake__chip--custom">
-            <input
-              type="color"
-              id="intake-brand-custom"
-              value="#1f5f8b"
-              aria-label="Choose a custom brand color"
-            />
-          </span>
-          <span class="intake__swatch-name">Custom</span>
-        </label>
+      <div class="intake__field">
+        <label for="intake-tag">Tagline</label>
+        <input
+          id="intake-tag"
+          name="tag"
+          type="text"
+          placeholder={t.demoTagline}
+        />
       </div>
-      {
-        t.accentFinish !== false && (
-          <div class="intake__finish" role="radiogroup" aria-label="Button finish">
-            <label>
-              <input type="radio" name="finish" value="solid" checked />
-              <span>Solid buttons</span>
-            </label>
-            <label>
-              <input type="radio" name="finish" value="tonal" />
-              <span>Tonal gradient</span>
-            </label>
-          </div>
-        )
-      }
-      <p class="intake__brand-status" data-brand-status aria-live="polite"></p>
-    </fieldset>
-
-    <div class="intake__field">
-      <label for="intake-tag">Tagline <em>optional</em></label>
-      <input
-        id="intake-tag"
-        name="tag"
-        type="text"
-        placeholder={t.demoTagline}
-      />
-    </div>
+    </details>
 
     <div class="intake__actions">
       <button type="submit" class="intake__go">Show me my site</button>
@@ -149,7 +82,7 @@ const { t } = Astro.props;
     font-size: 0.96rem;
     line-height: 1.55;
   }
-  /* Keep the backdrop light: the vibe pick previews live on the page behind */
+  /* Keep the backdrop light: the demo reads as a real page behind */
   .intake::backdrop {
     background: rgba(34, 28, 24, 0.38);
   }
@@ -220,62 +153,6 @@ const { t } = Astro.props;
     color: #b23122;
   }
 
-  .intake__vibes {
-    border: 0;
-    padding: 0;
-    margin: 0 0 1rem;
-  }
-  .intake__vibe-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6rem;
-  }
-  .intake__vibe input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
-  }
-  .intake__vibe-card {
-    display: block;
-    border: 1.5px solid #e4d9c4;
-    border-radius: 9px;
-    background: #fff;
-    padding: 0.7rem 0.85rem;
-    cursor: pointer;
-    transition: border-color 0.16s ease, box-shadow 0.16s ease;
-  }
-  .intake__vibe-card strong {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #221c18;
-  }
-  .intake__vibe-card span {
-    display: block;
-    font-size: 0.78rem;
-    color: #9a8e7e;
-    margin-top: 0.15rem;
-  }
-  .intake__vibe input:checked + .intake__vibe-card {
-    border-color: #c75b39;
-    box-shadow: 0 0 0 3px rgba(199, 91, 57, 0.14);
-  }
-  .intake__vibe input:focus-visible + .intake__vibe-card {
-    outline: 2.5px solid #c75b39;
-    outline-offset: 3px;
-  }
-  .intake__vibe-note {
-    margin: 0.55rem 0 0;
-    font-size: 0.78rem;
-    color: #9a8e7e;
-  }
-
   .intake__actions {
     display: flex;
     align-items: center;
@@ -324,142 +201,52 @@ const { t } = Astro.props;
   }
 
 
-  /* Brand color: swatches are radios; the page behind previews live. */
-  .intake__brand {
-    border: 0;
-    padding: 0;
-    margin: 0 0 1rem;
+  .intake__more {
+    margin: 0 0 0.4rem;
   }
-  .intake__swatches {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.5rem 0.4rem;
-  }
-  .intake__swatch {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+  .intake__more summary {
+    display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    margin: 0;
-    cursor: pointer;
-    min-width: 0;
-  }
-  .intake__swatch[hidden] {
-    display: none;
-  }
-  .intake__swatch > input[type="radio"] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
-  }
-  .intake__chip {
-    position: relative;
-    display: block;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--chip, #ddd);
-    box-shadow: inset 0 0 0 1px rgba(34, 28, 24, 0.14);
-    transition: box-shadow 0.16s ease, transform 0.16s ease;
-  }
-  .intake__swatch:hover .intake__chip {
-    transform: translateY(-1px);
-  }
-  .intake__swatch > input:checked + .intake__chip {
-    box-shadow: 0 0 0 2px #fbf7f0, 0 0 0 4px #c75b39;
-  }
-  .intake__swatch > input:focus-visible + .intake__chip {
-    outline: 2.5px solid #c75b39;
-    outline-offset: 4px;
-  }
-  .intake__chip--custom {
-    background: conic-gradient(from 90deg, #c3352b, #e9a13b, #7a8b3a, #256d67, #1f5f8b, #8a3a52, #c3352b);
-    overflow: hidden;
-  }
-  .intake__chip--custom input[type="color"] {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    border: 0;
-    padding: 0;
-  }
-  .intake__swatch-name {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #4a4038;
-    text-align: center;
-    line-height: 1.2;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .intake__finish {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.8rem;
-  }
-  .intake__finish label {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0;
+    gap: 0.4rem;
     min-height: 44px;
-    padding: 0.45rem 0.75rem;
-    border: 1.5px solid #e4d9c4;
-    border-radius: 9px;
-    background: #fff;
-    font-size: 0.82rem;
+    font-size: 0.86rem;
     font-weight: 600;
     color: #221c18;
     cursor: pointer;
+    list-style: none;
   }
-  .intake__finish input {
-    accent-color: #c75b39;
-    width: 1rem;
-    height: 1rem;
-    margin: 0;
+  .intake__more summary::-webkit-details-marker {
+    display: none;
   }
-  .intake__finish label:has(input:checked) {
-    border-color: #c75b39;
+  .intake__more summary::before {
+    content: "+";
+    display: inline-grid;
+    place-items: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 1.5px solid #e4d9c4;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    line-height: 1;
+    color: #c75b39;
   }
-  .intake__finish label:has(input:focus-visible) {
+  .intake__more[open] summary::before {
+    content: "−";
+  }
+  .intake__more summary em {
+    font-style: normal;
+    font-weight: 500;
+    color: #9a8e7e;
+  }
+  .intake__more summary:focus-visible {
     outline: 2.5px solid #c75b39;
     outline-offset: 3px;
+    border-radius: 6px;
   }
-  .intake__brand-status {
-    margin: 0.55rem 0 0;
-    min-height: 1.1rem;
-    font-size: 0.78rem;
-    color: #4a4038;
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
+  .intake__more[open] {
+    margin-bottom: 0.2rem;
   }
-  .intake__brand-status svg {
-    flex: none;
-  }
-  .intake__brand-status[data-state="adjusted"] {
-    color: #8a4b12;
-  }
-
-  @media (max-width: 460px) {
-    .intake__swatches {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-    .intake__vibe-row {
-      grid-template-columns: 1fr;
-    }
+  .intake__more .intake__field:first-of-type {
+    margin-top: 0.4rem;
   }
 </style>

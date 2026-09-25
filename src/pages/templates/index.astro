@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import Base from "../../layouts/Base.astro";
 import CtaBand from "../../components/CtaBand.astro";
 import HeroVideo from "../../components/templates/HeroVideo.astro";
+import Studio from "../../components/templates/Studio.astro";
 import { directionFilters, directions } from "../../data/directions";
 import { site } from "../../data/site";
 import cinematicDiningPoster from "../../assets/directions/cinematic-dining.jpg";
@@ -38,22 +39,30 @@ const jsonLd = {
     <div class="container direction-hero__copy">
       <p class="kicker">Restaurant website directions</p>
       <h1>
-        Start with a direction. Make it <em>yours.</em>
+        See your restaurant's site <em>first.</em>
       </h1>
       <p class="lede">
-        These are live directions built around how a restaurant actually works.
-        Choose what fits the room, the guest action that matters most, and the
-        parts of the operation your site needs to carry.
+        Type your restaurant's name. Every direction comes to life with it,
+        then try them in your colors before we build a thing.
       </p>
-      <a class="direction-hero__jump" href="#directions">Browse directions</a>
+      <form class="direction-hero__start" data-studio-start novalidate>
+        <label for="hero-name">Your restaurant's name</label>
+        <div class="direction-hero__row">
+          <input id="hero-name" name="name" type="text" autocomplete="organization" maxlength="60" placeholder="Your restaurant" />
+          <button type="submit" class="btn btn--primary">Show me</button>
+        </div>
+      </form>
+      <a class="direction-hero__jump" href="#directions">Or browse every direction</a>
     </div>
   </section>
+
+  <Studio />
 
   <section id="directions" class="catalog section" aria-labelledby="directions-title">
     <div class="container">
       <header class="catalog__head">
         <div>
-          <p class="kicker">Find the closest fit</p>
+          <p class="kicker">Every direction</p>
           <h2 id="directions-title">Choose the room, then the work it needs to do.</h2>
         </div>
         <p class="catalog__intro">
@@ -153,7 +162,7 @@ const jsonLd = {
                   {direction.capabilities.map((capability) => <li>{capability}</li>)}
                 </ul>
                 <div class="direction-card__actions">
-                  <a class="direction-card__go" href={direction.href}>{direction.actionLabel} <span aria-hidden="true">→</span></a>
+                  <a class="direction-card__go" href={direction.href} data-carry-studio={direction.mode === "preview" ? direction.href : undefined}>{direction.actionLabel} <span aria-hidden="true">→</span></a>
                   <button
                     type="button"
                     class="direction-card__add"
@@ -251,6 +260,60 @@ const jsonLd = {
   .direction-hero .lede {
     max-width: 53ch;
     color: var(--muted-on-ink);
+  }
+  .direction-hero__start {
+    max-width: 30rem;
+    margin-top: 1.6rem;
+  }
+  .direction-hero__start label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-on-ink);
+  }
+  .direction-hero__row {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.35rem;
+    border: 1.5px solid rgba(251, 247, 240, 0.28);
+    border-radius: 999px;
+    background: rgba(34, 28, 24, 0.55);
+    backdrop-filter: blur(8px);
+    transition: border-color 0.16s ease;
+  }
+  .direction-hero__row:focus-within {
+    border-color: var(--ember-bright);
+  }
+  .direction-hero__row input {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 0.9rem;
+    border: 0;
+    background: transparent;
+    color: var(--paper);
+    font: inherit;
+    font-size: 1.05rem;
+  }
+  .direction-hero__row input::placeholder {
+    color: rgba(251, 247, 240, 0.5);
+  }
+  .direction-hero__row input:focus {
+    outline: none;
+  }
+  .direction-hero__row input[aria-invalid="true"] + .btn {
+    animation: hero-nudge 0.3s ease;
+  }
+  @keyframes hero-nudge {
+    30% { transform: translateX(-3px); }
+    70% { transform: translateX(3px); }
+  }
+  .direction-hero__row .btn {
+    flex: none;
+    border-radius: 999px;
   }
   .direction-hero__jump {
     display: inline-block;
