@@ -13,11 +13,10 @@ const { mp4, webm, poster, className, label } = Astro.props;
 <figure class:list={["hero-video", className]} data-hero-video-shell>
   <video
     data-hero-video
-    autoplay
     muted
     loop
     playsinline
-    preload="metadata"
+    preload="none"
     poster={poster}
     aria-hidden="true"
   >
@@ -35,13 +34,19 @@ const { mp4, webm, poster, className, label } = Astro.props;
   </button>
 </figure>
 
-<style>
-  .hero-video {
+<style is:global>
+  /* Zero specificity on purpose: pages place the reel with their own class
+     (often position: absolute behind a hero), and that must always win.
+     A scoped .hero-video rule outranked it and pushed hero copy off screen. */
+  :where(.hero-video) {
     position: relative;
     margin: 0;
     overflow: hidden;
     background: #221c18;
   }
+</style>
+
+<style>
   .hero-video video {
     display: block;
     width: 100%;
@@ -111,6 +116,13 @@ const { mp4, webm, poster, className, label } = Astro.props;
       );
       if (label) label.textContent = playing ? "Pause motion" : "Play motion";
     };
+
+    // Studio previews show the poster only: four autoplaying reels in
+    // small iframes would cost bandwidth for motion nobody can see.
+    if (document.documentElement.classList.contains("foh-embed")) {
+      toggle.hidden = true;
+      return;
+    }
 
     if (reducedMotion.matches || saveData) setPlaying(false);
     else video.play().then(() => applyState(true), () => applyState(false));

@@ -18,11 +18,19 @@ const enabled = import.meta.env.PROD && Boolean(analytics.umamiWebsiteId);
 {enabled && (
   <script
     is:inline
-    defer
-    src={analytics.umamiScript}
-    data-website-id={analytics.umamiWebsiteId}
-    data-domains={analytics.domains}
-  />
+    define:vars={{ src: analytics.umamiScript, id: analytics.umamiWebsiteId, domains: analytics.domains }}
+  >
+    // Studio previews (?embed=1) are the same visitor seen four more times:
+    // skip them so each person counts once.
+    if (!/[?&]embed=1(&|$)/.test(location.search)) {
+      var s = document.createElement("script");
+      s.defer = true;
+      s.src = src;
+      s.setAttribute("data-website-id", id);
+      if (domains) s.setAttribute("data-domains", domains);
+      document.head.appendChild(s);
+    }
+  </script>
 )}
 
 <script is:inline>

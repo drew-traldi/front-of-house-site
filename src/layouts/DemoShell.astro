@@ -53,11 +53,15 @@ const ogImageUrl = new URL(`/og/${t.slug}.jpg`, site.url).href;
         crossorigin
       />
     )}
+    <script is:inline>
+      // Studio previews (?embed=1) drop the FOH chrome before first paint.
+      if (/[?&]embed=1(&|$)/.test(location.search)) document.documentElement.classList.add("foh-embed");
+    </script>
     <Analytics />
   </head>
   <body>
     <a href="#demo-main" class="visually-hidden">Skip to content</a>
-    <FohBar templateLabel={t.label} />
+    <FohBar t={t} />
     <div
       id="demo-root"
       data-slug={t.slug}
@@ -116,6 +120,15 @@ const ogImageUrl = new URL(`/og/${t.slug}.jpg`, site.url).href;
   ol,
   figure {
     margin: 0;
+  }
+
+  /* Studio preview: just the restaurant's site, no FOH frame. */
+  html.foh-embed .foh-bar,
+  html.foh-embed .intake {
+    display: none !important;
+  }
+  html.foh-embed {
+    scroll-padding-top: 0;
   }
 
   .visually-hidden {

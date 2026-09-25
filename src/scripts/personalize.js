@@ -1,14 +1,21 @@
 // ─────────────────────────────────────────────────────────────
 // Demo template personalization.
-// Reads the visitor's answers (URL params → sessionStorage → none),
-// fills every [data-slot] in the demo, sets the vibe palette, and
-// drives the 60-second intake overlay + the FOH frame bar.
+// Reads the visitor's answers (URL params → this demo's sessionStorage →
+// the shared studio answers → none), fills every [data-slot] in the demo,
+// sets the vibe palette and brand color, and drives the name intake, the
+// FOH bar's Color & vibe panel, and the frame bar.
 // No backend: URLs are shareable, state survives MPA navigation.
+//
+// Embed mode (?embed=1): the /templates studio shows each demo as a live
+// preview in an iframe. No intake, no FOH bar, nothing stored; the studio
+// pushes answers in with postMessage.
 // ─────────────────────────────────────────────────────────────
 
-import { applyBrand, normalizeHex, suggest } from "./brand-color.js";
+import { applyBrand, familyColors, normalizeHex, suggest } from "./brand-color.js";
+import { readStudio, writeStudio } from "./studio-state.js";
 
 const PARAMS = ["name", "city", "vibe", "tag", "accent", "finish"];
+const EMBED = new URLSearchParams(window.location.search).get("embed") === "1";
 
 function readParams() {
   const q = new URLSearchParams(window.location.search);
@@ -33,15 +40,34 @@ function readStored(slug) {
   }
 }
 
+/** The answers given in the studio or another demo, shaped for this demo. */
+function fromStudio(slug) {
+  const s = readStudio();
+  const state = {};
+  if (s.name) state.name = s.name;
+  if (s.accent) state.accent = String(s.accent).replace(/^#/, "");
+  if (s.finish === "tonal") state.finish = "tonal";
+  if (s.vibes?.[slug]) state.vibe = s.vibes[slug];
+  return state;
+}
+
 function store(slug, state) {
+  if (EMBED) return;
   try {
     sessionStorage.setItem(storageKey(slug), JSON.stringify(state));
   } catch {
     /* private mode etc. — the URL still carries the state */
   }
+  writeStudio({
+    name: state.name || "",
+    accent: state.accent || "",
+    finish: state.finish || "",
+    vibes: state.vibe ? { [slug]: state.vibe } : {},
+  });
 }
 
 function syncUrl(state) {
+  if (EMBED) return;
   const q = new URLSearchParams();
   for (const key of PARAMS) if (state[key]) q.set(key, state[key]);
   const qs = q.toString();
@@ -51,6 +77,11 @@ function syncUrl(state) {
     window.location.pathname + (qs ? `?${qs}` : "")
   );
 }
+
+const CHECK =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+const NOTE =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>';
 
 export function initDemo() {
   const root = document.getElementById("demo-root");
@@ -79,7 +110,14 @@ export function initDemo() {
 
   // ── State ──
   const fromUrl = readParams();
-  let state = Object.keys(fromUrl).length ? fromUrl : readStored(cfg.slug);
+  const stored = readStored(cfg.slug);
+  let state = Object.keys(fromUrl).length
+    ? fromUrl
+    : Object.keys(stored).length
+      ? stored
+      : EMBED
+        ? {}
+        : fromStudio(cfg.slug);
   let personalized = Boolean(state.name);
 
   function validVibe(v) {
@@ -97,11 +135,15 @@ export function initDemo() {
     };
   }
 
+  function save() {
+    store(cfg.slug, state);
+    syncUrl(state);
+  }
+
   // ── Apply state to the page ──
   function apply() {
     const m = merged();
     root.setAttribute("data-vibe", m.vibe);
-    applyBrand(root, m.accent, m.finish);
     for (const [slot, value] of [
       ["name", m.name],
       ["city", m.city],
@@ -135,126 +177,144 @@ export function initDemo() {
       .querySelectorAll("a[data-foh-cta]")
       .forEach((a) => (a.href = `/templates/brief?${q.toString()}`));
 
-    if (personalized) {
+    if (personalized && !EMBED) {
       document.title = `${m.name} · ${cfg.label} website direction · Front of House`;
     }
 
-    // The one-tap vibe switch names its destination
-    const vibeBtn = document.querySelector("[data-foh-vibe]");
-    if (vibeBtn) {
-      const otherIdx = m.vibe === cfg.vibes[0] ? 1 : 0;
-      const label = `Switch to the ${cfg.vibeLabels[otherIdx] || "other"} vibe`;
-      vibeBtn.setAttribute("aria-label", label);
-      vibeBtn.setAttribute("title", label);
-    }
+    renderLook(m);
   }
 
-  // ── Brand color picker (inside the intake) ──
-  const picker = form?.querySelector("[data-brand-picker]");
-  const customInput = document.getElementById("intake-brand-custom");
-  const brandStatus = picker?.querySelector("[data-brand-status]");
-  const CHECK =
-    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
-  const NOTE =
-    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>';
+  // ── Color & vibe panel (FOH bar) ──
+  // Live on the page: every choice applies at once and is saved, so the
+  // panel never needs a submit. Suggestions are fitted to the current
+  // vibe's background, so they rebuild when the vibe changes.
+  const look = document.querySelector("[data-foh-look-panel]");
+  const lookBtn = document.querySelector("[data-foh-look]");
+  const lookChip = document.querySelector("[data-foh-look-chip]");
+  const swatchBox = look?.querySelector("[data-look-swatches]");
+  const lookStatus = look?.querySelector("[data-look-status]");
+  let builtFor = "";
 
-  function formVibe() {
-    return validVibe(form?.querySelector('input[name="vibe"]:checked')?.value);
-  }
-  function formFinish() {
-    return form?.querySelector('input[name="finish"]:checked')?.value === "tonal" ? "tonal" : "solid";
-  }
-  function formAccent() {
-    const r = picker?.querySelector('input[name="brand"]:checked');
-    if (!r || !r.value) return "";
-    return r.value === "custom" ? normalizeHex(customInput?.value) || "" : normalizeHex(r.value) || "";
-  }
-
-  // Suggestions are fitted to the vibe's background, so rebuild them
-  // whenever the vibe changes. Keeps the visitor's slot selection.
   function buildSwatches(vibe) {
-    if (!picker) return;
-    root.setAttribute("data-vibe", vibe);
+    if (!swatchBox || builtFor === vibe) return;
+    builtFor = vibe;
+    // Read the vibe's own tokens without the brand override.
     const { bg, fg, vibeAccent } = applyBrand(root, "", "solid");
-    const tChip = picker.querySelector("[data-brand-template]");
-    if (tChip) tChip.style.setProperty("--chip", vibeAccent || "#ccc");
     const list = bg ? suggest(bg, fg, vibeAccent) : [];
-    picker.querySelectorAll("[data-brand-slot]").forEach((slot, i) => {
-      const sug = list[i];
-      slot.hidden = !sug;
-      if (!sug) return;
-      slot.querySelector("input").value = sug.hex;
-      slot.querySelector(".intake__chip").style.setProperty("--chip", sug.hex);
-      slot.querySelector(".intake__swatch-name").textContent = sug.name;
-      slot.title = `${sug.name} ${sug.hex}`;
-    });
+    const chip = (hex, name, value) =>
+      `<button type="button" class="foh-look__swatch" data-look-color="${value}" aria-pressed="false" title="${name}${value ? " " + value : ""}">` +
+      `<span class="foh-look__chip" style="--chip:${hex}"></span><span class="foh-look__name">${name}</span></button>`;
+    swatchBox.innerHTML =
+      chip(vibeAccent || "#ccc", "Template", "") +
+      list.map((s) => chip(s.hex, s.name, s.hex)).join("") +
+      `<label class="foh-look__swatch foh-look__swatch--custom" title="Pick any color">` +
+      `<span class="foh-look__chip foh-look__chip--custom"><input type="color" data-look-custom value="#1f5f8b" aria-label="Choose any brand color" /></span>` +
+      `<span class="foh-look__name">Custom</span></label>`;
   }
 
-  function previewBrand() {
-    if (!form) return;
-    const vibe = formVibe();
-    root.setAttribute("data-vibe", vibe);
-    const accent = formAccent();
-    const { fit } = applyBrand(root, accent, formFinish());
-    if (!brandStatus) return;
-    if (!fit) {
-      brandStatus.dataset.state = "template";
-      brandStatus.textContent = "Using this template's own color.";
-    } else if (fit.weak) {
-      brandStatus.dataset.state = "adjusted";
-      brandStatus.innerHTML = `${NOTE}<span>This color is hard to read on this background. We used the closest readable shade, ${fit.accent}.</span>`;
-    } else if (fit.adjusted) {
-      brandStatus.dataset.state = "adjusted";
-      brandStatus.innerHTML = `${NOTE}<span>Deepened slightly to ${fit.accent} so it stays readable (${fit.ratio.toFixed(1)}:1).</span>`;
-    } else {
-      brandStatus.dataset.state = "ok";
-      brandStatus.innerHTML = `${CHECK}<span>Readable on this background, ${fit.ratio.toFixed(1)}:1.</span>`;
-    }
-  }
-
-  function prefillBrand() {
-    if (!picker) return;
-    const m = merged();
+  // Sets the vibe, then the brand color on top of it (buildSwatches needs
+  // the bare vibe tokens first), and syncs the panel and bar chip.
+  function renderLook(m) {
     buildSwatches(m.vibe);
-    const radios = [...picker.querySelectorAll('input[name="brand"]')];
-    let match = radios.find((r) => r.value && r.value !== "custom" && r.value === m.accent);
-    if (!match && m.accent) {
-      match = radios.find((r) => r.value === "custom");
-      if (customInput) customInput.value = m.accent;
+    const brand = applyBrand(root, m.accent, m.finish);
+    const fit = brand.fit;
+    if (lookChip) lookChip.style.setProperty("--chip", fit?.accent || brand.vibeAccent || "#c75b39");
+    if (!look) return;
+    look.querySelectorAll("[data-look-vibe]").forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.lookVibe === m.vibe))
+    );
+    look.querySelectorAll("[data-look-finish]").forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.lookFinish === m.finish))
+    );
+    const buttons = [...look.querySelectorAll("[data-look-color]")];
+    // A family picked in the studio arrives as its raw color; here the same
+    // family is listed fitted to this vibe, so match it by name too.
+    const family = familyColors().find((f) => f.hex === m.accent);
+    const match =
+      buttons.find((b) => b.dataset.lookColor === m.accent) ||
+      (family && buttons.find((b) => b.title.startsWith(`${family.name} `)));
+    buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === match)));
+    const custom = look.querySelector(".foh-look__swatch--custom");
+    const customInput = look.querySelector("[data-look-custom]");
+    const isCustom = Boolean(m.accent) && !match;
+    custom?.classList.toggle("is-on", isCustom);
+    if (isCustom && customInput && document.activeElement !== customInput) customInput.value = m.accent;
+
+    if (!lookStatus) return;
+    if (!fit) {
+      lookStatus.dataset.state = "template";
+      lookStatus.textContent = "Using this direction's own color.";
+    } else if (fit.weak) {
+      lookStatus.dataset.state = "adjusted";
+      lookStatus.innerHTML = `${NOTE}<span>Hard to read on this background, so we used the closest readable shade, ${fit.accent}.</span>`;
+    } else if (fit.adjusted) {
+      lookStatus.dataset.state = "adjusted";
+      lookStatus.innerHTML = `${NOTE}<span>Deepened slightly to ${fit.accent} so every word stays readable.</span>`;
+    } else {
+      lookStatus.dataset.state = "ok";
+      lookStatus.innerHTML = `${CHECK}<span>Readable on this background.</span>`;
     }
-    (match || radios[0]).checked = true;
-    const fin = form.querySelector(`input[name="finish"][value="${m.finish}"]`);
-    if (fin) fin.checked = true;
-    previewBrand();
   }
 
-  picker?.addEventListener("change", (e) => {
-    if (e.target.name === "brand" || e.target.name === "finish") previewBrand();
+  function setLook(patch) {
+    state = { ...state, ...patch };
+    for (const k of Object.keys(state)) if (!state[k]) delete state[k];
+    save();
+    apply();
+  }
+
+  look?.addEventListener("click", (e) => {
+    const vibeBtn = e.target.closest("[data-look-vibe]");
+    if (vibeBtn) return setLook({ vibe: vibeBtn.dataset.lookVibe });
+    const finBtn = e.target.closest("[data-look-finish]");
+    if (finBtn) return setLook({ finish: finBtn.dataset.lookFinish === "tonal" ? "tonal" : "" });
+    const colorBtn = e.target.closest("[data-look-color]");
+    if (colorBtn) return setLook({ accent: colorBtn.dataset.lookColor.replace(/^#/, "") });
+    if (e.target.closest("[data-look-close]")) closeLook();
   });
-  // The color well sits on top of the Custom chip: using it selects Custom.
-  customInput?.addEventListener("input", () => {
-    const r = picker.querySelector('input[name="brand"][value="custom"]');
-    if (r) r.checked = true;
-    previewBrand();
+  look?.addEventListener("input", (e) => {
+    if (e.target.matches("[data-look-custom]")) {
+      const hex = normalizeHex(e.target.value);
+      if (hex) setLook({ accent: hex.slice(1) });
+    }
   });
 
-  // ── Intake overlay ──
+  function openLook() {
+    if (!look || !lookBtn) return;
+    look.hidden = false;
+    lookBtn.setAttribute("aria-expanded", "true");
+    (look.querySelector('[aria-pressed="true"]') || look.querySelector("button"))?.focus({ preventScroll: true });
+  }
+  function closeLook(returnFocus = true) {
+    if (!look || look.hidden) return;
+    look.hidden = true;
+    lookBtn?.setAttribute("aria-expanded", "false");
+    if (returnFocus) lookBtn?.focus({ preventScroll: true });
+  }
+  lookBtn?.addEventListener("click", () => (look?.hidden ? openLook() : closeLook()));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && look && !look.hidden) closeLook();
+  });
+  document.addEventListener("pointerdown", (e) => {
+    if (look && !look.hidden && !look.contains(e.target) && !lookBtn?.contains(e.target)) closeLook(false);
+  });
+
+  // ── Name intake ──
   function prefillIntake() {
     if (!form) return;
-    const m = merged();
     nameInput.value = state.name || "";
     cityInput.value = state.city || "";
     cityInput.placeholder = cfg.defaults.city;
     tagInput.value = state.tag || "";
     tagInput.placeholder = cfg.defaults.tag;
-    const radio = form.querySelector(`input[name="vibe"][value="${m.vibe}"]`);
-    if (radio) radio.checked = true;
+    const details = form.querySelector("details");
+    if (details && (state.city || state.tag)) details.open = true;
     setNameError("");
-    prefillBrand();
   }
 
   function openIntake() {
     if (!dialog) return;
+    closeLook(false);
     prefillIntake();
     dialog.showModal();
   }
@@ -284,14 +344,6 @@ export function initDemo() {
     }
   });
 
-  // Vibe cards preview live behind the overlay
-  form?.querySelectorAll('input[name="vibe"]').forEach((radio) => {
-    radio.addEventListener("change", () => {
-      buildSwatches(validVibe(radio.value));
-      previewBrand();
-    });
-  });
-
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
     const name = nameInput.value.trim();
@@ -300,20 +352,17 @@ export function initDemo() {
       nameInput.focus();
       return;
     }
-    const vibe = form.querySelector('input[name="vibe"]:checked')?.value;
-    state = { name };
+    const first = !personalized;
+    state = { ...state, name };
     const city = cityInput.value.trim();
     const tag = tagInput.value.trim();
     if (city) state.city = city;
+    else delete state.city;
     if (tag) state.tag = tag;
-    if (vibe) state.vibe = validVibe(vibe);
-    const accent = formAccent();
-    if (accent) state.accent = accent.slice(1);
-    if (formFinish() === "tonal") state.finish = "tonal";
+    else delete state.tag;
     personalized = true;
 
-    store(cfg.slug, state);
-    syncUrl(state);
+    save();
     apply();
     dialog.close();
 
@@ -323,12 +372,11 @@ export function initDemo() {
     void root.offsetWidth;
     root.classList.add("is-revealed");
     window.scrollTo({ top: 0, behavior: "instant" });
+    // Name first, then the look: open Color & vibe once the reveal lands.
+    if (first) setTimeout(openLook, 700);
   });
 
-  // Esc / "keep browsing" closes without answers: restore the real vibe
-  dialog?.addEventListener("close", () => {
-    apply();
-  });
+  dialog?.addEventListener("close", () => apply());
   dialog
     ?.querySelector("[data-intake-skip]")
     ?.addEventListener("click", () => dialog.close());
@@ -336,15 +384,6 @@ export function initDemo() {
   document
     .querySelectorAll("[data-foh-edit]")
     .forEach((btn) => btn.addEventListener("click", openIntake));
-
-  // ── One-tap vibe switch in the FOH bar ──
-  document.querySelector("[data-foh-vibe]")?.addEventListener("click", () => {
-    const next = merged().vibe === cfg.vibes[0] ? cfg.vibes[1] : cfg.vibes[0];
-    state.vibe = next;
-    store(cfg.slug, state);
-    syncUrl(state);
-    apply();
-  });
 
   // ── Copy the personalized link ──
   const shareBtn = document.querySelector("[data-foh-share]");
@@ -367,7 +406,7 @@ export function initDemo() {
   const srItems = document.querySelectorAll("[data-scroll-reveal]");
   if (srItems.length) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || !("IntersectionObserver" in window)) {
+    if (EMBED || reduce || !("IntersectionObserver" in window)) {
       srItems.forEach((el) => el.classList.add("sr-in"));
     } else {
       const io = new IntersectionObserver(
@@ -385,11 +424,27 @@ export function initDemo() {
     }
   }
 
-  // ── Boot ──
-  if (personalized) {
-    store(cfg.slug, state);
-    syncUrl(state);
+  // ── Embedded preview: the studio pushes answers in ──
+  if (EMBED) {
+    window.addEventListener("message", (e) => {
+      if (e.origin !== window.location.origin || e.data?.type !== "foh:studio") return;
+      const d = e.data;
+      state = {};
+      if (d.name) state.name = String(d.name).slice(0, 80);
+      if (d.accent) state.accent = String(d.accent).replace(/^#/, "");
+      if (d.finish === "tonal") state.finish = "tonal";
+      if (d.vibe) state.vibe = d.vibe;
+      personalized = Boolean(state.name);
+      apply();
+    });
+    apply();
+    root.classList.add("is-ready");
+    window.parent?.postMessage({ type: "foh:embed-ready", slug: cfg.slug }, window.location.origin);
+    return;
   }
+
+  // ── Boot ──
+  if (personalized) save();
   apply();
   root.classList.add("is-ready");
   if (!personalized) {
