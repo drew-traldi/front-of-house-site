@@ -14,82 +14,29 @@
       background: #0a0a0a;
     }
 
-    .ambient-layer {
+    .scene {
       position: absolute;
       inset: 0;
-    }
-
-    .gradient-base {
-      background: radial-gradient(ellipse 120% 80% at 70% 50%, 
-        rgba(26, 21, 16, 0.9) 0%, 
-        rgba(10, 10, 10, 1) 60%);
-    }
-
-    .golden-glow {
-      background: radial-gradient(ellipse 80% 60% at 65% 45%, 
-        rgba(212, 175, 55, 0.08) 0%, 
-        transparent 50%);
       opacity: 0;
+      overflow: hidden;
     }
 
-    .accent-orb-1 {
+    .scene__bg {
       position: absolute;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
-      top: 20%;
-      right: 15%;
-      filter: blur(80px);
-      opacity: 0;
+      inset: -100px;
+      background-size: cover;
+      background-position: center;
+      transform-origin: center;
     }
 
-    .accent-orb-2 {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
-      bottom: 25%;
-      right: 30%;
-      filter: blur(60px);
-      opacity: 0;
-    }
-
-    .accent-orb-3 {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(200, 160, 50, 0.08) 0%, transparent 70%);
-      top: 40%;
-      right: 45%;
-      filter: blur(50px);
-      opacity: 0;
-    }
-
-    .shimmer-line {
-      position: absolute;
-      width: 2px;
-      height: 200px;
-      background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.3), transparent);
-      opacity: 0;
-    }
-
-    .shimmer-1 { right: 25%; top: 30%; }
-    .shimmer-2 { right: 40%; top: 45%; height: 150px; }
-    .shimmer-3 { right: 55%; top: 35%; height: 180px; }
-
-    .subtle-particles {
+    .scene__vignette {
       position: absolute;
       inset: 0;
-      background-image: 
-        radial-gradient(1px 1px at 70% 20%, rgba(212, 175, 55, 0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 75% 40%, rgba(212, 175, 55, 0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 65% 60%, rgba(212, 175, 55, 0.35) 0%, transparent 100%),
-        radial-gradient(1px 1px at 80% 70%, rgba(212, 175, 55, 0.25) 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 80%, rgba(212, 175, 55, 0.3) 0%, transparent 100%);
-      opacity: 0;
+      background: radial-gradient(
+        ellipse 80% 70% at 50% 50%,
+        transparent 0%,
+        rgba(10, 10, 10, 0.3) 100%
+      );
     }
   </style>
 </head>
@@ -102,57 +49,61 @@
     data-width="1920"
     data-height="1080"
   >
-    <div class="ambient-layer gradient-base clip" id="base" data-start="0" data-duration="12" data-track-index="0"></div>
-    <div class="ambient-layer golden-glow clip" id="glow" data-start="0" data-duration="12" data-track-index="1"></div>
-    <div class="accent-orb-1 clip" id="orb1" data-start="0" data-duration="12" data-track-index="2"></div>
-    <div class="accent-orb-2 clip" id="orb2" data-start="0" data-duration="12" data-track-index="3"></div>
-    <div class="accent-orb-3 clip" id="orb3" data-start="0" data-duration="12" data-track-index="4"></div>
-    <div class="shimmer-line shimmer-1 clip" id="shimmer1" data-start="0" data-duration="12" data-track-index="5"></div>
-    <div class="shimmer-line shimmer-2 clip" id="shimmer2" data-start="0" data-duration="12" data-track-index="6"></div>
-    <div class="shimmer-line shimmer-3 clip" id="shimmer3" data-start="0" data-duration="12" data-track-index="7"></div>
-    <div class="subtle-particles clip" id="particles" data-start="0" data-duration="12" data-track-index="8"></div>
+    <!-- Scene 1: Patio hero with Ken Burns (0-4s) -->
+    <div class="scene clip" id="scene-1" data-start="0" data-duration="4" data-track-index="0">
+      <div class="scene__bg" id="scene-1-bg" style="background-image: url('assets/captures/patio.png');"></div>
+      <div class="scene__vignette"></div>
+    </div>
+
+    <!-- Scene 2: Homepage with slow pan (4-8s) -->
+    <div class="scene clip" id="scene-2" data-start="4" data-duration="4" data-track-index="1">
+      <div class="scene__bg" id="scene-2-bg" style="background-image: url('assets/captures/viewport-0.png');"></div>
+      <div class="scene__vignette"></div>
+    </div>
+
+    <!-- Scene 3: Ceviche close-up (8-10s) -->
+    <div class="scene clip" id="scene-3" data-start="8" data-duration="2" data-track-index="2">
+      <div class="scene__bg" id="scene-3-bg" style="background-image: url('assets/captures/ceviche.jpg');"></div>
+      <div class="scene__vignette"></div>
+    </div>
+
+    <!-- Scene 4: Back to patio for seamless loop (10-12s) -->
+    <div class="scene clip" id="scene-4" data-start="10" data-duration="2" data-track-index="3">
+      <div class="scene__bg" id="scene-4-bg" style="background-image: url('assets/captures/patio.png');"></div>
+      <div class="scene__vignette"></div>
+    </div>
   </div>
 
   <script>
     const tl = gsap.timeline({ paused: true });
 
-    tl.to("#glow", { opacity: 0.8, duration: 3, ease: "power1.inOut" }, 0);
-    tl.to("#glow", { opacity: 0.5, duration: 3, ease: "power1.inOut" }, 6);
-    tl.to("#glow", { opacity: 0.8, duration: 3, ease: "power1.inOut" }, 9);
+    // Scene 1: Patio with slow zoom out (0-4s)
+    tl.to("#scene-1", { opacity: 1, duration: 0.8 }, 0);
+    tl.fromTo("#scene-1-bg", 
+      { scale: 1.15, x: 30 }, 
+      { scale: 1.05, x: -20, duration: 4, ease: "power1.inOut" }, 0);
+    tl.to("#scene-1", { opacity: 0, duration: 0.8 }, 3.2);
 
-    tl.to("#orb1", { opacity: 0.7, duration: 2, ease: "power2.out" }, 0);
-    tl.to("#orb1", { x: 30, y: -20, duration: 6, ease: "sine.inOut" }, 0);
-    tl.to("#orb1", { x: 0, y: 0, duration: 6, ease: "sine.inOut" }, 6);
+    // Scene 2: Homepage with pan (4-8s)
+    tl.to("#scene-2", { opacity: 1, duration: 0.8 }, 3.5);
+    tl.fromTo("#scene-2-bg", 
+      { scale: 1.1, x: -30 }, 
+      { scale: 1.05, x: 30, duration: 4, ease: "power1.inOut" }, 4);
+    tl.to("#scene-2", { opacity: 0, duration: 0.8 }, 7.2);
 
-    tl.to("#orb2", { opacity: 0.6, duration: 2.5, ease: "power2.out" }, 0.5);
-    tl.to("#orb2", { x: -40, y: 25, duration: 5.5, ease: "sine.inOut" }, 0.5);
-    tl.to("#orb2", { x: 0, y: 0, duration: 5.5, ease: "sine.inOut" }, 6);
+    // Scene 3: Ceviche (8-10s)
+    tl.to("#scene-3", { opacity: 1, duration: 0.6 }, 7.5);
+    tl.fromTo("#scene-3-bg", 
+      { scale: 1.2 }, 
+      { scale: 1.1, duration: 2, ease: "power1.out" }, 8);
+    tl.to("#scene-3", { opacity: 0, duration: 0.6 }, 9.4);
 
-    tl.to("#orb3", { opacity: 0.5, duration: 3, ease: "power2.out" }, 1);
-    tl.to("#orb3", { x: 20, y: -15, duration: 5, ease: "sine.inOut" }, 1);
-    tl.to("#orb3", { x: 0, y: 0, duration: 5, ease: "sine.inOut" }, 7);
-
-    tl.to("#shimmer1", { opacity: 0.6, y: 100, duration: 3, ease: "power1.inOut" }, 1);
-    tl.to("#shimmer1", { opacity: 0, y: 200, duration: 2, ease: "power1.in" }, 4);
-    tl.set("#shimmer1", { y: 0 }, 6);
-    tl.to("#shimmer1", { opacity: 0.5, y: 80, duration: 3, ease: "power1.inOut" }, 7);
-    tl.to("#shimmer1", { opacity: 0, y: 160, duration: 2, ease: "power1.in" }, 10);
-
-    tl.to("#shimmer2", { opacity: 0.4, y: 60, duration: 2.5, ease: "power1.inOut" }, 2);
-    tl.to("#shimmer2", { opacity: 0, y: 120, duration: 2, ease: "power1.in" }, 5);
-    tl.set("#shimmer2", { y: 0 }, 7);
-    tl.to("#shimmer2", { opacity: 0.35, y: 50, duration: 2.5, ease: "power1.inOut" }, 8);
-    tl.to("#shimmer2", { opacity: 0, y: 100, duration: 1.5, ease: "power1.in" }, 10.5);
-
-    tl.to("#shimmer3", { opacity: 0.3, y: 70, duration: 3, ease: "power1.inOut" }, 0.5);
-    tl.to("#shimmer3", { opacity: 0, y: 140, duration: 2, ease: "power1.in" }, 4);
-    tl.set("#shimmer3", { y: 0 }, 6.5);
-    tl.to("#shimmer3", { opacity: 0.25, y: 60, duration: 3, ease: "power1.inOut" }, 7.5);
-    tl.to("#shimmer3", { opacity: 0, y: 120, duration: 1.5, ease: "power1.in" }, 11);
-
-    tl.to("#particles", { opacity: 0.7, duration: 2, ease: "power2.out" }, 0);
-    tl.to("#particles", { opacity: 0.4, duration: 3, ease: "sine.inOut" }, 4);
-    tl.to("#particles", { opacity: 0.65, duration: 3, ease: "sine.inOut" }, 8);
+    // Scene 4: Return to patio for loop point (10-12s)
+    tl.to("#scene-4", { opacity: 1, duration: 0.8 }, 9.7);
+    tl.fromTo("#scene-4-bg", 
+      { scale: 1.05, x: -20 }, 
+      { scale: 1.15, x: 30, duration: 2, ease: "power1.in" }, 10);
+    tl.to("#scene-4", { opacity: 0, duration: 0.3 }, 11.7);
 
     window.__timelines = window.__timelines || {};
     window.__timelines["killa-hero"] = tl;

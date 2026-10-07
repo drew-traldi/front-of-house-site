@@ -20,147 +20,209 @@
     .scene {
       position: absolute;
       inset: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .scene__bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transform-origin: center;
+    }
+
+    .scene__scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(10, 10, 10, 0.7) 0%,
+        rgba(10, 10, 10, 0.3) 50%,
+        rgba(10, 10, 10, 0.5) 100%
+      );
+    }
+
+    .scene__content {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      padding: 80px 120px;
+    }
+
+    .hook-title {
+      font-size: 96px;
+      font-weight: 600;
+      color: #D4AF37;
+      letter-spacing: 0.06em;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.8);
       opacity: 0;
     }
 
-    /* Scene 1: Hook */
-    .scene-hook {
-      background: radial-gradient(ellipse at center, #1a1510 0%, #0a0a0a 70%);
-    }
-    .hook-line {
-      font-size: 72px;
-      font-weight: 500;
-      color: #D4AF37;
-      letter-spacing: 0.08em;
-      text-align: center;
-      opacity: 0;
-    }
-    .hook-line-2 {
+    .hook-sub {
       font-size: 48px;
       font-weight: 400;
-      color: #ffffff;
+      color: #fff;
+      font-style: italic;
       margin-top: 20px;
-      font-style: italic;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+      opacity: 0;
     }
 
-    /* Scene 2: Philosophy */
-    .scene-philosophy {
-      background: #0a0a0a;
-    }
-    .philosophy-title {
-      font-size: 84px;
-      font-weight: 600;
-      color: #D4AF37;
-      margin-bottom: 80px;
+    .browser-frame {
+      position: absolute;
+      top: 60px;
+      left: 120px;
+      right: 120px;
+      bottom: 60px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
       opacity: 0;
     }
-    .pillars {
+
+    .browser-frame__bar {
+      height: 40px;
+      background: #2a2a2a;
       display: flex;
-      gap: 120px;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
     }
-    .pillar {
-      text-align: center;
-      opacity: 0;
+
+    .browser-frame__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff5f57;
     }
-    .pillar-title {
-      font-size: 36px;
-      font-weight: 600;
-      color: #D4AF37;
-      margin-bottom: 16px;
-      letter-spacing: 0.05em;
-    }
-    .pillar-desc {
+    .browser-frame__dot:nth-child(2) { background: #ffbd2e; }
+    .browser-frame__dot:nth-child(3) { background: #28c940; }
+
+    .browser-frame__url {
+      flex: 1;
+      margin-left: 20px;
+      height: 24px;
+      background: #1a1a1a;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
       font-family: 'Inter', sans-serif;
-      font-size: 18px;
-      font-weight: 300;
+      font-size: 12px;
       color: #888;
-      max-width: 280px;
     }
 
-    /* Scene 3: Dishes */
-    .scene-dishes {
-      background: linear-gradient(135deg, #0a0a0a 0%, #12100e 100%);
+    .browser-frame__content {
+      position: relative;
+      height: calc(100% - 40px);
+      overflow: hidden;
     }
-    .dishes-title {
-      font-size: 48px;
-      font-weight: 500;
-      color: #D4AF37;
-      margin-bottom: 60px;
-      letter-spacing: 0.12em;
-      opacity: 0;
+
+    .browser-frame__scroll {
+      position: absolute;
+      width: 100%;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-position: top center;
     }
-    .dishes-grid {
+
+    .dish-grid {
+      position: absolute;
+      bottom: 100px;
+      left: 120px;
+      right: 120px;
       display: flex;
-      gap: 80px;
+      gap: 40px;
+      justify-content: center;
     }
+
     .dish-card {
+      width: 380px;
+      background: rgba(10, 10, 10, 0.85);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 16px;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .dish-card__img {
+      width: 100%;
+      height: 240px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .dish-card__text {
+      padding: 24px;
+      text-align: center;
+    }
+
+    .dish-card__name {
+      font-size: 28px;
+      font-weight: 600;
+      color: #D4AF37;
+      margin-bottom: 8px;
+    }
+
+    .dish-card__desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #aaa;
+      line-height: 1.5;
+    }
+
+    .cta-overlay {
+      position: absolute;
+      bottom: 80px;
+      left: 0;
+      right: 0;
       text-align: center;
       opacity: 0;
     }
-    .dish-name {
-      font-size: 42px;
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 16px;
-    }
-    .dish-desc {
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      font-weight: 300;
-      color: #888;
-      max-width: 320px;
-      line-height: 1.6;
-    }
 
-    /* Scene 4: Reserve */
-    .scene-reserve {
-      background: radial-gradient(ellipse at center, #1a1510 0%, #0a0a0a 70%);
-    }
-    .reserve-title {
+    .cta-title {
       font-size: 72px;
       font-weight: 600;
       color: #D4AF37;
-      margin-bottom: 24px;
-      opacity: 0;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.9);
+      margin-bottom: 16px;
     }
-    .reserve-sub {
-      font-size: 32px;
-      font-weight: 400;
-      color: #888;
-      font-style: italic;
-      margin-bottom: 60px;
-      opacity: 0;
-    }
-    .reserve-address {
+
+    .cta-sub {
       font-family: 'Inter', sans-serif;
       font-size: 24px;
-      font-weight: 400;
-      color: #ffffff;
+      color: #fff;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+    }
+
+    .logo-outro {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       opacity: 0;
     }
 
-    /* Scene 5: Outro */
-    .scene-outro {
-      background: #0a0a0a;
-    }
-    .outro-logo {
-      font-size: 120px;
+    .logo-outro__mark {
+      font-size: 140px;
       font-weight: 700;
       color: #D4AF37;
-      letter-spacing: 0.15em;
-      margin-bottom: 32px;
-      opacity: 0;
+      letter-spacing: 0.2em;
+      text-shadow: 0 4px 60px rgba(212, 175, 55, 0.4);
     }
-    .outro-tagline {
-      font-size: 36px;
-      font-weight: 400;
-      color: #ffffff;
+
+    .logo-outro__tag {
+      font-size: 32px;
       font-style: italic;
-      opacity: 0;
+      color: #fff;
+      margin-top: 20px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
     }
   </style>
 </head>
@@ -169,115 +231,129 @@
     id="root"
     data-composition-id="killa-brag"
     data-start="0"
-    data-duration="20"
+    data-duration="22"
     data-width="1920"
     data-height="1080"
   >
-    <!-- Scene 1: Hook - 0s to 3s -->
-    <div class="scene scene-hook clip" id="scene-hook" data-start="0" data-duration="3" data-track-index="0">
-      <div class="hook-line" id="hook-1">A Flavor Ritual</div>
-      <div class="hook-line hook-line-2" id="hook-2">made Under the Moon.</div>
+    <!-- Scene 1: Hook on patio hero (0-4s) -->
+    <div class="scene clip" id="scene-1" data-start="0" data-duration="4" data-track-index="0">
+      <div class="scene__bg" id="scene-1-bg" style="background-image: url('assets/captures/patio.png');"></div>
+      <div class="scene__scrim"></div>
+      <div class="scene__content">
+        <h1 class="hook-title" id="hook-title">A Flavor Ritual</h1>
+        <p class="hook-sub" id="hook-sub">made Under the Moon.</p>
+      </div>
     </div>
 
-    <!-- Scene 2: Philosophy - 3s to 7s -->
-    <div class="scene scene-philosophy clip" id="scene-philosophy" data-start="3" data-duration="4" data-track-index="1">
-      <div class="philosophy-title" id="phil-title">Two Worlds, One Moon</div>
-      <div class="pillars">
-        <div class="pillar" id="pillar-1">
-          <div class="pillar-title">Nikkei Heritage</div>
-          <div class="pillar-desc">A culinary tradition born from cultural exchange</div>
+    <!-- Scene 2: Browser showing homepage scroll (4-10s) -->
+    <div class="scene clip" id="scene-2" data-start="4" data-duration="6" data-track-index="1">
+      <div class="scene__bg" style="background: #0a0a0a;"></div>
+      <div class="browser-frame" id="browser">
+        <div class="browser-frame__bar">
+          <span class="browser-frame__dot"></span>
+          <span class="browser-frame__dot"></span>
+          <span class="browser-frame__dot"></span>
+          <div class="browser-frame__url">killanikkei.com</div>
         </div>
-        <div class="pillar" id="pillar-2">
-          <div class="pillar-title">Intentional Craft</div>
-          <div class="pillar-desc">Unwavering attention to technique</div>
-        </div>
-        <div class="pillar" id="pillar-3">
-          <div class="pillar-title">Atmosphere of Calm</div>
-          <div class="pillar-desc">Designed for contemplation</div>
+        <div class="browser-frame__content">
+          <div class="browser-frame__scroll" id="browser-scroll" style="background-image: url('assets/captures/fullpage.png');"></div>
         </div>
       </div>
     </div>
 
-    <!-- Scene 3: Dishes - 7s to 13s -->
-    <div class="scene scene-dishes clip" id="scene-dishes" data-start="7" data-duration="6" data-track-index="2">
-      <div class="dishes-title" id="dishes-title">SIGNATURE CREATIONS</div>
-      <div class="dishes-grid">
+    <!-- Scene 3: Dish showcase on food photo bg (10-16s) -->
+    <div class="scene clip" id="scene-3" data-start="10" data-duration="6" data-track-index="2">
+      <div class="scene__bg" id="scene-3-bg" style="background-image: url('assets/captures/viewport-1.png');"></div>
+      <div class="scene__scrim" style="background: rgba(10,10,10,0.75);"></div>
+      <div class="dish-grid">
         <div class="dish-card" id="dish-1">
-          <div class="dish-name">Ceviche Killa</div>
-          <div class="dish-desc">Tuna, Cucumber, Cherry Daikon, Aji Limo, Kimchi, Gochujang</div>
+          <div class="dish-card__img" style="background-image: url('assets/captures/ceviche.jpg');"></div>
+          <div class="dish-card__text">
+            <div class="dish-card__name">Ceviche Killa</div>
+            <div class="dish-card__desc">Tuna, Cucumber, Cherry Daikon, Aji Limo</div>
+          </div>
         </div>
         <div class="dish-card" id="dish-2">
-          <div class="dish-name">Killa Old Fashioned</div>
-          <div class="dish-desc">Andean Black Whisky, Kuromitsu, Cacao, Angostura</div>
+          <div class="dish-card__img" style="background-image: url('assets/captures/old-fashioned.jpg');"></div>
+          <div class="dish-card__text">
+            <div class="dish-card__name">Killa Old Fashioned</div>
+            <div class="dish-card__desc">Andean Black Whisky, Kuromitsu, Cacao</div>
+          </div>
         </div>
         <div class="dish-card" id="dish-3">
-          <div class="dish-name">Crab Causa</div>
-          <div class="dish-desc">Black Potato Mousse, Avocado, Huancaina, Orange Tobiko</div>
+          <div class="dish-card__img" style="background-image: url('assets/captures/causa.jpg');"></div>
+          <div class="dish-card__text">
+            <div class="dish-card__name">Crab Causa</div>
+            <div class="dish-card__desc">Black Potato Mousse, Avocado, Huancaina</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Scene 4: Reserve - 13s to 17s -->
-    <div class="scene scene-reserve clip" id="scene-reserve" data-start="13" data-duration="4" data-track-index="3">
-      <div class="reserve-title" id="reserve-title">Reserve Your Table</div>
-      <div class="reserve-sub" id="reserve-sub">Limited seating. Intentional dining.</div>
-      <div class="reserve-address" id="reserve-address">279 E 300 S, Salt Lake City, UT</div>
+    <!-- Scene 4: Reserve CTA on viewport (16-19s) -->
+    <div class="scene clip" id="scene-4" data-start="16" data-duration="3" data-track-index="3">
+      <div class="scene__bg" id="scene-4-bg" style="background-image: url('assets/captures/viewport-3.png');"></div>
+      <div class="scene__scrim"></div>
+      <div class="cta-overlay" id="cta">
+        <div class="cta-title">Reserve Your Table</div>
+        <div class="cta-sub">279 E 300 S, Salt Lake City</div>
+      </div>
     </div>
 
-    <!-- Scene 5: Outro - 17s to 20s -->
-    <div class="scene scene-outro clip" id="scene-outro" data-start="17" data-duration="3" data-track-index="4">
-      <div class="outro-logo" id="outro-logo">KILLA</div>
-      <div class="outro-tagline" id="outro-tagline">A Flavor Ritual made Under the Moon.</div>
+    <!-- Scene 5: Logo outro on patio (19-22s) -->
+    <div class="scene clip" id="scene-5" data-start="19" data-duration="3" data-track-index="4">
+      <div class="scene__bg" id="scene-5-bg" style="background-image: url('assets/captures/patio.png'); filter: brightness(0.6);"></div>
+      <div class="scene__scrim" style="background: rgba(10,10,10,0.6);"></div>
+      <div class="logo-outro" id="outro">
+        <div class="logo-outro__mark">KILLA</div>
+        <div class="logo-outro__tag">Two Worlds, One Moon.</div>
+      </div>
     </div>
 
     <!-- Audio -->
-    <audio id="bg-music" data-start="0" data-duration="20" data-track-index="10" data-volume="0.28" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
-    <audio id="sfx-bell-hook" data-start="1.8" data-duration="2" data-track-index="11" data-volume="0.5" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
-    <audio id="sfx-drop-dishes" data-start="8.7" data-duration="1" data-track-index="12" data-volume="0.45" src="assets/sfx/interface/drop_001.ogg"></audio>
-    <audio id="sfx-bell-outro" data-start="17.4" data-duration="2" data-track-index="13" data-volume="0.6" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+    <audio id="bg-music" data-start="0" data-duration="22" data-track-index="10" data-volume="0.25" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
+    <audio id="sfx-bell" data-start="2.5" data-duration="2" data-track-index="11" data-volume="0.4" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+    <audio id="sfx-drop" data-start="11" data-duration="1" data-track-index="12" data-volume="0.35" src="assets/sfx/interface/drop_001.ogg"></audio>
   </div>
 
   <script>
     const tl = gsap.timeline({ paused: true });
 
-    // Scene 1: Hook (0-3s)
-    tl.to("#scene-hook", { opacity: 1, duration: 0.3 }, 0);
-    tl.fromTo("#hook-1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 0.3);
-    tl.fromTo("#hook-2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 1.2);
-    tl.to("#scene-hook", { opacity: 0, duration: 0.4 }, 2.6);
+    // Scene 1: Hook on patio (0-4s)
+    tl.to("#scene-1", { opacity: 1, duration: 0.5 }, 0);
+    tl.fromTo("#scene-1-bg", { scale: 1.1 }, { scale: 1.0, duration: 4, ease: "power1.out" }, 0);
+    tl.fromTo("#hook-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0.5);
+    tl.fromTo("#hook-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 1.5);
+    tl.to("#scene-1", { opacity: 0, duration: 0.5 }, 3.5);
 
-    // Scene 2: Philosophy (3-7s)
-    tl.to("#scene-philosophy", { opacity: 1, duration: 0.3 }, 3);
-    tl.fromTo("#phil-title", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power2.out" }, 3.2);
-    // beat-grid: pillars at 4.39s, 4.91s, 5.34s
-    tl.fromTo("#pillar-1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 4.39);
-    tl.fromTo("#pillar-2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 4.91);
-    tl.fromTo("#pillar-3", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 5.34);
-    tl.to("#scene-philosophy", { opacity: 0, duration: 0.4 }, 6.6);
+    // Scene 2: Browser scroll (4-10s)
+    tl.to("#scene-2", { opacity: 1, duration: 0.3 }, 4);
+    tl.fromTo("#browser", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" }, 4.2);
+    
+    // Calculate scroll: fullpage is ~4300px tall, browser content is ~920px, so we scroll 3380px
+    tl.set("#browser-scroll", { height: "4300px", y: 0 }, 4);
+    tl.to("#browser-scroll", { y: -2800, duration: 5, ease: "power1.inOut" }, 4.5);
+    tl.to("#scene-2", { opacity: 0, duration: 0.4 }, 9.6);
 
-    // Scene 3: Dishes (7-13s)
-    tl.to("#scene-dishes", { opacity: 1, duration: 0.3 }, 7);
-    tl.fromTo("#dishes-title", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 7.2);
-    // beat-locked: dish reveal near 8.74s strong cue
-    tl.fromTo("#dish-1", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 8.74);
-    tl.fromTo("#dish-2", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 9.29);
-    tl.fromTo("#dish-3", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 9.83);
-    tl.to("#scene-dishes", { opacity: 0, duration: 0.4 }, 12.6);
+    // Scene 3: Dish cards (10-16s)
+    tl.to("#scene-3", { opacity: 1, duration: 0.3 }, 10);
+    tl.fromTo("#scene-3-bg", { scale: 1.05 }, { scale: 1.0, duration: 6, ease: "power1.out" }, 10);
+    tl.fromTo("#dish-1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 10.8);
+    tl.fromTo("#dish-2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 11.3);
+    tl.fromTo("#dish-3", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 11.8);
+    tl.to("#scene-3", { opacity: 0, duration: 0.4 }, 15.6);
 
-    // Scene 4: Reserve (13-17s)
-    tl.to("#scene-reserve", { opacity: 1, duration: 0.3 }, 13);
-    // beat-locked: reserve title near 13.11s strong cue
-    tl.fromTo("#reserve-title", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power2.out" }, 13.11);
-    tl.fromTo("#reserve-sub", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 14);
-    tl.fromTo("#reserve-address", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 }, 14.8);
-    tl.to("#scene-reserve", { opacity: 0, duration: 0.4 }, 16.6);
+    // Scene 4: CTA (16-19s)
+    tl.to("#scene-4", { opacity: 1, duration: 0.3 }, 16);
+    tl.fromTo("#scene-4-bg", { scale: 1.08, x: 50 }, { scale: 1.0, x: 0, duration: 3, ease: "power1.out" }, 16);
+    tl.fromTo("#cta", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 16.4);
+    tl.to("#scene-4", { opacity: 0, duration: 0.4 }, 18.6);
 
-    // Scene 5: Outro (17-20s)
-    tl.to("#scene-outro", { opacity: 1, duration: 0.3 }, 17);
-    // beat-locked: logo at 17.47s strong cue
-    tl.fromTo("#outro-logo", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }, 17.47);
-    tl.fromTo("#outro-tagline", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 18.2);
-    tl.to("#scene-outro", { opacity: 0, duration: 0.5 }, 19.5);
+    // Scene 5: Outro (19-22s)
+    tl.to("#scene-5", { opacity: 1, duration: 0.3 }, 19);
+    tl.fromTo("#scene-5-bg", { scale: 1.1 }, { scale: 1.0, duration: 3, ease: "power1.out" }, 19);
+    tl.fromTo("#outro", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.1)" }, 19.4);
+    tl.to("#scene-5", { opacity: 0, duration: 0.5 }, 21.5);
 
     window.__timelines = window.__timelines || {};
     window.__timelines["killa-brag"] = tl;

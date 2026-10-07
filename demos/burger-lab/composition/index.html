@@ -3,159 +3,184 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1920, height=1080">
-  <title>BURGER.LAB - Brag Video</title>
+  <title>Burger Lab - Brag Video</title>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 1920px;
       height: 1080px;
       overflow: hidden;
-      background: #0f0f0f;
-      font-family: 'Space Grotesk', sans-serif;
+      background: #0a0a0a;
+      font-family: 'Inter', sans-serif;
       color: #ffffff;
     }
 
     .scene {
       position: absolute;
       inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       opacity: 0;
+      overflow: hidden;
     }
 
-    /* Scene 1: Hook */
-    .scene-hook {
-      background: radial-gradient(ellipse at center, #0a1a0a 0%, #0f0f0f 70%);
+    .scene__bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transform-origin: center;
     }
-    .hook-tagline {
+
+    .scene__scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(10, 10, 10, 0.75) 0%,
+        rgba(10, 10, 10, 0.4) 50%,
+        rgba(10, 10, 10, 0.6) 100%
+      );
+    }
+
+    .scene__content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 120px;
+    }
+
+    .hook-title {
+      font-family: 'Space Mono', monospace;
       font-size: 72px;
       font-weight: 700;
       color: #39FF14;
-      letter-spacing: 0.03em;
-      text-align: center;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      opacity: 0;
-    }
-    .hook-logo {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 48px;
-      font-weight: 600;
-      color: #ffffff;
-      margin-top: 32px;
-      letter-spacing: 0.15em;
+      text-shadow: 0 0 40px rgba(57, 255, 20, 0.4);
       opacity: 0;
     }
 
-    /* Scene 2: Burgers */
-    .scene-burgers {
-      background: #0f0f0f;
-    }
-    .burgers-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 42px;
-      font-weight: 600;
-      color: #39FF14;
-      letter-spacing: 0.2em;
-      margin-bottom: 60px;
-      opacity: 0;
-    }
-    .burgers-grid {
-      display: flex;
-      gap: 60px;
-    }
-    .burger-card {
-      background: #1a1a1a;
-      border: 2px solid #39FF14;
-      border-radius: 8px;
-      padding: 32px;
-      width: 380px;
-      opacity: 0;
-    }
-    .burger-name {
-      font-size: 28px;
-      font-weight: 700;
-      color: #39FF14;
-      margin-bottom: 12px;
-    }
-    .burger-desc {
-      font-size: 16px;
+    .hook-sub {
+      font-size: 36px;
       font-weight: 400;
-      color: #aaa;
-      line-height: 1.5;
-    }
-
-    /* Scene 3: Cocktails */
-    .scene-cocktails {
-      background: linear-gradient(135deg, #0f0f0f 0%, #0a150a 100%);
-    }
-    .cocktails-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 42px;
-      font-weight: 600;
-      color: #00D4FF;
-      letter-spacing: 0.2em;
-      margin-bottom: 50px;
+      color: #fff;
+      margin-top: 16px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9);
       opacity: 0;
     }
-    .cocktails-grid {
-      display: flex;
-      gap: 50px;
+
+    .browser-frame {
+      position: absolute;
+      top: 50px;
+      left: 100px;
+      right: 100px;
+      bottom: 50px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.2);
+      opacity: 0;
     }
-    .cocktail-item {
+
+    .browser-frame__bar {
+      height: 40px;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+
+    .browser-frame__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff5f57;
+    }
+    .browser-frame__dot:nth-child(2) { background: #ffbd2e; }
+    .browser-frame__dot:nth-child(3) { background: #28c940; }
+
+    .browser-frame__url {
+      flex: 1;
+      margin-left: 20px;
+      height: 24px;
+      background: #0a0a0a;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: #39FF14;
+    }
+
+    .browser-frame__content {
+      position: relative;
+      height: calc(100% - 40px);
+      overflow: hidden;
+    }
+
+    .browser-frame__scroll {
+      position: absolute;
+      width: 100%;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-position: top center;
+    }
+
+    .cta-overlay {
+      position: absolute;
+      bottom: 100px;
+      left: 0;
+      right: 0;
       text-align: center;
       opacity: 0;
     }
-    .cocktail-name {
-      font-size: 24px;
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 8px;
-    }
-    .cocktail-desc {
-      font-size: 14px;
-      color: #666;
-      max-width: 240px;
-    }
 
-    /* Scene 4: Reserve */
-    .scene-reserve {
-      background: #0f0f0f;
-    }
-    .reserve-cta {
-      font-size: 48px;
-      font-weight: 600;
-      color: #39FF14;
-      margin-bottom: 24px;
-      opacity: 0;
-    }
-    .reserve-address {
-      font-size: 24px;
-      color: #888;
-      opacity: 0;
-    }
-
-    /* Scene 5: Outro */
-    .scene-outro {
-      background: radial-gradient(ellipse at center, #0a1a0a 0%, #0f0f0f 70%);
-    }
-    .outro-logo {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 96px;
+    .cta-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 64px;
       font-weight: 700;
       color: #39FF14;
-      letter-spacing: 0.1em;
-      margin-bottom: 24px;
+      text-transform: uppercase;
+      text-shadow: 0 0 40px rgba(57, 255, 20, 0.5);
+      margin-bottom: 16px;
+    }
+
+    .cta-sub {
+      font-size: 24px;
+      color: #fff;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+    }
+
+    .logo-outro {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       opacity: 0;
     }
-    .outro-tagline {
-      font-size: 32px;
-      font-weight: 500;
-      color: #ffffff;
-      opacity: 0;
+
+    .logo-outro__mark {
+      font-family: 'Space Mono', monospace;
+      font-size: 100px;
+      font-weight: 700;
+      color: #39FF14;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-shadow: 0 0 60px rgba(57, 255, 20, 0.5);
+    }
+
+    .logo-outro__tag {
+      font-size: 28px;
+      color: #fff;
+      margin-top: 20px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
     }
   </style>
 </head>
@@ -164,116 +189,92 @@
     id="root"
     data-composition-id="burger-brag"
     data-start="0"
-    data-duration="18"
+    data-duration="20"
     data-width="1920"
     data-height="1080"
   >
-    <!-- Scene 1: Hook - 0s to 2.5s -->
-    <div class="scene scene-hook clip" id="scene-hook" data-start="0" data-duration="2.5" data-track-index="0">
-      <div class="hook-tagline" id="hook-tagline">We Don't Cook, We Experiment.</div>
-      <div class="hook-logo" id="hook-logo">BURGER.LAB</div>
+    <!-- Scene 1: Hook on hero (0-4s) -->
+    <div class="scene clip" id="scene-1" data-start="0" data-duration="4" data-track-index="0">
+      <div class="scene__bg" id="scene-1-bg" style="background-image: url('assets/captures/viewport-0.png');"></div>
+      <div class="scene__scrim"></div>
+      <div class="scene__content">
+        <h1 class="hook-title" id="hook-title">We Don't Cook.</h1>
+        <p class="hook-sub" id="hook-sub">We Experiment.</p>
+      </div>
     </div>
 
-    <!-- Scene 2: Burgers - 2.5s to 7.5s -->
-    <div class="scene scene-burgers clip" id="scene-burgers" data-start="2.5" data-duration="5" data-track-index="1">
-      <div class="burgers-title" id="burgers-title">LAB TESTED BURGERS</div>
-      <div class="burgers-grid">
-        <div class="burger-card" id="burger-1">
-          <div class="burger-name">Huckleberry Catalyst</div>
-          <div class="burger-desc">Fresh huckleberry jam, thick cut bacon, brie.</div>
+    <!-- Scene 2: Browser showing homepage scroll (4-11s) -->
+    <div class="scene clip" id="scene-2" data-start="4" data-duration="7" data-track-index="1">
+      <div class="scene__bg" style="background: #0a0a0a;"></div>
+      <div class="browser-frame" id="browser">
+        <div class="browser-frame__bar">
+          <span class="browser-frame__dot"></span>
+          <span class="browser-frame__dot"></span>
+          <span class="browser-frame__dot"></span>
+          <div class="browser-frame__url">burgerlabbar.com</div>
         </div>
-        <div class="burger-card" id="burger-2">
-          <div class="burger-name">Smokehouse Compound</div>
-          <div class="burger-desc">Beer battered onion ring, BBQ, cheddar.</div>
-        </div>
-        <div class="burger-card" id="burger-3">
-          <div class="burger-name">Veg'n Out</div>
-          <div class="burger-desc">Portobello, zucchini, squash, balsamic, pesto aioli.</div>
+        <div class="browser-frame__content">
+          <div class="browser-frame__scroll" id="browser-scroll" style="background-image: url('assets/captures/fullpage.png');"></div>
         </div>
       </div>
     </div>
 
-    <!-- Scene 3: Cocktails - 7.5s to 11.5s -->
-    <div class="scene scene-cocktails clip" id="scene-cocktails" data-start="7.5" data-duration="4" data-track-index="2">
-      <div class="cocktails-title" id="cocktails-title">LAB COCKTAILS</div>
-      <div class="cocktails-grid">
-        <div class="cocktail-item" id="cocktail-1">
-          <div class="cocktail-name">Deconstructed Old Fashioned</div>
-          <div class="cocktail-desc">Angels Envy Bourbon, Luxardo, Orange Bitters</div>
-        </div>
-        <div class="cocktail-item" id="cocktail-2">
-          <div class="cocktail-name">Bubble Martini</div>
-          <div class="cocktail-desc">Ketel One Peach, Lillet Blanc, Rosemary</div>
-        </div>
-        <div class="cocktail-item" id="cocktail-3">
-          <div class="cocktail-name">Alchemist Flame</div>
-          <div class="cocktail-desc">Bacardi Superior, Licor 43, Pineapple Cinnamon</div>
-        </div>
+    <!-- Scene 3: Menu section with CTA (11-16s) -->
+    <div class="scene clip" id="scene-3" data-start="11" data-duration="5" data-track-index="2">
+      <div class="scene__bg" id="scene-3-bg" style="background-image: url('assets/captures/viewport-1.png');"></div>
+      <div class="scene__scrim"></div>
+      <div class="cta-overlay" id="cta">
+        <div class="cta-title">Reserve the Experiment</div>
+        <div class="cta-sub">Salt Lake City's Gourmet Burger Laboratory</div>
       </div>
     </div>
 
-    <!-- Scene 4: Reserve - 11.5s to 14.5s -->
-    <div class="scene scene-reserve clip" id="scene-reserve" data-start="11.5" data-duration="3" data-track-index="3">
-      <div class="reserve-cta" id="reserve-cta">Reserve space for the experiment</div>
-      <div class="reserve-address" id="reserve-address">270 S 300 E, Salt Lake City, UT</div>
-    </div>
-
-    <!-- Scene 5: Outro - 14.5s to 18s -->
-    <div class="scene scene-outro clip" id="scene-outro" data-start="14.5" data-duration="3.5" data-track-index="4">
-      <div class="outro-logo" id="outro-logo">BURGER.LAB</div>
-      <div class="outro-tagline" id="outro-tagline">We Don't Cook, We Experiment.</div>
+    <!-- Scene 4: Logo outro (16-20s) -->
+    <div class="scene clip" id="scene-4" data-start="16" data-duration="4" data-track-index="3">
+      <div class="scene__bg" id="scene-4-bg" style="background-image: url('assets/captures/viewport-2.png'); filter: brightness(0.5);"></div>
+      <div class="scene__scrim" style="background: rgba(10,10,10,0.7);"></div>
+      <div class="logo-outro" id="outro">
+        <div class="logo-outro__mark">BURGER.LAB</div>
+        <div class="logo-outro__tag">Gourmet Burgers & Cocktail Lab</div>
+      </div>
     </div>
 
     <!-- Audio -->
-    <audio id="bg-music" data-start="0" data-duration="18" data-track-index="10" data-volume="0.35" src="assets/music/happy-beats-business-moves-vol-10-by-ende-dot-app.mp3"></audio>
-    <audio id="sfx-click-hook" data-start="0.8" data-duration="0.5" data-track-index="11" data-volume="0.55" src="assets/sfx/interface/click_001.ogg"></audio>
-    <audio id="sfx-card-1" data-start="3.55" data-duration="0.5" data-track-index="12" data-volume="0.5" src="assets/sfx/casino/card-slide-1.ogg"></audio>
-    <audio id="sfx-card-2" data-start="4.1" data-duration="0.5" data-track-index="13" data-volume="0.5" src="assets/sfx/casino/card-slide-1.ogg"></audio>
-    <audio id="sfx-card-3" data-start="4.64" data-duration="0.5" data-track-index="14" data-volume="0.5" src="assets/sfx/casino/card-slide-1.ogg"></audio>
-    <audio id="sfx-impact-outro" data-start="15.28" data-duration="1" data-track-index="15" data-volume="0.6" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
+    <audio id="bg-music" data-start="0" data-duration="20" data-track-index="10" data-volume="0.25" src="assets/music/happy-beats-business-moves-vol-10-by-ende-dot-app.mp3"></audio>
+    <audio id="sfx-click" data-start="2" data-duration="1" data-track-index="11" data-volume="0.35" src="assets/sfx/interface/click_001.ogg"></audio>
+    <audio id="sfx-impact" data-start="11.5" data-duration="1" data-track-index="12" data-volume="0.4" src="assets/sfx/impact/impactSoft_medium_001.ogg"></audio>
   </div>
 
   <script>
     const tl = gsap.timeline({ paused: true });
 
-    // Scene 1: Hook (0-2.5s)
-    tl.to("#scene-hook", { opacity: 1, duration: 0.2 }, 0);
-    tl.fromTo("#hook-tagline", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.3);
-    // beat-locked: logo at 1.37s
-    tl.fromTo("#hook-logo", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.2)" }, 1.37);
-    tl.to("#scene-hook", { opacity: 0, duration: 0.3 }, 2.2);
+    // Scene 1: Hook (0-4s)
+    tl.to("#scene-1", { opacity: 1, duration: 0.5 }, 0);
+    tl.fromTo("#scene-1-bg", { scale: 1.1 }, { scale: 1.0, duration: 4, ease: "power1.out" }, 0);
+    tl.fromTo("#hook-title", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, 0.5);
+    tl.fromTo("#hook-sub", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" }, 1.3);
+    tl.to("#scene-1", { opacity: 0, duration: 0.5 }, 3.5);
 
-    // Scene 2: Burgers (2.5-7.5s)
-    tl.to("#scene-burgers", { opacity: 1, duration: 0.2 }, 2.5);
-    tl.fromTo("#burgers-title", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 2.7);
-    // beat-grid: burger cards at 3.55s, 4.10s, 4.64s
-    tl.fromTo("#burger-1", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 3.55);
-    tl.fromTo("#burger-2", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 4.10);
-    tl.fromTo("#burger-3", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 4.64);
-    tl.to("#scene-burgers", { opacity: 0, duration: 0.3 }, 7.2);
+    // Scene 2: Browser scroll (4-11s)
+    tl.to("#scene-2", { opacity: 1, duration: 0.3 }, 4);
+    tl.fromTo("#browser", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 4.2);
+    
+    // Calculate scroll for fullpage
+    tl.set("#browser-scroll", { height: "5200px", y: 0 }, 4);
+    tl.to("#browser-scroll", { y: -3500, duration: 6, ease: "power1.inOut" }, 4.5);
+    tl.to("#scene-2", { opacity: 0, duration: 0.4 }, 10.6);
 
-    // Scene 3: Cocktails (7.5-11.5s)
-    tl.to("#scene-cocktails", { opacity: 1, duration: 0.2 }, 7.5);
-    // beat-locked: title at 7.79s
-    tl.fromTo("#cocktails-title", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 7.79);
-    // beat-grid: cocktails at 8.73s, 9.29s, 9.83s
-    tl.fromTo("#cocktail-1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 8.73);
-    tl.fromTo("#cocktail-2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 9.29);
-    tl.fromTo("#cocktail-3", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 9.83);
-    tl.to("#scene-cocktails", { opacity: 0, duration: 0.3 }, 11.2);
+    // Scene 3: CTA (11-16s)
+    tl.to("#scene-3", { opacity: 1, duration: 0.3 }, 11);
+    tl.fromTo("#scene-3-bg", { scale: 1.08, x: 30 }, { scale: 1.0, x: 0, duration: 5, ease: "power1.out" }, 11);
+    tl.fromTo("#cta", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 11.5);
+    tl.to("#scene-3", { opacity: 0, duration: 0.4 }, 15.6);
 
-    // Scene 4: Reserve (11.5-14.5s)
-    tl.to("#scene-reserve", { opacity: 1, duration: 0.2 }, 11.5);
-    tl.fromTo("#reserve-cta", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }, 11.7);
-    tl.fromTo("#reserve-address", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 12.5);
-    tl.to("#scene-reserve", { opacity: 0, duration: 0.3 }, 14.2);
-
-    // Scene 5: Outro (14.5-18s)
-    tl.to("#scene-outro", { opacity: 1, duration: 0.2 }, 14.5);
-    // beat-locked: logo at 15.28s near strong cue
-    tl.fromTo("#outro-logo", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, 15.28);
-    tl.fromTo("#outro-tagline", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 16.2);
-    tl.to("#scene-outro", { opacity: 0, duration: 0.4 }, 17.6);
+    // Scene 4: Outro (16-20s)
+    tl.to("#scene-4", { opacity: 1, duration: 0.3 }, 16);
+    tl.fromTo("#scene-4-bg", { scale: 1.1 }, { scale: 1.0, duration: 4, ease: "power1.out" }, 16);
+    tl.fromTo("#outro", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.1)" }, 16.5);
+    tl.to("#scene-4", { opacity: 0, duration: 0.5 }, 19.5);
 
     window.__timelines = window.__timelines || {};
     window.__timelines["burger-brag"] = tl;

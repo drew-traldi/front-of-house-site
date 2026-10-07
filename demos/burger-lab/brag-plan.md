@@ -1,97 +1,56 @@
-# Brag Plan: BURGER.LAB
+# Burger Lab Brag Plan
 
-## What is this app?
-A gourmet burger and craft cocktail bar in downtown Salt Lake City with a science-lab aesthetic. The site uses neon greens on dark backgrounds with a periodic-table style menu system.
+## Project Summary
+- **Site**: https://burgerlabbar.com/
+- **Type**: Gourmet burger and cocktail laboratory
+- **Location**: Salt Lake City, UT
+- **Brand**: Neon green (#39FF14) on dark, science-lab aesthetic
 
-## The angle
-This is not a restaurant. It is a laboratory. We don't cook, we experiment. The video should feel like entering a mad scientist's burger workshop where every burger is a formula and every cocktail is a compound.
+## Brag Configuration
+- **Tone**: polished/energetic
+- **Format**: landscape (1920×1080)
+- **Duration**: 20 seconds
+- **Music**: vol-10 (energetic, upbeat)
+- **Voice**: off
 
-## Hook (first 2-3 seconds)
-The line that defines everything: "We Don't Cook, We Experiment." Neon green text emerging from the dark lab.
+## Hook
+**"We Don't Cook. We Experiment."**
 
-## Key moments (the middle)
-- The hero with "LAB TESTED BURGERS" headline and burger imagery
-- Signature burgers: Huckleberry Catalyst, Smokehouse Compound, Veg'n Out with their experimental descriptions
-- Lab Cocktails: Deconstructed Old Fashioned, Bubble Martini, Alchemist Flame
-- The periodic-table style tap list
-
-## Outro / punchline
-"Reserve space for the experiment" CTA. Address and the BURGER.LAB logo.
-
-## User flow worth showing
-Landing page focused site with waitlist/reservation. The flow is: hook → burgers → cocktails → reserve. No app interaction.
-
-## Tone
-- Preset: polished leaning cinematic
-- Creative direction: science-lab aesthetic, neon-on-dark, experimental energy without chaos
-- Interpretation: Clean reveals with a slightly playful edge. The science metaphor is the personality. Confident, not frantic.
-
-## Format: landscape — 1920x1080
-## Duration: 18 seconds
-
-## Visual identity (from the project)
-- Background: #0f0f0f (dark, almost black)
-- Accent: #39FF14 (neon green) 
-- Secondary: #00D4FF (cyan accents)
-- Text: #FFFFFF (white) and neon green
-- Display font: Bold sans-serif (tech/lab feel)
-- Body font: Clean sans-serif
-- Strongest visual element: Neon green on black, periodic-table menu style, burger photography
-
-## Share copy (draft)
-We don't cook. We experiment. BURGER.LAB brings gourmet burgers and crafted cocktails to downtown SLC. Lab tested. Guest approved.
-
-## Audio direction
-- Role: warm bed with playful accents
-- Music: happy-beats-business-moves-vol-10 (compact, punchy, fits the energy)
-- Music treatment: Start at 0s, moderate volume (0.32-0.38), clean fade at end
-- Music cue guidance: Vol-10 preset exists. Use strong cues for hook and burger reveal. Beat grid for sequential menu items.
-- Audio-reactive treatment: subtle; neon glow elements pulse gently with bass
-- SFX posture: moderate; 3-4 well-placed cues
-- Audio-coupled moments: hook text (interface click), burger cards (card-slide), cocktail names (drop sounds), outro logo (impact)
-- Restraint rule: keep it clean and professional, not chaotic
-
-## Music cue guidance
-Track: happy-beats-business-moves-vol-10-by-ende-dot-app.mp3
-Reading preset for timing. Use strong cue for burger reveal moment.
+## Creative Angle
+Showcase the site as a lab experiment: bold green accents, scientific energy, and real site content showing the menu and atmosphere. Every frame shows real screenshots from burgerlabbar.com.
 
 ## Storyboard
 
-### Scene 1 — Hook — 2.5s
-"We Don't Cook, We Experiment." Neon green text on black. BURGER.LAB logo or wordmark.
-Sequential/interaction: text reveal
-Audio intent: energetic entry, lab startup
-Audio-coupled idea: interface click on text landing
-Music: upbeat bed starts
-Transition mood: clean → Scene 2
+### Scene 1: Hook (0–4s)
+- **Background**: Homepage hero screenshot (Ken Burns zoom out)
+- **Overlay**: Hook text in neon green monospace
+- **Audio**: Music begins, click SFX at 2s
+- **Copy**: 
+  - "WE DON'T COOK." (green, 72px, monospace)
+  - "We Experiment." (white, 36px)
 
-### Scene 2 — Burgers — 5s
-"LAB TESTED BURGERS" headline. Three signature burgers appear: Huckleberry Catalyst, Smokehouse Compound, Veg'n Out. Each with their ingredient description in the periodic-table style.
-Sequential/interaction: burger cards appear one by one
-Audio intent: appetizing, scientific precision
-Audio-coupled idea: card-slide sounds for each burger reveal
-Transition mood: clean → Scene 3
+### Scene 2: Browser Scroll (4–11s)
+- **Visual**: Browser frame showing actual burgerlabbar.com
+- **Motion**: Smooth scroll through full page (hero → menu → about → order)
+- **Audio**: Continuing music
+- **Purpose**: Show the real site UI and lab aesthetic
 
-### Scene 3 — Cocktails — 4s
-"LAB COCKTAILS" section. Deconstructed Old Fashioned, Bubble Martini, Alchemist Flame. Neon accents.
-Sequential/interaction: cocktail names appear sequentially
-Audio intent: sophisticated bar energy
-Audio-coupled idea: drop sounds for cocktails
-Transition mood: clean → Scene 4
+### Scene 3: CTA (11–16s)
+- **Background**: Menu section screenshot with Ken Burns pan
+- **Overlay**: "Reserve the Experiment" CTA
+- **Motion**: Text fades in over site content
+- **Audio**: Impact SFX at 11.5s
 
-### Scene 4 — Reserve — 3s
-"Reserve space for the experiment" CTA. Address: 270 S 300 E, Salt Lake City.
-Sequential/interaction: none
-Audio intent: invitation
-Audio-coupled idea: subtle presence
-Transition mood: clean → Scene 5
+### Scene 4: Logo Outro (16–20s)
+- **Background**: Site content (dimmed)
+- **Overlay**: BURGER.LAB wordmark + tagline
+- **Motion**: Scale-in with bounce
 
-### Scene 5 — Outro — 3.5s
-BURGER.LAB logo. "We Don't Cook, We Experiment." tagline return.
-Sequential/interaction: none
-Audio intent: memorable close
-Audio-coupled idea: impact bell on logo
-Music: fade out
+## Technical Notes
+- All backgrounds use real screenshots from the live site
+- Browser scroll shows full page capture at 1920px wide
+- At least 70% of screen time shows real site visuals
+- Text overlays use scrim for legibility
 
-**Music mood for this video:** upbeat corporate with edge
-**Audio summary:** Punchy upbeat bed with clean SFX. Card sounds for menu reveals. Ends on a satisfying impact.
+## Share Copy
+We Don't Cook. We Experiment. Burger Lab brings gourmet burgers and craft cocktails to Salt Lake City with a science-lab twist. Site by Front of House.

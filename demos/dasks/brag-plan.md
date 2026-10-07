@@ -1,89 +1,57 @@
-# Brag Plan: Dasks Greek Grill
+# Dasks Brag Plan
 
-## What is this app?
-A family-owned Greek restaurant in Holladay, Utah, known for Salt Lake's best gyro. Warm, authentic Mediterranean cuisine with a welcoming neighborhood feel. Featured in the Salt Lake Tribune.
+## Project Summary
+- **Site**: https://www.dasks.com/
+- **Type**: Authentic Greek restaurant
+- **Location**: Salt Lake City, UT
+- **Brand**: Mediterranean blue (#1a3a5c) on cream, warm and inviting
 
-## The angle
-This is not fancy fusion. It is family cooking. Real spinach, real feta, real fire. The video should feel like being welcomed to a family table where the gyro is carved fresh and the portions are generous.
+## Brag Configuration
+- **Tone**: polished/cinematic
+- **Format**: landscape (1920×1080)
+- **Duration**: 18 seconds
+- **Music**: vol-11 (warm, sophisticated)
+- **Voice**: off
 
-## Hook (first 2-3 seconds)
-The claim that matters: "Home of Salt Lake's Best Gyro." Simple, confident, earned.
+## Hook
+**"Home of Salt Lake's Best Gyro"**
+**"Authentic Greek. One Bite at a Time."**
 
-## Key moments (the middle)
-- The hero with the warm restaurant branding
-- Signature dishes: Lamb Gyro, Double Dasks Burger, Spanakopita with their honest descriptions
-- The Salt Lake Tribune quote: "Soft, warm pita filled with copious amounts of well-seasoned meat..."
-- The welcoming family atmosphere messaging
-
-## Outro / punchline
-Location in Holladay with hours and "Authentic Greek Cuisine in Salt Lake City" positioning.
-
-## User flow worth showing
-Landing page focused site. The flow is: hook → dishes → testimonial → visit. No app interaction.
-
-## Tone
-- Preset: polished
-- Creative direction: warm family restaurant film, Mediterranean warmth, neighborhood gem
-- Interpretation: Confident but approachable. Warm colors. Let the food and the honest quote speak. Not cinematic drama, just genuine warmth.
-
-## Format: landscape — 1920x1080
-## Duration: 16 seconds
-
-## Visual identity (from the project)
-- Background: #FFFFFF or warm cream
-- Accent: #1E4D8C (Mediterranean blue) or warm terracotta
-- Text: #333333 (dark gray/black)
-- Display font: Serif or warm sans-serif
-- Body font: Clean sans-serif
-- Strongest visual element: The food photography, the Tribune quote, warm Mediterranean colors
-
-## Share copy (draft)
-Home of Salt Lake's best gyro. Dasks Greek Grill brings authentic Mediterranean flavors to Holladay. Fresh pita, well-seasoned meat, house-made tzatziki. Family table, generous portions.
-
-## Audio direction
-- Role: warm bed
-- Music: happy-beats-business-moves-vol-11 (warm and business-y, fits approachable)
-- Music treatment: Start at 0s, moderate volume (0.30-0.35), gentle fade at end
-- Music cue guidance: Vol-11 preset exists. Use strong cue for dish reveal and quote moment.
-- Audio-reactive treatment: subtle; warm elements breathe gently
-- SFX posture: sparse; 2-3 warm cues
-- Audio-coupled moments: hook text (soft drop), dish cards (gentle card sounds), quote (subtle presence), outro (warm bell)
-- Restraint rule: warm and inviting, not aggressive or flashy
-
-## Music cue guidance
-Track: happy-beats-business-moves-vol-11-by-ende-dot-app.mp3
-Reading preset for timing. Use strong cue for quote moment.
+## Creative Angle
+Showcase the site's warm Mediterranean aesthetic with real site content. Clean, inviting design that feels authentic to Greek hospitality.
 
 ## Storyboard
 
-### Scene 1 — Hook — 2.5s
-"Home of Salt Lake's Best Gyro" text. Dasks Greek Grill wordmark or logo.
-Sequential/interaction: text reveal
-Audio intent: warm welcome
-Audio-coupled idea: soft drop sound on text
-Music: warm bed starts
-Transition mood: soft → Scene 2
+### Scene 1: Hook (0–4s)
+- **Background**: Homepage hero screenshot (Ken Burns zoom out)
+- **Overlay**: Hook text in navy blue
+- **Audio**: Music begins, bell SFX at 2s
+- **Copy**: 
+  - "Home of Salt Lake's Best Gyro" (navy, 84px, Playfair)
+  - "Authentic Greek. One Bite at a Time." (brown italic, 42px)
 
-### Scene 2 — Dishes — 5s
-Signature dishes: Lamb Gyro ("Tender lamb on warm pita with fresh vegetables"), Double Dasks Burger, Spanakopita ("Phyllo pastry filled with spinach and feta cheese").
-Sequential/interaction: dish cards appear one by one
-Audio intent: appetizing, homestyle
-Audio-coupled idea: gentle card sounds for each dish
-Transition mood: soft → Scene 3
+### Scene 2: Browser Scroll (4–11s)
+- **Visual**: Browser frame showing actual dasks.com
+- **Motion**: Smooth scroll through full page
+- **Audio**: Continuing music
+- **Purpose**: Show the real site UI and menu content
 
-### Scene 3 — Quote — 4s
-The Salt Lake Tribune quote: "Soft, warm pita filled with copious amounts of well-seasoned meat, small onion squares, liberal saucing of tangy, great-tasting tzatziki. Glorious garlic breath afterwards...in a good way."
-Sequential/interaction: quote text appears
-Audio intent: earned credibility, warmth
-Audio-coupled idea: subtle presence
-Transition mood: soft → Scene 4
+### Scene 3: CTA (11–14s)
+- **Background**: Menu section screenshot with Ken Burns pan
+- **Overlay**: "Taste the Mediterranean" CTA
+- **Motion**: Text fades in over site content
+- **Audio**: Drop SFX at 11.5s
 
-### Scene 4 — Outro — 4.5s
-"Authentic Greek Cuisine in Salt Lake City" positioning. Address: 6522 S. Big Cottonwood Canyon Rd., Holladay. Hours. Dasks logo.
-Sequential/interaction: none
-Audio intent: warm invitation to visit
-Audio-coupled idea: soft bell on logo
-Music: fade out
+### Scene 4: Logo Outro (14–18s)
+- **Background**: Homepage (lightened)
+- **Overlay**: DASKS wordmark + tagline
+- **Motion**: Scale-in with slight bounce
 
-**Music mood for this video:** warm, welcoming
-**Audio summary:** Warm, approachable bed with gentle SFX. The quote lands with earned presence. Ends on a welcoming note.
+## Technical Notes
+- All backgrounds use real screenshots from the live site
+- Browser scroll shows full page capture at 1920px wide
+- At least 70% of screen time shows real site visuals
+- Light scrim treatment for warm aesthetic
+
+## Share Copy
+Home of Salt Lake's Best Gyro. Dasks brings authentic Greek cuisine to Salt Lake City, one bite at a time. Site by Front of House.
