@@ -35,12 +35,7 @@
     .scene__scrim {
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        135deg,
-        rgba(10, 10, 10, 0.7) 0%,
-        rgba(10, 10, 10, 0.3) 50%,
-        rgba(10, 10, 10, 0.5) 100%
-      );
+      background: linear-gradient(135deg, rgba(10, 10, 10, 0.65) 0%, rgba(10, 10, 10, 0.25) 50%, rgba(10, 10, 10, 0.45) 100%);
     }
 
     .scene__content {
@@ -231,12 +226,12 @@
     id="root"
     data-composition-id="killa-brag"
     data-start="0"
-    data-duration="22"
+    data-duration="20"
     data-width="1920"
     data-height="1080"
   >
     <!-- Scene 1: Hook on patio hero (0-4s) -->
-    <div class="scene clip" id="scene-1" data-start="0" data-duration="4" data-track-index="0">
+    <div class="scene clip" id="scene-1" data-start="0" data-duration="4.3" data-track-index="0">
       <div class="scene__bg" id="scene-1-bg" style="background-image: url('assets/captures/patio.png');"></div>
       <div class="scene__scrim"></div>
       <div class="scene__content">
@@ -245,26 +240,18 @@
       </div>
     </div>
 
-    <!-- Scene 2: Browser showing homepage scroll (4-10s) -->
-    <div class="scene clip" id="scene-2" data-start="4" data-duration="6" data-track-index="1">
-      <div class="scene__bg" style="background: #0a0a0a;"></div>
-      <div class="browser-frame" id="browser">
-        <div class="browser-frame__bar">
-          <span class="browser-frame__dot"></span>
-          <span class="browser-frame__dot"></span>
-          <span class="browser-frame__dot"></span>
-          <div class="browser-frame__url">killanikkei.com</div>
-        </div>
-        <div class="browser-frame__content">
-          <div class="browser-frame__scroll" id="browser-scroll" style="background-image: url('assets/captures/fullpage.png');"></div>
-        </div>
+    <!-- Scene 2: Site scroll without browser frame (3.8-9.3s) - overlaps with scene 1 -->
+    <div class="scene clip" id="scene-2" data-start="3.8" data-duration="5.8" data-track-index="1">
+      <div class="scene__bg" id="scene-2-bg" style="background-image: url('assets/captures/viewport-0.png');"></div>
+      <div style="position: absolute; inset: 0; overflow: hidden;">
+        <div id="site-scroll" style="position: absolute; width: 100%; height: 4300px; background-image: url('assets/captures/fullpage.png'); background-size: 100% auto; background-repeat: no-repeat; background-position: top center;"></div>
       </div>
     </div>
 
-    <!-- Scene 3: Dish showcase on food photo bg (10-16s) -->
-    <div class="scene clip" id="scene-3" data-start="10" data-duration="6" data-track-index="2">
+    <!-- Scene 3: Dish showcase (9-14.3s) - overlaps with scene 2 -->
+    <div class="scene clip" id="scene-3" data-start="9" data-duration="5.6" data-track-index="2">
       <div class="scene__bg" id="scene-3-bg" style="background-image: url('assets/captures/viewport-1.png');"></div>
-      <div class="scene__scrim" style="background: rgba(10,10,10,0.75);"></div>
+      <div class="scene__scrim" style="background: rgba(10,10,10,0.7);"></div>
       <div class="dish-grid">
         <div class="dish-card" id="dish-1">
           <div class="dish-card__img" style="background-image: url('assets/captures/ceviche.jpg');"></div>
@@ -290,8 +277,8 @@
       </div>
     </div>
 
-    <!-- Scene 4: Reserve CTA on viewport (16-19s) -->
-    <div class="scene clip" id="scene-4" data-start="16" data-duration="3" data-track-index="3">
+    <!-- Scene 4: Reserve CTA (14-17.3s) - overlaps with scene 3 -->
+    <div class="scene clip" id="scene-4" data-start="14" data-duration="3.6" data-track-index="3">
       <div class="scene__bg" id="scene-4-bg" style="background-image: url('assets/captures/viewport-3.png');"></div>
       <div class="scene__scrim"></div>
       <div class="cta-overlay" id="cta">
@@ -300,10 +287,10 @@
       </div>
     </div>
 
-    <!-- Scene 5: Logo outro on patio (19-22s) -->
-    <div class="scene clip" id="scene-5" data-start="19" data-duration="3" data-track-index="4">
+    <!-- Scene 5: Logo outro on patio (17-20s) - overlaps with scene 4 -->
+    <div class="scene clip" id="scene-5" data-start="17" data-duration="3" data-track-index="4">
       <div class="scene__bg" id="scene-5-bg" style="background-image: url('assets/captures/patio.png'); filter: brightness(0.6);"></div>
-      <div class="scene__scrim" style="background: rgba(10,10,10,0.6);"></div>
+      <div class="scene__scrim" style="background: rgba(10,10,10,0.55);"></div>
       <div class="logo-outro" id="outro">
         <div class="logo-outro__mark">KILLA</div>
         <div class="logo-outro__tag">Two Worlds, One Moon.</div>
@@ -311,49 +298,46 @@
     </div>
 
     <!-- Audio -->
-    <audio id="bg-music" data-start="0" data-duration="22" data-track-index="10" data-volume="0.25" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
+    <audio id="bg-music" data-start="0" data-duration="20" data-track-index="10" data-volume="0.25" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
     <audio id="sfx-bell" data-start="2.5" data-duration="2" data-track-index="11" data-volume="0.4" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
-    <audio id="sfx-drop" data-start="11" data-duration="1" data-track-index="12" data-volume="0.35" src="assets/sfx/interface/drop_001.ogg"></audio>
+    <audio id="sfx-drop" data-start="10" data-duration="1" data-track-index="12" data-volume="0.35" src="assets/sfx/interface/drop_001.ogg"></audio>
   </div>
 
   <script>
     const tl = gsap.timeline({ paused: true });
 
-    // Scene 1: Hook on patio (0-4s)
-    tl.to("#scene-1", { opacity: 1, duration: 0.5 }, 0);
-    tl.fromTo("#scene-1-bg", { scale: 1.1 }, { scale: 1.0, duration: 4, ease: "power1.out" }, 0);
-    tl.fromTo("#hook-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0.5);
-    tl.fromTo("#hook-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 1.5);
-    tl.to("#scene-1", { opacity: 0, duration: 0.5 }, 3.5);
+    // Scene 1: Hook on patio (0-4.3s) - immediate start
+    tl.to("#scene-1", { opacity: 1, duration: 0.2 }, 0);
+    tl.fromTo("#scene-1-bg", { scale: 1.1 }, { scale: 1.0, duration: 4.3, ease: "power1.out" }, 0);
+    tl.fromTo("#hook-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 0.3);
+    tl.fromTo("#hook-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 1.1);
+    tl.to("#scene-1", { opacity: 0, duration: 0.3 }, 4);
 
-    // Scene 2: Browser scroll (4-10s)
-    tl.to("#scene-2", { opacity: 1, duration: 0.3 }, 4);
-    tl.fromTo("#browser", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" }, 4.2);
-    
-    // Calculate scroll: fullpage is ~4300px tall, browser content is ~920px, so we scroll 3380px
-    tl.set("#browser-scroll", { height: "4300px", y: 0 }, 4);
-    tl.to("#browser-scroll", { y: -2800, duration: 5, ease: "power1.inOut" }, 4.5);
-    tl.to("#scene-2", { opacity: 0, duration: 0.4 }, 9.6);
+    // Scene 2: Site scroll (3.8-9.3s) - cross-fade in
+    tl.to("#scene-2", { opacity: 1, duration: 0.3 }, 3.8);
+    tl.set("#site-scroll", { y: 0 }, 3.8);
+    tl.to("#site-scroll", { y: -2800, duration: 4.8, ease: "power1.inOut" }, 4.2);
+    tl.to("#scene-2", { opacity: 0, duration: 0.3 }, 9);
 
-    // Scene 3: Dish cards (10-16s)
-    tl.to("#scene-3", { opacity: 1, duration: 0.3 }, 10);
-    tl.fromTo("#scene-3-bg", { scale: 1.05 }, { scale: 1.0, duration: 6, ease: "power1.out" }, 10);
-    tl.fromTo("#dish-1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 10.8);
-    tl.fromTo("#dish-2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 11.3);
-    tl.fromTo("#dish-3", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 11.8);
-    tl.to("#scene-3", { opacity: 0, duration: 0.4 }, 15.6);
+    // Scene 3: Dish cards (9-14.3s) - cross-fade in
+    tl.to("#scene-3", { opacity: 1, duration: 0.3 }, 9);
+    tl.fromTo("#scene-3-bg", { scale: 1.05 }, { scale: 1.0, duration: 5.3, ease: "power1.out" }, 9);
+    tl.fromTo("#dish-1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 9.5);
+    tl.fromTo("#dish-2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 9.9);
+    tl.fromTo("#dish-3", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 10.3);
+    tl.to("#scene-3", { opacity: 0, duration: 0.3 }, 14);
 
-    // Scene 4: CTA (16-19s)
-    tl.to("#scene-4", { opacity: 1, duration: 0.3 }, 16);
-    tl.fromTo("#scene-4-bg", { scale: 1.08, x: 50 }, { scale: 1.0, x: 0, duration: 3, ease: "power1.out" }, 16);
-    tl.fromTo("#cta", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 16.4);
-    tl.to("#scene-4", { opacity: 0, duration: 0.4 }, 18.6);
+    // Scene 4: CTA (14-17.3s) - cross-fade in
+    tl.to("#scene-4", { opacity: 1, duration: 0.3 }, 14);
+    tl.fromTo("#scene-4-bg", { scale: 1.06, x: 40 }, { scale: 1.0, x: 0, duration: 3.3, ease: "power1.out" }, 14);
+    tl.fromTo("#cta", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 14.3);
+    tl.to("#scene-4", { opacity: 0, duration: 0.3 }, 17);
 
-    // Scene 5: Outro (19-22s)
-    tl.to("#scene-5", { opacity: 1, duration: 0.3 }, 19);
-    tl.fromTo("#scene-5-bg", { scale: 1.1 }, { scale: 1.0, duration: 3, ease: "power1.out" }, 19);
-    tl.fromTo("#outro", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.1)" }, 19.4);
-    tl.to("#scene-5", { opacity: 0, duration: 0.5 }, 21.5);
+    // Scene 5: Outro (17-20s) - cross-fade in
+    tl.to("#scene-5", { opacity: 1, duration: 0.3 }, 17);
+    tl.fromTo("#scene-5-bg", { scale: 1.08 }, { scale: 1.0, duration: 3, ease: "power1.out" }, 17);
+    tl.fromTo("#outro", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.1)" }, 17.3);
+    tl.to("#scene-5", { opacity: 0, duration: 0.3 }, 19.7);
 
     window.__timelines = window.__timelines || {};
     window.__timelines["killa-brag"] = tl;

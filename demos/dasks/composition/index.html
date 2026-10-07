@@ -35,39 +35,7 @@
     .scene__scrim {
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        135deg,
-        rgba(26, 58, 92, 0.6) 0%,
-        rgba(26, 58, 92, 0.2) 50%,
-        rgba(26, 58, 92, 0.4) 100%
-      );
-    }
-
-    .scene__content {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 80px 120px;
-    }
-
-    .hook-title {
-      font-size: 84px;
-      font-weight: 600;
-      color: #1a3a5c;
-      text-shadow: 0 4px 40px rgba(255,255,255,0.5);
-      opacity: 0;
-    }
-
-    .hook-sub {
-      font-size: 42px;
-      font-weight: 400;
-      color: #8b4513;
-      font-style: italic;
-      margin-top: 16px;
-      text-shadow: 0 2px 20px rgba(255,255,255,0.8);
-      opacity: 0;
+      background: linear-gradient(135deg, rgba(26, 58, 92, 0.5) 0%, rgba(26, 58, 92, 0.15) 50%, rgba(26, 58, 92, 0.35) 100%);
     }
 
     .browser-frame {
@@ -130,30 +98,6 @@
       background-position: top center;
     }
 
-    .cta-overlay {
-      position: absolute;
-      bottom: 100px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      opacity: 0;
-    }
-
-    .cta-title {
-      font-size: 72px;
-      font-weight: 600;
-      color: #fff;
-      text-shadow: 0 4px 40px rgba(0,0,0,0.5);
-      margin-bottom: 16px;
-    }
-
-    .cta-sub {
-      font-family: 'Inter', sans-serif;
-      font-size: 24px;
-      color: #fff;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
-    }
-
     .logo-outro {
       position: absolute;
       inset: 0;
@@ -185,92 +129,68 @@
     id="root"
     data-composition-id="dasks-brag"
     data-start="0"
-    data-duration="18"
+    data-duration="16"
     data-width="1920"
     data-height="1080"
   >
-    <!-- Scene 1: Hook on hero (0-4s) -->
-    <div class="scene clip" id="scene-1" data-start="0" data-duration="4" data-track-index="0">
+    <!-- Scene 1: Hero - site's own headline (0-4.3s) -->
+    <div class="scene clip" id="scene-1" data-start="0" data-duration="4.5" data-track-index="0">
       <div class="scene__bg" id="scene-1-bg" style="background-image: url('assets/captures/viewport-0.png');"></div>
-      <div class="scene__scrim" style="background: linear-gradient(135deg, rgba(245,241,235,0.7) 0%, rgba(245,241,235,0.3) 100%);"></div>
-      <div class="scene__content">
-        <h1 class="hook-title" id="hook-title">Home of Salt Lake's Best Gyro</h1>
-        <p class="hook-sub" id="hook-sub">Authentic Greek. One Bite at a Time.</p>
+    </div>
+
+    <!-- Scene 2: Site scroll without browser frame (4-10.3s) -->
+    <div class="scene clip" id="scene-2" data-start="4" data-duration="6.5" data-track-index="1">
+      <div class="scene__bg" id="scene-2-bg" style="background-image: url('assets/captures/viewport-1.png');"></div>
+      <div style="position: absolute; inset: 0; overflow: hidden;">
+        <div id="site-scroll" style="position: absolute; width: 100%; height: 1400px; background-image: url('assets/captures/fullpage.png'); background-size: 100% auto; background-repeat: no-repeat; background-position: top center;"></div>
       </div>
     </div>
 
-    <!-- Scene 2: Browser showing homepage scroll (4-11s) -->
-    <div class="scene clip" id="scene-2" data-start="4" data-duration="7" data-track-index="1">
-      <div class="scene__bg" style="background: #f5f1eb;"></div>
-      <div class="browser-frame" id="browser">
-        <div class="browser-frame__bar">
-          <span class="browser-frame__dot"></span>
-          <span class="browser-frame__dot"></span>
-          <span class="browser-frame__dot"></span>
-          <div class="browser-frame__url">dasks.com</div>
-        </div>
-        <div class="browser-frame__content">
-          <div class="browser-frame__scroll" id="browser-scroll" style="background-image: url('assets/captures/fullpage.png');"></div>
-        </div>
-      </div>
+    <!-- Scene 3: Food section (10-12.3s) -->
+    <div class="scene clip" id="scene-3" data-start="10" data-duration="2.5" data-track-index="2">
+      <div class="scene__bg" id="scene-3-bg" style="background-image: url('assets/captures/viewport-2.png');"></div>
     </div>
 
-    <!-- Scene 3: Menu section with CTA (11-14s) -->
-    <div class="scene clip" id="scene-3" data-start="11" data-duration="3" data-track-index="2">
-      <div class="scene__bg" id="scene-3-bg" style="background-image: url('assets/captures/viewport-1.png');"></div>
-      <div class="scene__scrim"></div>
-      <div class="cta-overlay" id="cta">
-        <div class="cta-title">Taste the Mediterranean</div>
-        <div class="cta-sub">Greek cuisine in Salt Lake City</div>
-      </div>
-    </div>
-
-    <!-- Scene 4: Logo outro (14-18s) -->
-    <div class="scene clip" id="scene-4" data-start="14" data-duration="4" data-track-index="3">
-      <div class="scene__bg" id="scene-4-bg" style="background-image: url('assets/captures/viewport-0.png'); filter: brightness(0.9);"></div>
-      <div class="scene__scrim" style="background: rgba(245,241,235,0.75);"></div>
+    <!-- Scene 4: Logo outro on food image (12-16s) -->
+    <div class="scene clip" id="scene-4" data-start="12" data-duration="4" data-track-index="3">
+      <div class="scene__bg" id="scene-4-bg" style="background-image: url('assets/captures/viewport-2.png'); filter: brightness(0.7);"></div>
+      <div class="scene__scrim" style="background: linear-gradient(135deg, rgba(26,58,92,0.75) 0%, rgba(26,58,92,0.5) 50%, rgba(26,58,92,0.65) 100%);"></div>
       <div class="logo-outro" id="outro">
-        <div class="logo-outro__mark">DASKS</div>
-        <div class="logo-outro__tag">Authentic Greek Cuisine in Salt Lake City</div>
+        <div class="logo-outro__mark" style="color: #fff;">DASKS</div>
+        <div class="logo-outro__tag" style="color: #f5f1eb;">Authentic Greek Cuisine in Salt Lake City</div>
       </div>
     </div>
 
     <!-- Audio -->
-    <audio id="bg-music" data-start="0" data-duration="18" data-track-index="10" data-volume="0.25" src="assets/music/happy-beats-business-moves-vol-11-by-ende-dot-app.mp3"></audio>
+    <audio id="bg-music" data-start="0" data-duration="16" data-track-index="10" data-volume="0.25" src="assets/music/happy-beats-business-moves-vol-11-by-ende-dot-app.mp3"></audio>
     <audio id="sfx-bell" data-start="2" data-duration="2" data-track-index="11" data-volume="0.35" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
-    <audio id="sfx-drop" data-start="11.5" data-duration="1" data-track-index="12" data-volume="0.35" src="assets/sfx/interface/drop_002.ogg"></audio>
+    <audio id="sfx-drop" data-start="10.3" data-duration="1" data-track-index="12" data-volume="0.35" src="assets/sfx/interface/drop_002.ogg"></audio>
   </div>
 
   <script>
     const tl = gsap.timeline({ paused: true });
 
-    // Scene 1: Hook (0-4s)
-    tl.to("#scene-1", { opacity: 1, duration: 0.5 }, 0);
-    tl.fromTo("#scene-1-bg", { scale: 1.08 }, { scale: 1.0, duration: 4, ease: "power1.out" }, 0);
-    tl.fromTo("#hook-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0.5);
-    tl.fromTo("#hook-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 1.5);
-    tl.to("#scene-1", { opacity: 0, duration: 0.5 }, 3.5);
+    // Scene 1: Hero (0-4.3s)
+    tl.to("#scene-1", { opacity: 1, duration: 0.2 }, 0);
+    tl.fromTo("#scene-1-bg", { scale: 1.06 }, { scale: 1.0, duration: 4.3, ease: "power1.out" }, 0);
+    tl.to("#scene-1", { opacity: 0, duration: 0.3 }, 4);
 
-    // Scene 2: Browser scroll (4-11s)
+    // Scene 2: Site scroll (4-10.3s)
     tl.to("#scene-2", { opacity: 1, duration: 0.3 }, 4);
-    tl.fromTo("#browser", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 4.2);
-    
-    // Calculate scroll for fullpage
-    tl.set("#browser-scroll", { height: "1400px", y: 0 }, 4);
-    tl.to("#browser-scroll", { y: -500, duration: 6, ease: "power1.inOut" }, 4.5);
-    tl.to("#scene-2", { opacity: 0, duration: 0.4 }, 10.6);
+    tl.set("#site-scroll", { y: 0 }, 4);
+    tl.to("#site-scroll", { y: -400, duration: 5.5, ease: "power1.inOut" }, 4.5);
+    tl.to("#scene-2", { opacity: 0, duration: 0.3 }, 10);
 
-    // Scene 3: CTA (11-14s)
-    tl.to("#scene-3", { opacity: 1, duration: 0.3 }, 11);
-    tl.fromTo("#scene-3-bg", { scale: 1.08, x: 30 }, { scale: 1.0, x: 0, duration: 3, ease: "power1.out" }, 11);
-    tl.fromTo("#cta", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 11.5);
-    tl.to("#scene-3", { opacity: 0, duration: 0.4 }, 13.6);
+    // Scene 3: Food (10-12.3s)
+    tl.to("#scene-3", { opacity: 1, duration: 0.3 }, 10);
+    tl.fromTo("#scene-3-bg", { scale: 1.06, x: 25 }, { scale: 1.0, x: 0, duration: 2.3, ease: "power1.out" }, 10);
+    tl.to("#scene-3", { opacity: 0, duration: 0.3 }, 12);
 
-    // Scene 4: Outro (14-18s)
-    tl.to("#scene-4", { opacity: 1, duration: 0.3 }, 14);
-    tl.fromTo("#scene-4-bg", { scale: 1.06 }, { scale: 1.0, duration: 4, ease: "power1.out" }, 14);
-    tl.fromTo("#outro", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.1)" }, 14.5);
-    tl.to("#scene-4", { opacity: 0, duration: 0.5 }, 17.5);
+    // Scene 4: Outro (12-16s)
+    tl.to("#scene-4", { opacity: 1, duration: 0.3 }, 12);
+    tl.fromTo("#scene-4-bg", { scale: 1.04 }, { scale: 1.0, duration: 4, ease: "power1.out" }, 12);
+    tl.fromTo("#outro", { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.1)" }, 12.4);
+    tl.to("#scene-4", { opacity: 0, duration: 0.3 }, 15.7);
 
     window.__timelines = window.__timelines || {};
     window.__timelines["dasks-brag"] = tl;
