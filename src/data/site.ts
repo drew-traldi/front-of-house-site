@@ -62,6 +62,7 @@ export const hai = {
 
 // ── Portfolio video from the team's real restaurant builds. ──
 // Each has an optimized MP4 + WebM source and a poster frame (same basename).
+// Videos are smooth-scroll captures showing the full site at a calm pace.
 export const portfolioVideo = {
   burgerLab: {
     mp4: "/videos/burger-lab.mp4",
@@ -72,6 +73,11 @@ export const portfolioVideo = {
     mp4: "/videos/killa-nikkei.mp4",
     webm: "/videos/killa-nikkei.webm",
     poster: "/videos/killa-nikkei.jpg",
+  },
+  dasks: {
+    mp4: "/videos/dasks.mp4",
+    webm: "/videos/dasks.webm",
+    poster: "/videos/dasks.jpg",
   },
 } as const;
 
