@@ -23,7 +23,7 @@
 
     .scene__bg {
       position: absolute;
-      inset: -100px;
+      inset: -80px;
       background-size: cover;
       background-position: center;
       transform-origin: center;
@@ -32,11 +32,7 @@
     .scene__vignette {
       position: absolute;
       inset: 0;
-      background: radial-gradient(
-        ellipse 80% 70% at 50% 50%,
-        transparent 0%,
-        rgba(10, 10, 10, 0.3) 100%
-      );
+      background: radial-gradient(ellipse 85% 75% at 50% 50%, transparent 0%, rgba(10, 10, 10, 0.25) 100%);
     }
   </style>
 </head>
@@ -49,26 +45,26 @@
     data-width="1920"
     data-height="1080"
   >
-    <!-- Scene 1: Patio hero with Ken Burns (0-4s) -->
-    <div class="scene clip" id="scene-1" data-start="0" data-duration="4" data-track-index="0">
+    <!-- Scene 1: Patio with Ken Burns (0-4s) -->
+    <div class="scene clip" id="scene-1" data-start="0" data-duration="4.3" data-track-index="0">
       <div class="scene__bg" id="scene-1-bg" style="background-image: url('assets/captures/patio.png');"></div>
       <div class="scene__vignette"></div>
     </div>
 
-    <!-- Scene 2: Homepage with slow pan (4-8s) -->
-    <div class="scene clip" id="scene-2" data-start="4" data-duration="4" data-track-index="1">
-      <div class="scene__bg" id="scene-2-bg" style="background-image: url('assets/captures/viewport-0.png');"></div>
+    <!-- Scene 2: Ceviche dish (3.8-7s) -->
+    <div class="scene clip" id="scene-2" data-start="3.8" data-duration="3.5" data-track-index="1">
+      <div class="scene__bg" id="scene-2-bg" style="background-image: url('assets/captures/ceviche.jpg');"></div>
       <div class="scene__vignette"></div>
     </div>
 
-    <!-- Scene 3: Ceviche close-up (8-10s) -->
-    <div class="scene clip" id="scene-3" data-start="8" data-duration="2" data-track-index="2">
-      <div class="scene__bg" id="scene-3-bg" style="background-image: url('assets/captures/ceviche.jpg');"></div>
+    <!-- Scene 3: Old Fashioned (6.8-9.5s) -->
+    <div class="scene clip" id="scene-3" data-start="6.8" data-duration="3" data-track-index="2">
+      <div class="scene__bg" id="scene-3-bg" style="background-image: url('assets/captures/old-fashioned.jpg');"></div>
       <div class="scene__vignette"></div>
     </div>
 
-    <!-- Scene 4: Back to patio for seamless loop (10-12s) -->
-    <div class="scene clip" id="scene-4" data-start="10" data-duration="2" data-track-index="3">
+    <!-- Scene 4: Back to patio for loop (9.2-12s) -->
+    <div class="scene clip" id="scene-4" data-start="9.2" data-duration="2.8" data-track-index="3">
       <div class="scene__bg" id="scene-4-bg" style="background-image: url('assets/captures/patio.png');"></div>
       <div class="scene__vignette"></div>
     </div>
@@ -77,33 +73,25 @@
   <script>
     const tl = gsap.timeline({ paused: true });
 
-    // Scene 1: Patio with slow zoom out (0-4s)
-    tl.to("#scene-1", { opacity: 1, duration: 0.8 }, 0);
-    tl.fromTo("#scene-1-bg", 
-      { scale: 1.15, x: 30 }, 
-      { scale: 1.05, x: -20, duration: 4, ease: "power1.inOut" }, 0);
-    tl.to("#scene-1", { opacity: 0, duration: 0.8 }, 3.2);
+    // Scene 1: Patio slow zoom out (0-4.3s)
+    tl.to("#scene-1", { opacity: 1, duration: 0.3 }, 0);
+    tl.fromTo("#scene-1-bg", { scale: 1.12, x: 25 }, { scale: 1.02, x: -15, duration: 4.3, ease: "power1.inOut" }, 0);
+    tl.to("#scene-1", { opacity: 0, duration: 0.3 }, 4);
 
-    // Scene 2: Homepage with pan (4-8s)
-    tl.to("#scene-2", { opacity: 1, duration: 0.8 }, 3.5);
-    tl.fromTo("#scene-2-bg", 
-      { scale: 1.1, x: -30 }, 
-      { scale: 1.05, x: 30, duration: 4, ease: "power1.inOut" }, 4);
-    tl.to("#scene-2", { opacity: 0, duration: 0.8 }, 7.2);
+    // Scene 2: Ceviche (3.8-7s) - cross-fade
+    tl.to("#scene-2", { opacity: 1, duration: 0.3 }, 3.8);
+    tl.fromTo("#scene-2-bg", { scale: 1.15, x: -20 }, { scale: 1.05, x: 10, duration: 3.2, ease: "power1.inOut" }, 3.8);
+    tl.to("#scene-2", { opacity: 0, duration: 0.3 }, 6.7);
 
-    // Scene 3: Ceviche (8-10s)
-    tl.to("#scene-3", { opacity: 1, duration: 0.6 }, 7.5);
-    tl.fromTo("#scene-3-bg", 
-      { scale: 1.2 }, 
-      { scale: 1.1, duration: 2, ease: "power1.out" }, 8);
-    tl.to("#scene-3", { opacity: 0, duration: 0.6 }, 9.4);
+    // Scene 3: Old Fashioned (6.8-9.5s) - cross-fade
+    tl.to("#scene-3", { opacity: 1, duration: 0.3 }, 6.8);
+    tl.fromTo("#scene-3-bg", { scale: 1.18, y: 15 }, { scale: 1.06, y: -10, duration: 2.7, ease: "power1.inOut" }, 6.8);
+    tl.to("#scene-3", { opacity: 0, duration: 0.3 }, 9.2);
 
-    // Scene 4: Return to patio for loop point (10-12s)
-    tl.to("#scene-4", { opacity: 1, duration: 0.8 }, 9.7);
-    tl.fromTo("#scene-4-bg", 
-      { scale: 1.05, x: -20 }, 
-      { scale: 1.15, x: 30, duration: 2, ease: "power1.in" }, 10);
-    tl.to("#scene-4", { opacity: 0, duration: 0.3 }, 11.7);
+    // Scene 4: Patio for loop return (9.2-12s) - matches Scene 1 start
+    tl.to("#scene-4", { opacity: 1, duration: 0.3 }, 9.2);
+    tl.fromTo("#scene-4-bg", { scale: 1.02, x: -15 }, { scale: 1.12, x: 25, duration: 2.8, ease: "power1.inOut" }, 9.2);
+    tl.to("#scene-4", { opacity: 0, duration: 0.2 }, 11.8);
 
     window.__timelines = window.__timelines || {};
     window.__timelines["killa-hero"] = tl;
