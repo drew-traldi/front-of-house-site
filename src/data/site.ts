@@ -74,6 +74,11 @@ export const portfolioVideo = {
     webm: "/videos/killa-nikkei.webm",
     poster: "/videos/killa-nikkei.jpg",
   },
+  killaHero: {
+    mp4: "/videos/killa-nikkei-hero.mp4",
+    webm: "/videos/killa-nikkei-hero.webm",
+    poster: "/videos/killa-nikkei-hero.jpg",
+  },
   dasks: {
     mp4: "/videos/dasks.mp4",
     webm: "/videos/dasks.webm",

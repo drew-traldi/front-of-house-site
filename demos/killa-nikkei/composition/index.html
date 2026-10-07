@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>Killa Nikkei - Brag Video</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #0a0a0a;
+      font-family: 'Cormorant', Georgia, serif;
+      color: #ffffff;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+    }
+
+    /* Scene 1: Hook */
+    .scene-hook {
+      background: radial-gradient(ellipse at center, #1a1510 0%, #0a0a0a 70%);
+    }
+    .hook-line {
+      font-size: 72px;
+      font-weight: 500;
+      color: #D4AF37;
+      letter-spacing: 0.08em;
+      text-align: center;
+      opacity: 0;
+    }
+    .hook-line-2 {
+      font-size: 48px;
+      font-weight: 400;
+      color: #ffffff;
+      margin-top: 20px;
+      font-style: italic;
+    }
+
+    /* Scene 2: Philosophy */
+    .scene-philosophy {
+      background: #0a0a0a;
+    }
+    .philosophy-title {
+      font-size: 84px;
+      font-weight: 600;
+      color: #D4AF37;
+      margin-bottom: 80px;
+      opacity: 0;
+    }
+    .pillars {
+      display: flex;
+      gap: 120px;
+    }
+    .pillar {
+      text-align: center;
+      opacity: 0;
+    }
+    .pillar-title {
+      font-size: 36px;
+      font-weight: 600;
+      color: #D4AF37;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+    .pillar-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 300;
+      color: #888;
+      max-width: 280px;
+    }
+
+    /* Scene 3: Dishes */
+    .scene-dishes {
+      background: linear-gradient(135deg, #0a0a0a 0%, #12100e 100%);
+    }
+    .dishes-title {
+      font-size: 48px;
+      font-weight: 500;
+      color: #D4AF37;
+      margin-bottom: 60px;
+      letter-spacing: 0.12em;
+      opacity: 0;
+    }
+    .dishes-grid {
+      display: flex;
+      gap: 80px;
+    }
+    .dish-card {
+      text-align: center;
+      opacity: 0;
+    }
+    .dish-name {
+      font-size: 42px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+    .dish-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 300;
+      color: #888;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    /* Scene 4: Reserve */
+    .scene-reserve {
+      background: radial-gradient(ellipse at center, #1a1510 0%, #0a0a0a 70%);
+    }
+    .reserve-title {
+      font-size: 72px;
+      font-weight: 600;
+      color: #D4AF37;
+      margin-bottom: 24px;
+      opacity: 0;
+    }
+    .reserve-sub {
+      font-size: 32px;
+      font-weight: 400;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 60px;
+      opacity: 0;
+    }
+    .reserve-address {
+      font-family: 'Inter', sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: #ffffff;
+      opacity: 0;
+    }
+
+    /* Scene 5: Outro */
+    .scene-outro {
+      background: #0a0a0a;
+    }
+    .outro-logo {
+      font-size: 120px;
+      font-weight: 700;
+      color: #D4AF37;
+      letter-spacing: 0.15em;
+      margin-bottom: 32px;
+      opacity: 0;
+    }
+    .outro-tagline {
+      font-size: 36px;
+      font-weight: 400;
+      color: #ffffff;
+      font-style: italic;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div
+    id="root"
+    data-composition-id="killa-brag"
+    data-start="0"
+    data-duration="20"
+    data-width="1920"
+    data-height="1080"
+  >
+    <!-- Scene 1: Hook - 0s to 3s -->
+    <div class="scene scene-hook clip" id="scene-hook" data-start="0" data-duration="3" data-track-index="0">
+      <div class="hook-line" id="hook-1">A Flavor Ritual</div>
+      <div class="hook-line hook-line-2" id="hook-2">made Under the Moon.</div>
+    </div>
+
+    <!-- Scene 2: Philosophy - 3s to 7s -->
+    <div class="scene scene-philosophy clip" id="scene-philosophy" data-start="3" data-duration="4" data-track-index="1">
+      <div class="philosophy-title" id="phil-title">Two Worlds, One Moon</div>
+      <div class="pillars">
+        <div class="pillar" id="pillar-1">
+          <div class="pillar-title">Nikkei Heritage</div>
+          <div class="pillar-desc">A culinary tradition born from cultural exchange</div>
+        </div>
+        <div class="pillar" id="pillar-2">
+          <div class="pillar-title">Intentional Craft</div>
+          <div class="pillar-desc">Unwavering attention to technique</div>
+        </div>
+        <div class="pillar" id="pillar-3">
+          <div class="pillar-title">Atmosphere of Calm</div>
+          <div class="pillar-desc">Designed for contemplation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 3: Dishes - 7s to 13s -->
+    <div class="scene scene-dishes clip" id="scene-dishes" data-start="7" data-duration="6" data-track-index="2">
+      <div class="dishes-title" id="dishes-title">SIGNATURE CREATIONS</div>
+      <div class="dishes-grid">
+        <div class="dish-card" id="dish-1">
+          <div class="dish-name">Ceviche Killa</div>
+          <div class="dish-desc">Tuna, Cucumber, Cherry Daikon, Aji Limo, Kimchi, Gochujang</div>
+        </div>
+        <div class="dish-card" id="dish-2">
+          <div class="dish-name">Killa Old Fashioned</div>
+          <div class="dish-desc">Andean Black Whisky, Kuromitsu, Cacao, Angostura</div>
+        </div>
+        <div class="dish-card" id="dish-3">
+          <div class="dish-name">Crab Causa</div>
+          <div class="dish-desc">Black Potato Mousse, Avocado, Huancaina, Orange Tobiko</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 4: Reserve - 13s to 17s -->
+    <div class="scene scene-reserve clip" id="scene-reserve" data-start="13" data-duration="4" data-track-index="3">
+      <div class="reserve-title" id="reserve-title">Reserve Your Table</div>
+      <div class="reserve-sub" id="reserve-sub">Limited seating. Intentional dining.</div>
+      <div class="reserve-address" id="reserve-address">279 E 300 S, Salt Lake City, UT</div>
+    </div>
+
+    <!-- Scene 5: Outro - 17s to 20s -->
+    <div class="scene scene-outro clip" id="scene-outro" data-start="17" data-duration="3" data-track-index="4">
+      <div class="outro-logo" id="outro-logo">KILLA</div>
+      <div class="outro-tagline" id="outro-tagline">A Flavor Ritual made Under the Moon.</div>
+    </div>
+
+    <!-- Audio -->
+    <audio id="bg-music" data-start="0" data-duration="20" data-track-index="10" data-volume="0.28" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"></audio>
+    <audio id="sfx-bell-hook" data-start="1.8" data-duration="2" data-track-index="11" data-volume="0.5" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+    <audio id="sfx-drop-dishes" data-start="8.7" data-duration="1" data-track-index="12" data-volume="0.45" src="assets/sfx/interface/drop_001.ogg"></audio>
+    <audio id="sfx-bell-outro" data-start="17.4" data-duration="2" data-track-index="13" data-volume="0.6" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+  </div>
+
+  <script>
+    const tl = gsap.timeline({ paused: true });
+
+    // Scene 1: Hook (0-3s)
+    tl.to("#scene-hook", { opacity: 1, duration: 0.3 }, 0);
+    tl.fromTo("#hook-1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 0.3);
+    tl.fromTo("#hook-2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 1.2);
+    tl.to("#scene-hook", { opacity: 0, duration: 0.4 }, 2.6);
+
+    // Scene 2: Philosophy (3-7s)
+    tl.to("#scene-philosophy", { opacity: 1, duration: 0.3 }, 3);
+    tl.fromTo("#phil-title", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power2.out" }, 3.2);
+    // beat-grid: pillars at 4.39s, 4.91s, 5.34s
+    tl.fromTo("#pillar-1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 4.39);
+    tl.fromTo("#pillar-2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 4.91);
+    tl.fromTo("#pillar-3", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 5.34);
+    tl.to("#scene-philosophy", { opacity: 0, duration: 0.4 }, 6.6);
+
+    // Scene 3: Dishes (7-13s)
+    tl.to("#scene-dishes", { opacity: 1, duration: 0.3 }, 7);
+    tl.fromTo("#dishes-title", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 7.2);
+    // beat-locked: dish reveal near 8.74s strong cue
+    tl.fromTo("#dish-1", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 8.74);
+    tl.fromTo("#dish-2", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 9.29);
+    tl.fromTo("#dish-3", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 9.83);
+    tl.to("#scene-dishes", { opacity: 0, duration: 0.4 }, 12.6);
+
+    // Scene 4: Reserve (13-17s)
+    tl.to("#scene-reserve", { opacity: 1, duration: 0.3 }, 13);
+    // beat-locked: reserve title near 13.11s strong cue
+    tl.fromTo("#reserve-title", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power2.out" }, 13.11);
+    tl.fromTo("#reserve-sub", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 14);
+    tl.fromTo("#reserve-address", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 }, 14.8);
+    tl.to("#scene-reserve", { opacity: 0, duration: 0.4 }, 16.6);
+
+    // Scene 5: Outro (17-20s)
+    tl.to("#scene-outro", { opacity: 1, duration: 0.3 }, 17);
+    // beat-locked: logo at 17.47s strong cue
+    tl.fromTo("#outro-logo", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }, 17.47);
+    tl.fromTo("#outro-tagline", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 18.2);
+    tl.to("#scene-outro", { opacity: 0, duration: 0.5 }, 19.5);
+
+    window.__timelines = window.__timelines || {};
+    window.__timelines["killa-brag"] = tl;
+    tl.seek(0);
+  </script>
+</body>
+</html>
