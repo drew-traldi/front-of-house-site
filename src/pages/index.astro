@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import Tiers from "../components/Tiers.astro";
 import CtaBand from "../components/CtaBand.astro";
 import VideoSlot from "../components/VideoSlot.astro";
+import HeroVideo from "../components/templates/HeroVideo.astro";
 import TickList from "../components/TickList.astro";
 import { offerings, reasons, steps, site, portfolioVideo, faq, specConcepts } from "../data/site.ts";
 
@@ -22,55 +23,50 @@ const jsonLd = {
   description="Front of House is the web and brand studio built only for restaurants. We design, shoot, and build a custom website you own outright, then keep it sharp for a flat yearly fee. No monthly rental. Built for AI search from the start."
   jsonLd={jsonLd}
 >
-  <!-- ── Hero ── -->
-  <section class="hero">
-    <div class="container hero__grid">
-      <div class="hero__copy">
-        <p class="kicker">{site.studioType}</p>
-        <h1 class="hero__title">
-          Your website is your new <em>front of house.</em>
-        </h1>
-        <p class="lede hero__lede">
-          We design the brand, shoot the photos on site, and build a custom
-          website you own outright, then keep it sharp for a flat yearly fee.
-          Built for one thing only: independent restaurants and small groups.
-        </p>
-        <div class="hero__actions">
-          <a href="/contact" class="btn btn--primary">Scope your build</a>
-          <a href="/pricing" class="btn btn--ghost">See pricing</a>
+  <!-- ── Hero (Full-bleed video background) ── -->
+  <section class="hero-fullbleed">
+    <HeroVideo
+      mp4={portfolioVideo.killaHero.mp4}
+      webm={portfolioVideo.killaHero.webm}
+      poster={portfolioVideo.killaHero.poster}
+      className="hero-fullbleed__video"
+      label="Killa Nikkei ambient background"
+    />
+    <div class="hero-fullbleed__scrim" aria-hidden="true"></div>
+    <div class="container hero-fullbleed__content">
+      <p class="kicker hero-fullbleed__kicker">{site.studioType}</p>
+      <h1 class="hero-fullbleed__title">
+        Your website is your new <em>front of house.</em>
+      </h1>
+      <p class="lede hero-fullbleed__lede">
+        We design the brand, shoot the photos on site, and build a custom
+        website you own outright, then keep it sharp for a flat yearly fee.
+        Built for one thing only: independent restaurants and small groups.
+      </p>
+      <div class="hero-fullbleed__actions">
+        <a href="/contact" class="btn btn--primary">Scope your build</a>
+        <a href="/pricing" class="btn btn--on-ink">See pricing</a>
+      </div>
+      <div class="hero-fullbleed__stats">
+        <div class="stat">
+          <span class="stat__num stat__num--light">From $2,000</span>
+          <span class="stat__cap stat__cap--light">One-time custom build</span>
         </div>
-        <div class="hero__stats">
-          <div class="stat">
-            <span class="stat__num">From $2,000</span>
-            <span class="stat__cap">One-time custom build</span>
-          </div>
-          <span class="stat__div"></span>
-          <div class="stat">
-            <span class="stat__num">$450 / yr</span>
-            <span class="stat__cap">Flat care, you own the site</span>
-          </div>
+        <span class="stat__div stat__div--light"></span>
+        <div class="stat">
+          <span class="stat__num stat__num--light">$450 / yr</span>
+          <span class="stat__cap stat__cap--light">Flat care, you own the site</span>
         </div>
       </div>
-
-      <div class="hero__media">
-        <VideoSlot
-          src={portfolioVideo.burgerLab}
-          alt="BURGER.LAB, a live restaurant site built by Front of House"
-          class="hero__photo"
-        />
-        <div class="livecard">
-          <div class="livecard__row">
-            <span class="livecard__dot"></span>
-            <span class="livecard__title">BURGER.LAB · live restaurant site</span>
-          </div>
-          <p class="livecard__quote">"Just ask the Host. It gets done."</p>
-        </div>
+      <div class="hero-fullbleed__livecard">
+        <span class="livecard__dot"></span>
+        <span class="livecard__label">Killa Nikkei · live restaurant site</span>
       </div>
     </div>
   </section>
 
-  <!-- Gradient seam: blend the light hero into the dark services section -->
-  <div class="seam seam--into-ink" aria-hidden="true"></div>
+  <!-- Subtle seam: both hero and services are dark, minimal transition needed -->
+  <div class="seam seam--dark-to-dark" aria-hidden="true"></div>
 
   <!-- ── Services (dark) ── -->
   <section id="services" class="services surface-ink surface-ink--glow">
@@ -225,7 +221,7 @@ const jsonLd = {
         <div class="phone">
           <span class="phone__notch"></span>
           <VideoSlot
-            src={portfolioVideo.killa}
+            src={portfolioVideo.burgerLab}
             alt="A Front of House restaurant site running on a phone"
             class="phone__screen"
           />
@@ -280,8 +276,8 @@ const jsonLd = {
         />
         <VideoSlot src={portfolioVideo.killa} alt="Killa Nikkei site preview" />
         <VideoSlot
-          src={portfolioVideo.burgerLab}
-          alt="BURGER.LAB, video-led restaurant web design"
+          src={portfolioVideo.dasks}
+          alt="Dasks restaurant site preview"
         />
       </div>
     </div>
@@ -387,7 +383,152 @@ const jsonLd = {
     }
   }
 
-  /* ── Hero ── */
+  /* ── Full-bleed Hero ── */
+  .hero-fullbleed {
+    position: relative;
+    min-height: clamp(600px, 85vh, 900px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-fullbleed__video {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-fullbleed__video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-fullbleed__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(34, 28, 24, 0.78) 0%,
+        rgba(34, 28, 24, 0.55) 40%,
+        rgba(34, 28, 24, 0.18) 100%
+      );
+    pointer-events: none;
+  }
+  .hero-fullbleed__content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    padding-block: clamp(4rem, 10vw, 7rem);
+  }
+  .hero-fullbleed__kicker {
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    color: var(--ember-bright);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.1rem;
+  }
+  .hero-fullbleed__kicker::before {
+    content: "";
+    width: 1.8rem;
+    height: 2px;
+    background: var(--ember);
+  }
+  .hero-fullbleed__title {
+    font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+    line-height: 1.02;
+    margin: 0 0 1.5rem;
+    color: var(--paper);
+  }
+  .hero-fullbleed__title em {
+    font-style: italic;
+    color: var(--ember-bright);
+  }
+  .hero-fullbleed__lede {
+    color: var(--bone);
+    opacity: 0.95;
+    margin-bottom: 2.2rem;
+    max-width: 48ch;
+  }
+  .hero-fullbleed__actions {
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+  }
+  .hero-fullbleed__stats {
+    display: flex;
+    align-items: center;
+    gap: 2.2rem;
+    margin-top: 2.8rem;
+  }
+  .stat__num--light {
+    display: block;
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--paper);
+    line-height: 1;
+  }
+  .stat__cap--light {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--muted-on-ink);
+    margin-top: 0.35rem;
+  }
+  .stat__div--light {
+    width: 1px;
+    align-self: stretch;
+    background: var(--ink-border);
+  }
+  .hero-fullbleed__livecard {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 2.5rem;
+    padding: 0.65rem 1rem;
+    background: rgba(34, 28, 24, 0.7);
+    backdrop-filter: blur(8px);
+    border-radius: 6px;
+    border: 1px solid var(--ink-border);
+  }
+  .hero-fullbleed__livecard .livecard__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--live);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .hero-fullbleed__livecard .livecard__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--bone);
+    letter-spacing: 0.02em;
+  }
+  @media (max-width: 900px) {
+    .hero-fullbleed__scrim {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(34, 28, 24, 0.75) 0%,
+          rgba(34, 28, 24, 0.55) 60%,
+          rgba(34, 28, 24, 0.3) 100%
+        );
+    }
+    .hero-fullbleed__content {
+      max-width: 100%;
+    }
+    .hero-fullbleed__stats {
+      gap: 1.4rem;
+    }
+  }
+
+  /* ── Legacy Hero (kept for reference) ── */
   .hero {
     background:
       radial-gradient(
@@ -632,6 +773,14 @@ const jsonLd = {
   /* ── Gradient seams between sections ── */
   .seam {
     height: clamp(56px, 9vw, 110px);
+  }
+  .seam--dark-to-dark {
+    height: clamp(32px, 5vw, 60px);
+    background: linear-gradient(
+      180deg,
+      var(--ink) 0%,
+      var(--ink) 100%
+    );
   }
   .seam--into-ink {
     background: linear-gradient(
